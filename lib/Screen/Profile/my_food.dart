@@ -12,10 +12,10 @@ class _MyFoodsState extends State<MyFoods> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("ฉัน",
-        style: TextStyle(
-          color: Colors.amber
-        ),),
+        child: Text(
+          "ฉันhhhhhh",
+          style: TextStyle(color: Colors.amber),
+        ),
       ),
     );
   }
