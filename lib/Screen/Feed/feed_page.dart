@@ -2,10 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
-import 'package:se_project_food/Screen/Profile/my_food.dart';
+//import 'package:se_project_food/Screen/Profile/my_food.dart';
+import 'package:se_project_food/Widgets/search_box.dart';
+//import 'package:se_project_food/constants.dart';
 
 import '../../Models/foodmodels.dart';
 import '../../Models/user.dart';
+import '../../Widgets/food_card.dart';
+import '../../Widgets/title_cus_more.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -104,95 +108,116 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 19),
-            alignment: Alignment.bottomCenter,
-            height: 120,
-            decoration: BoxDecoration(color: Colors.orange),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("ยินดีต้อนรับ",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                  ),  
+    Size size = MediaQuery.of(context).size;
+      return SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            //Search box
+            HeadSearch(size: size),
+            //Recommend
+            TitleCustomWithMore(text: "เมนูแนะนำ",),
+            SizedBox(height: 10,),
+
+            //New menu
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){
+                    },
                   ),
-                  Text(
-                    'คุณ Your name',
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.white,
-                      ),
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Container(
-                    
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white54.withOpacity(.5)
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.search,
-                        
-                      ),
-                      onPressed: (){
-                        //Search Page
-                      },
-                    ),
-                  )
-                ],
-              )
-            ]),
-          ),
-          const SizedBox(height: 8,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RichText(text: const TextSpan(
-                  text: "เมนูแนะนำ",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ),
-                InkWell(
-                      onTap: (){
-                        //jump to register sceen
-                        Get.to(MyFoods());
-                      },
-                      child: const Text(
-                        "+เพิ่มเติม",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-              ],
             ),
-          )
-        ],)
 
+            //New menu title
+            TitleCustomWithMore(text: "เมนูเก่า"),
+            SizedBox(height: 10,),
+            //New Menu card
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                ],
+              ),
+            ),
 
-    );
+             //New menu title
+            TitleCustomWithMore(text: "เมนูที่ติดตาม"),
+            SizedBox(height: 10,),
+            //New Menu card
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                  ShowFoodCard(
+                    image: "images/food.jpg",
+                    title: "Food1",
+                    owner: "Kankawee",
+                    rating: 4.4,
+                    press: (){},
+                  ),
+                ],
+              ),
+            ),
+
+          ],
+        ),
+      );
   }
 }
 
@@ -280,3 +305,51 @@ class _FeedPageState extends State<FeedPage> {
 //           ),
 //         ),
 //       ),
+
+
+
+//Scaffold(
+    //   body: ListView(
+    //     padding: EdgeInsets.zero,
+    //     children: <Widget>[
+    //       Container(
+    //         padding: const EdgeInsets.only(top: 50,left: 20,right: 20),
+    //         height: 180,
+    //         width: double.infinity,
+    //         decoration: const BoxDecoration(
+    //           color: Colors.orange,
+    //           borderRadius: const BorderRadius.only(
+    //             bottomRight: Radius.circular(20),
+    //             bottomLeft: Radius.circular(20),
+    //           ),
+    //           gradient: LinearGradient(
+    //             colors:[
+    //               Color.fromARGB(255, 255, 127, 8),
+    //               Color.fromARGB(255, 255, 198, 55),],
+    //               begin: Alignment.topLeft,
+    //               end: Alignment.bottomRight, 
+    //             ),
+    //         ),
+    //         child: Column(
+    //           children: [
+    //             const SizedBox(height:30),
+    //             ListTile(
+    //               title: Text("Hi You!",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+    //                 color: Colors.white
+    //               )),
+    //               subtitle: Text("welcome!",style: Theme.of(context).textTheme.titleSmall?.copyWith(
+    //                 color: Colors.white
+    //               )),
+    //               trailing: CircleAvatar(
+    //                 radius: 30,
+    //                 //backgroundImage: AssetImage('assets/images/logo.png'),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+
+    //   ),
+
+    // );

@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+
 import 'package:se_project_food/Screen/Feed/feed_page.dart';
 import 'package:se_project_food/Screen/Profile/my_food.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
@@ -60,4 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
       body: screens[screenIndex],
     );
   }
+
+  // AppBar buildAppBar(){
+  //   return AppBar(
+  //     elevation: 0,
+  //     leading: IconButton(
+  //       icon: SvgPicture.asset(""),
+  //     ),
+  //   );
+  // }
 }
