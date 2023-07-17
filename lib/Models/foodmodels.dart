@@ -46,18 +46,19 @@ class FoodModel {
     // user_id = dataMap['User_id'];
 
     food_id = dataMap['Food_id'];
-    food_name = dataMap['Food_Name'];
+    food_name = dataMap['Food_Name'] ?? '';
     food_image = dataMap['Food_Image'];
     //food_video = dataMap['Food_Video'];
-    //food_level = dataMap['Food_Level'];
-    food_ingredients = dataMap['Food_Ingredients'];
-    //food_solution = dataMap['Food_Solution'];
-    //food_type = dataMap['Food_Type'];
-    food_description = dataMap['Food_Description'];
-    //food_time = dataMap['Food_Time'];
-    //food_nation = dataMap['Food_Nation'];
-    //food_point = dataMap['Food_Point'];
-    user_id = dataMap['User_id'];
+    food_level = dataMap['Food_Level'] ?? '';
+    food_ingredients = dataMap['Food_Ingredients'] ?? '';
+    food_solution = dataMap['Food_Solution'] ?? '';
+    food_type = dataMap['Food_Type'] ?? '';
+    food_description = dataMap['Food_Description'] ?? '';
+    food_time = dataMap['Food_Time'] ?? '';
+    food_nation = dataMap['Food_Nation'] ?? '';
+    food_point = dataMap['Food_Point'] ?? '';
+    //user_id = dataMap['User_id'];
+    user_id = "Worapong";
   } //setter
 
   Map<String, dynamic> toJson() => {
