@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:se_project_food/Screen/Detail/detail.dart';
 
 import 'package:se_project_food/Screen/Feed/feed_page.dart';
 import 'package:se_project_food/Screen/Profile/my_food.dart';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int screenIndex = 0 ;
   List screens = const [
     FeedPage(),
-    SearchPage(),
+    DetailFood(),
     UploadFood(),
     MyFoods(),
     UserProfile(),

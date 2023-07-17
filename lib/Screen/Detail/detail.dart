@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DetailFood extends StatefulWidget {
   const DetailFood({super.key});
@@ -11,11 +12,21 @@ class _DetailFoodState extends State<DetailFood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("ดีเทล",
-        style: TextStyle(
-          color: Colors.amber
-        ),),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 125,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Image.asset('images/food.jpg',
+              fit: BoxFit.cover,
+              ),
+            ),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+              //child: SvgPicture.asset(""),
+            ),
+          )
+        ]
       ),
     );
   }

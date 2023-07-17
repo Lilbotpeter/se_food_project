@@ -5,10 +5,11 @@ import 'package:se_project_food/constants.dart';
 class HeadSearch extends StatelessWidget {
   const HeadSearch({
     Key? key,
-    required this.size,
+    required this.size, required this.curuser, required this.image,
     }) : super(key: key);
 
     final Size size;
+    final String curuser,image;
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +41,13 @@ class HeadSearch extends StatelessWidget {
             ),
             child: Row(
               children: <Widget>[
-                Text("Hi You",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                Text("Hi $curuser",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
                 ),
                 Spacer(),
-                Image.asset('images/logo.png')
+                Image.asset(image)
               ],
             ),
           ),

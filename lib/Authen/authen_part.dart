@@ -155,6 +155,9 @@ void captureImageWithCamera() async{
     void signOut() async {
     await _firebaseAuth.signOut();
   }
+
+
+  
   
 
 

@@ -31,7 +31,9 @@ class ShowFoodCard extends StatelessWidget {
         children: <Widget>[
           //Image Show
           //showImage(index),
-          Image.asset(image),
+          //Image.asset(image),
+          Image.network(
+        image),
           GestureDetector(
             onTap: press(),
             child: Container(

@@ -25,7 +25,7 @@ class _FeedPageState extends State<FeedPage> {
   final TextEditingController edit_description = TextEditingController();
   final TextEditingController edit_ingredients = TextEditingController();
 
-    @override
+  @override
   void initState() {
     super.initState();
     readData();
@@ -105,137 +105,125 @@ class _FeedPageState extends State<FeedPage> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-      return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            //Search box
-            HeadSearch(size: size),
-            //Recommend
-            TitleCustomWithMore(text: "เมนูแนะนำ",),
-            SizedBox(height: 10,),
-
-            //New menu
-            SingleChildScrollView(
+      return SafeArea(
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: <Widget>[
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){
-                    },
-                  ),
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                ],
-              ),
-            ),
+              itemCount: foodModels.length,
+              itemBuilder: (BuildContext buildContext, int index) {
+                return Container(
+                    child: Column(children: <Widget>[
+                      ShowFoodCard(image: foodModels[index].food_image, title: foodModels[index].food_name, owner: foodModels[index].user_id, rating: 4.4, press: (){}),
+                      
+                    ]),
 
-            //New menu title
-            TitleCustomWithMore(text: "เมนูเก่า"),
-            SizedBox(height: 10,),
-            //New Menu card
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: <Widget>[
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                ],
-              ),
+                );
+              },
             ),
+          );
 
-             //New menu title
-            TitleCustomWithMore(text: "เมนูที่ติดตาม"),
-            SizedBox(height: 10,),
-            //New Menu card
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: <Widget>[
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                  ShowFoodCard(
-                    image: "images/food.jpg",
-                    title: "Food1",
-                    owner: "Kankawee",
-                    rating: 4.4,
-                    press: (){},
-                  ),
-                ],
-              ),
-            ),
-
-          ],
-        ),
-      );
   }
 }
 
+//   SafeArea(
+//         child: Column(
+//           children: <Widget>[
+//             //Search box
+//             HeadSearch(size: size,curuser: "Worapong", image: "images/james-person-1.jpg",),//<-uid.name
+//             //Recommend
+//             TitleCustomWithMore(text: "เมนูแนะนำ",),
+//             SizedBox(height: 10,),
+
+//             //New menu
+//             Row(
+//               children: [
+//                 ListView.builder(
+//                    itemCount: foodModels.length,
+//                    itemBuilder: (BuildContext buildContext, int index) {
+//                     return Row(
+//                     children: <Widget>[
+//                       ShowFoodCard(
+//                         image: foodModels[index].food_image,
+//                         title: foodModels[index].food_name,
+//                         owner: foodModels[index].user_id,
+//                         rating: 4.4,
+//                         press: (){
+//                         },
+//                       ),
+//                     ],
+//                     );
+            
+//                    }
+//                 ),
+//               ],
+//             ),
+  
+
+//             //New menu title
+//             TitleCustomWithMore(text: "เมนูเก่า"),
+//             SizedBox(height: 10,),
+//             //New Menu card
+
+//              //New menu title
+//             TitleCustomWithMore(text: "เมนูที่ติดตาม"),
+//             SizedBox(height: 10,),
+//             //New Menu card
+            
+
+//           ],
+//         ),
+//       );
+//   }
+// }
 
 
-// SafeArea(
-//         child: Center(
-//           child: Container(
-//             child: ListView.builder(
-//               itemCount: foodModels.length,
-//               itemBuilder: (BuildContext buildContext, int index) {
-//                 return Card(
-//                   child: Column(children: <Widget>[
-//                     showImage(index),
-//                     showName(
-//                       index,
-//                     ),
-//                     Center(
+//Scaffold(
+    //   body: ListView(
+    //     padding: EdgeInsets.zero,
+    //     children: <Widget>[
+    //       Container(
+    //         padding: const EdgeInsets.only(top: 50,left: 20,right: 20),
+    //         height: 180,
+    //         width: double.infinity,
+    //         decoration: const BoxDecoration(
+    //           color: Colors.orange,
+    //           borderRadius: const BorderRadius.only(
+    //             bottomRight: Radius.circular(20),
+    //             bottomLeft: Radius.circular(20),
+    //           ),
+    //           gradient: LinearGradient(
+    //             colors:[
+    //               Color.fromARGB(255, 255, 127, 8),
+    //               Color.fromARGB(255, 255, 198, 55),],
+    //               begin: Alignment.topLeft,
+    //               end: Alignment.bottomRight, 
+    //             ),
+    //         ),
+    //         child: Column(
+    //           children: [
+    //             const SizedBox(height:30),
+    //             ListTile(
+    //               title: Text("Hi You!",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+    //                 color: Colors.white
+    //               )),
+    //               subtitle: Text("welcome!",style: Theme.of(context).textTheme.titleSmall?.copyWith(
+    //                 color: Colors.white
+    //               )),
+    //               trailing: CircleAvatar(
+    //                 radius: 30,
+    //                 //backgroundImage: AssetImage('assets/images/logo.png'),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+
+    //   ),
+
+// Center(
 //                       child: ElevatedButton(
 //                         style: ElevatedButton.styleFrom(
 //                             primary: Color.fromARGB(255, 255, 115, 0),
@@ -298,58 +286,3 @@ class _FeedPageState extends State<FeedPage> {
 //                         child: Text('ดูสูตรอาหาร'),
 //                       ),
 //                     ),
-//                   ]),
-//                 );
-//               },
-//             ),
-//           ),
-//         ),
-//       ),
-
-
-
-//Scaffold(
-    //   body: ListView(
-    //     padding: EdgeInsets.zero,
-    //     children: <Widget>[
-    //       Container(
-    //         padding: const EdgeInsets.only(top: 50,left: 20,right: 20),
-    //         height: 180,
-    //         width: double.infinity,
-    //         decoration: const BoxDecoration(
-    //           color: Colors.orange,
-    //           borderRadius: const BorderRadius.only(
-    //             bottomRight: Radius.circular(20),
-    //             bottomLeft: Radius.circular(20),
-    //           ),
-    //           gradient: LinearGradient(
-    //             colors:[
-    //               Color.fromARGB(255, 255, 127, 8),
-    //               Color.fromARGB(255, 255, 198, 55),],
-    //               begin: Alignment.topLeft,
-    //               end: Alignment.bottomRight, 
-    //             ),
-    //         ),
-    //         child: Column(
-    //           children: [
-    //             const SizedBox(height:30),
-    //             ListTile(
-    //               title: Text("Hi You!",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-    //                 color: Colors.white
-    //               )),
-    //               subtitle: Text("welcome!",style: Theme.of(context).textTheme.titleSmall?.copyWith(
-    //                 color: Colors.white
-    //               )),
-    //               trailing: CircleAvatar(
-    //                 radius: 30,
-    //                 //backgroundImage: AssetImage('assets/images/logo.png'),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-
-    //   ),
-
-    // );
