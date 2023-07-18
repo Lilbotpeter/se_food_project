@@ -5,7 +5,7 @@ import 'package:se_project_food/Screen/Detail/detail.dart';
 import 'package:se_project_food/Screen/Feed/feed_page.dart';
 import 'package:se_project_food/Screen/Profile/my_food.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
-import 'package:se_project_food/Screen/Search/search_page.dart';
+//import 'package:se_project_food/Screen/Search/search_page.dart';
 import 'package:se_project_food/Screen/Upload/upload_page.dart';
 
 class HomeScreen extends StatefulWidget {

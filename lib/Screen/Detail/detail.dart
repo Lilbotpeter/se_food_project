@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Models/foodmodels.dart';
+
 class DetailFood extends StatefulWidget {
   const DetailFood({super.key});
 
@@ -10,7 +12,7 @@ class DetailFood extends StatefulWidget {
 }
 
 class _DetailFoodState extends State<DetailFood> {
-
+  List<FoodModel> foodModels = [];
   String? name_food = '';
   String? description_food = '';
   String? level_food = '';
@@ -19,9 +21,26 @@ class _DetailFoodState extends State<DetailFood> {
   String? point_food = '';
   String? time_food = '';
   String? type_food = '';
-  String? solution_food = '';
+  String? solution_food,image_food = '';
 
   final String getfoodID = Get.arguments as String;
+  // Future<void> readData() async {
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  //   DocumentSnapshot snapshot = await firestore
+  //       .collection('Foods')
+  //       .doc(getfoodID)
+  //       .get();
+
+  //   FoodModel foodModel =
+  //       FoodModel.fromMap(snapshot.data() as Map<String, dynamic>);
+  //   foodModel.food_id = snapshot.id;
+
+  //   setState(() {
+  //     foodModels = [foodModel]; // อัปเดต foodModels เพื่อให้มีแค่รายการเดียว
+  //   });
+  // }
+
   Future<void> _getDataFromDatabase() async {
      final DocumentSnapshot snapshot = await FirebaseFirestore.instance
         .collection("Foods")
@@ -42,6 +61,7 @@ class _DetailFoodState extends State<DetailFood> {
           point_food = data["Food_Point"];
           time_food = data["Food_Time"];
           type_food = data["Food_Type"];
+          image_food = data["Food_Image"];
         });
   }
       }
@@ -57,24 +77,26 @@ class _DetailFoodState extends State<DetailFood> {
      //ตัวรับ Parameter
     return Scaffold(
       appBar: AppBar(
-        title: Text(name_food ??''),
+        title: Text(nation_food ??''),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 125,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset('images/food.jpg',
-              fit: BoxFit.cover,
-              ),
-            ),
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              //child: SvgPicture.asset(""),
-            ),
-          ),
-        ]
-      ),
+      body: Text(name_food ??'')
     );
   }
 }
+
+// CustomScrollView(
+//         slivers: [
+//           SliverAppBar(
+//             expandedHeight: 125,
+//             flexibleSpace: FlexibleSpaceBar(
+//               background: Image.network(image_food?? '',
+//               fit: BoxFit.cover,
+//               ),
+//             ),
+//             leading: CircleAvatar(
+//               backgroundColor: Colors.white,
+//               //child: SvgPicture.asset(""),
+//             ),
+//           ),
+//         ]
+//       ),
