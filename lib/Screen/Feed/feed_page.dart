@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 //import 'package:se_project_food/Screen/Profile/my_food.dart';
-import 'package:se_project_food/Widgets/search_box.dart';
 //import 'package:se_project_food/constants.dart';
 
 import '../../Models/foodmodels.dart';
-import '../../Models/user.dart';
 import '../../Widgets/food_card.dart';
-import '../../Widgets/title_cus_more.dart';
+
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});

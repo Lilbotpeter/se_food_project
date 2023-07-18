@@ -34,11 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 "images/logo.png",
                 width: 300,
               ),
-              Text("ยินดีต้อนรับ"),
-              const SizedBox(
-                height: 50,
-              ),
-
               //email input
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -48,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
                  iconData: Icons.email,
                   isObscure: false),
               ),
-
               const SizedBox(
                 height: 25,
               ),

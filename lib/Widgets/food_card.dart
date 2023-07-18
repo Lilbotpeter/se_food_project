@@ -20,7 +20,7 @@ class ShowFoodCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size= MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         left: kDefaultPadding,
         right: kDefaultPadding,
         top: kDefaultPadding/2,
@@ -40,7 +40,7 @@ class ShowFoodCard extends StatelessWidget {
               padding: EdgeInsets.all(kDefaultPadding/2),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                   ),
@@ -71,7 +71,7 @@ class ShowFoodCard extends StatelessWidget {
                   
                 ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text("$rating",style: Theme.of(context).textTheme.bodySmall!
                 .copyWith(color: kPrimaryColor),)
                 ],
