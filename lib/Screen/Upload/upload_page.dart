@@ -195,24 +195,44 @@ class _UploadFoodState extends State<UploadFood> {
   }
 
   Widget level(context) {
-    return TextField(
-        onChanged: (value) {
-          food_level = value.trim();
-        },
-        decoration: InputDecoration(
-          labelText: 'ความยากในการทำ',
-          hintText: 'กรุณากรอกความยากในการทำ',
-          icon: Icon(Icons.point_of_sale),
-          border:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          enabledBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
-          contentPadding: const EdgeInsets.all(8),
+    String foodLevel = 'ง่าย'; // กำหนดค่าเริ่มต้น
+
+    return DropdownButtonFormField<String>(
+      value: foodLevel,
+      onChanged: (value) {
+        setState(() {
+          foodLevel = value.toString();
+          food_level = foodLevel;
+        });
+      },
+      decoration: InputDecoration(
+        labelText: 'ความยากในการทำ',
+        hintText: 'กรุณาเลือกความยากในการทำ',
+        icon: Icon(Icons.point_of_sale),
+        border:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        focusedBorder:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        enabledBorder:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        filled: true,
+        contentPadding: const EdgeInsets.all(8),
+      ),
+      items: <DropdownMenuItem<String>>[
+        DropdownMenuItem<String>(
+          value: 'ง่าย',
+          child: Text('ง่าย'),
         ),
-        keyboardType: TextInputType.text);
+        DropdownMenuItem<String>(
+          value: 'ปานกลาง',
+          child: Text('ปานกลาง'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ยาก',
+          child: Text('ยาก'),
+        ),
+      ],
+    );
   }
 
   Widget ingredients(context) {
@@ -259,24 +279,48 @@ class _UploadFoodState extends State<UploadFood> {
   }
 
   Widget type(context) {
-    return TextField(
-        onChanged: (value) {
-          food_type = value.trim();
-        },
-        decoration: InputDecoration(
-          labelText: 'ประเภทอาหาร',
-          hintText: 'กรุณากรอกประเภทอาหาร',
-          icon: Icon(Icons.solar_power_outlined),
-          border:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          enabledBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
-          contentPadding: const EdgeInsets.all(8),
+    String foodtype = 'ฟาสต์ฟู้ด'; // กำหนดค่าเริ่มต้น
+
+    return DropdownButtonFormField<String>(
+      value: foodtype,
+      onChanged: (value) {
+        setState(() {
+          foodtype = value.toString();
+          food_type = foodtype;
+        });
+      },
+      decoration: InputDecoration(
+        labelText: 'ความยากในการทำ',
+        hintText: 'กรุณาเลือกความยากในการทำ',
+        icon: Icon(Icons.point_of_sale),
+        border:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        focusedBorder:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        enabledBorder:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        filled: true,
+        contentPadding: const EdgeInsets.all(8),
+      ),
+      items: <DropdownMenuItem<String>>[
+        DropdownMenuItem<String>(
+          value: 'ฟาสต์ฟู้ด',
+          child: Text('ฟาสต์ฟู้ด'),
         ),
-        keyboardType: TextInputType.text);
+        DropdownMenuItem<String>(
+          value: 'ของหวาน',
+          child: Text('ของหวาน'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เครื่องดื่ม/น้ำผลไม้',
+          child: Text('เครื่องดื่ม/น้ำผลไม้'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารเจ',
+          child: Text('อาหารเจ'),
+        ),
+      ],
+    );
   }
 
   Widget description(context) {
@@ -322,24 +366,48 @@ class _UploadFoodState extends State<UploadFood> {
   }
 
   Widget nation(context) {
-    return TextField(
-        onChanged: (value) {
-          food_nation = value.trim();
-        },
-        decoration: InputDecoration(
-          labelText: 'สัญชาติอาหาร',
-          hintText: 'กรุณากรอกสัญชาติอาหาร',
-          icon: Icon(Icons.description),
-          border:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          enabledBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
-          contentPadding: const EdgeInsets.all(8),
+    String foodnation = 'ไทย'; // กำหนดค่าเริ่มต้น
+
+    return DropdownButtonFormField<String>(
+      value: foodnation,
+      onChanged: (value) {
+        setState(() {
+          foodnation = value.toString();
+          food_nation = foodnation;
+        });
+      },
+      decoration: InputDecoration(
+        labelText: 'ความยากในการทำ',
+        hintText: 'กรุณาเลือกความยากในการทำ',
+        icon: Icon(Icons.point_of_sale),
+        border:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        focusedBorder:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        enabledBorder:
+            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+        filled: true,
+        contentPadding: const EdgeInsets.all(8),
+      ),
+      items: <DropdownMenuItem<String>>[
+        DropdownMenuItem<String>(
+          value: 'ไทย',
+          child: Text('ไทย'),
         ),
-        keyboardType: TextInputType.text);
+        DropdownMenuItem<String>(
+          value: 'ญี่ปุ่น',
+          child: Text('ญี่ปุ่น'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เกาหลี',
+          child: Text('เกาหลี'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อิตาลี',
+          child: Text('อิตาลี'),
+        ),
+      ],
+    );
   }
 
   Widget point(context) {
