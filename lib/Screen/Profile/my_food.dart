@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
+import 'package:se_project_food/Edit/editfood_page.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
 
 import '../../Models/foodmodels.dart';
@@ -13,7 +15,7 @@ class MyFoods extends StatefulWidget {
 }
 
 class _MyFoodsState extends State<MyFoods> {
-    List<FoodModel> foodModels = [];
+  List<FoodModel> foodModels = [];
   final TextEditingController edit_name = TextEditingController();
   final TextEditingController edit_description = TextEditingController();
   final TextEditingController edit_ingredients = TextEditingController();
@@ -121,9 +123,7 @@ class _MyFoodsState extends State<MyFoods> {
         //     _userUID()
         //   ],
         // ),
-        actions: [
-          
-        ],
+        actions: [],
         backgroundColor: Colors.orangeAccent,
       ),
       body: SafeArea(
@@ -159,92 +159,86 @@ class _MyFoodsState extends State<MyFoods> {
                           print('Start NaJa');
 
                           print(foodModels[index].food_id);
-                          showDialog<void>(
-                            context: context,
-                            barrierDismissible: false, // user must tap button!
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text(''),
-                                content: SingleChildScrollView(
-                                  child: ListBody(
-                                    children: <Widget>[
-                                      Text("ชื่อสูตรอาหาร : "),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      TextFormField(
-                                        controller: edit_name,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Text("วัตถุดิบ : "),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      TextFormField(
-                                        controller: edit_ingredients,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Text("วิธีการทำ : "),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      TextFormField(
-                                        controller: edit_description,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('ยืนยันการแก้ไข'),
-                                    onPressed: () {
-                                      late String _editname = edit_name.text;
-                                      late String _editingredients =
-                                          edit_ingredients.text;
-                                      late String _editdescription =
-                                          edit_description.text;
-                                      final docker = FirebaseFirestore.instance
-                                          .collection('Foods')
-                                          .doc(foodModels[index].food_id);
-                                      docker.update({
-                                        'Food_Description': _editdescription,
-                                        'Food_Ingredients': _editingredients,
-                                        'Food_Name': _editname,
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                          // final docker = FirebaseFirestore.instance
-                          //     .collection('Foods')
-                          //     .doc(foodModels[index].food_id);
-                          // docker.update({
-                          //   'Food_Description': edit_name,
-                          //   //   'Food_Ingredients': edit_description,
-                          //   //   'Food_Name': edit_ingredients,
-                          // });
+                          Get.to(EditFoods(),
+                              arguments: foodModels[index].food_id);
+                          // showDialog<void>(
+                          //   context: context,
+                          //   barrierDismissible: false, // user must tap button!
+                          //   builder: (BuildContext context) {
+                          //     return AlertDialog(
+                          //       title: const Text(''),
+                          //       content: SingleChildScrollView(
+                          //         child: ListBody(
+                          //           children: <Widget>[
+                          //             Text("ชื่อสูตรอาหาร : "),
+                          //             SizedBox(
+                          //               height: 10.0,
+                          //             ),
+                          //             TextFormField(
+                          //               controller: edit_name,
+                          //               decoration: InputDecoration(
+                          //                 border: OutlineInputBorder(
+                          //                     borderRadius:
+                          //                         BorderRadius.circular(20)),
+                          //               ),
+                          //             ),
+                          //             SizedBox(
+                          //               height: 10.0,
+                          //             ),
+                          //             Text("วัตถุดิบ : "),
+                          //             SizedBox(
+                          //               height: 10.0,
+                          //             ),
+                          //             TextFormField(
+                          //               controller: edit_ingredients,
+                          //               decoration: InputDecoration(
+                          //                 border: OutlineInputBorder(
+                          //                     borderRadius:
+                          //                         BorderRadius.circular(20)),
+                          //               ),
+                          //             ),
+                          //             SizedBox(
+                          //               height: 10.0,
+                          //             ),
+                          //             Text("วิธีการทำ : "),
+                          //             SizedBox(
+                          //               height: 10.0,
+                          //             ),
+                          //             TextFormField(
+                          //               controller: edit_description,
+                          //               decoration: InputDecoration(
+                          //                 border: OutlineInputBorder(
+                          //                     borderRadius:
+                          //                         BorderRadius.circular(20)),
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //       actions: <Widget>[
+                          //         TextButton(
+                          //           child: const Text('ยืนยันการแก้ไข'),
+                          //           onPressed: () {
+                          //             late String _editname = edit_name.text;
+                          //             late String _editingredients =
+                          //                 edit_ingredients.text;
+                          //             late String _editdescription =
+                          //                 edit_description.text;
+                          //             final docker = FirebaseFirestore.instance
+                          //                 .collection('Foods')
+                          //                 .doc(foodModels[index].food_id);
+                          //             docker.update({
+                          //               'Food_Description': _editdescription,
+                          //               'Food_Ingredients': _editingredients,
+                          //               'Food_Name': _editname,
+                          //             });
+                          //             Navigator.of(context).pop();
+                          //           },
+                          //         ),
+                          //       ],
+                          //     );
+                          // },
+                          //);
                         },
                         child: Text('แก้ไขข้อมูล'),
                       ),
@@ -292,4 +286,3 @@ class _MyFoodsState extends State<MyFoods> {
     //Stream<List<PersonModel>> readData
   }
 }
-
