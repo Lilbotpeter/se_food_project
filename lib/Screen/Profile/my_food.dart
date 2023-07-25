@@ -112,20 +112,6 @@ class _MyFoodsState extends State<MyFoods> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: _userUID(),
-        // leadingWidth: 10,
-        // leading: Row(
-        //   children: [
-        //     const SizedBox(
-        //       width: 10,
-        //     ),
-        //     _userUID()
-        //   ],
-        // ),
-        actions: [],
-        backgroundColor: Colors.orangeAccent,
-      ),
       body: SafeArea(
         child: Center(
           child: Container(
