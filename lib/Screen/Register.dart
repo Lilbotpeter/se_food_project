@@ -219,7 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ) : Container(
                 //show animations
-                
+                child: CircularProgressIndicator(),
               ),
 
               //signup now

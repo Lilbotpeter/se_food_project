@@ -40,6 +40,7 @@ class AuthenticationController extends GetxController{
 
 //Choose image from ก้อง เด้อ
 void captureImageWithCamera() async{
+    try{
     final pickedImageFile = await ImagePicker().pickImage(source: ImageSource.camera);
 
     if(pickedImageFile != null){
@@ -50,6 +51,11 @@ void captureImageWithCamera() async{
     }
 
   _pickedFile = Rx<File?>(File(pickedImageFile!.path));
+    }
+    catch(error){
+      Get.snackbar("อัพโหลดรูปไม่สำเร็จ", 'กรุณาเพิ่มรูปภาพใหม่อีกครั้ง');
+    }
+    
   }
 
   //createAccountForNewUser

@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: InputTextWidget(textEditingController: passwordcontroll,
                  labelString: "รหัสผ่าน",
                  iconData: Icons.password_outlined,
-                  isObscure: false),
+                  isObscure: true),
               ),
               const SizedBox(
                 height: 25,
@@ -130,14 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ): Container(
                 //Show animations
-                //child: const LinearProgressIndicator(
-                  
-                //),
-              ) 
+                child: CircularProgressIndicator(
+                  color: Colors.orangeAccent,
+                ),
+              ), 
             ],
           ),
-        )
-      )
+      ),
+      ),
     );
   }
 }

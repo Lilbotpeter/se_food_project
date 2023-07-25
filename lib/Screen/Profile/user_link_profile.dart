@@ -15,15 +15,17 @@ import '../../constants.dart';
 
 //Authen Current User
 final User? user = AuthenticationController().currentUser;
+  
+  
 
-class UserProfile extends StatefulWidget {
-  const UserProfile({Key? key}) : super(key: key);
+class UserLinkProfile extends StatefulWidget {
+  const UserLinkProfile({Key? key}) : super(key: key);
 
   @override
-  State<UserProfile> createState() => _UserProfileState();
+  State<UserLinkProfile> createState() => UserLinkProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class UserLinkProfileState extends State<UserLinkProfile> {
   String? name = '';
   String? image = '';
   String? email = '';
@@ -32,26 +34,47 @@ class _UserProfileState extends State<UserProfile> {
 
   List<FoodModel> foodModels = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
+  final String getUserID = Get.arguments as String; //รับ Food ID
 
+ Future<void> _getUserFromDatabase() async {
+  final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+    .collection("users")
+    .doc(getUserID)
+    .get();
+        
+  if (snapshot.exists) {
+    final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
+    if (data != null) {
+      setState(() {
+        name = data["Name"];
+        image = data["ImageP"];
+        email = data["Email"];
+        phone = data["Phone"];
 
-//Get data fromdatabase
-  Future<void> _getDataFromDatabase() async {
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userid)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        setState(() {
-          name = snapshot.data()!["Name"];
-          email = snapshot.data()!["Email"];
-          phone = snapshot.data()!["Phone"];
-          image = snapshot.data()!["ImageP"];
-        });
-      }
-    });
+      });
+    }
   }
+}
+
+// //Get data fromdatabase
+//   Future<void> _getDataFromDatabase() async {
+    
+//     await FirebaseFirestore.instance
+//         .collection("users")
+//         .doc(getUserID)
+//         .get()
+//         .then((snapshot) {
+//       if (snapshot.exists) {
+//         setState(() {
+//           name = snapshot.data()!["Name"];
+//           email = snapshot.data()!["Email"];
+//           phone = snapshot.data()!["Phone"];
+//           image = snapshot.data()!["ImageP"];
+//         });
+//       }
+//     });
+//   }
 
 
   Future<void> readData() async {
@@ -69,7 +92,7 @@ class _UserProfileState extends State<UserProfile> {
       FoodModel foodModel = FoodModel.fromMap(snapshot.data() as Map<String, dynamic>);
       foodModel.food_id = snapshot.id;
 
-      if (userid == foodModel.user_id) {
+      if (getUserID == foodModel.user_id) {
         setState(() {
           foodModels.add(foodModel);
           
@@ -98,27 +121,10 @@ class _UserProfileState extends State<UserProfile> {
   @override
   void initState() {
     super.initState();
-    _getDataFromDatabase();
+    //_getDataFromDatabase();
+    _getUserFromDatabase();
     readData();
   }
-
-//   Widget buildFoodItem(int index) {
-//   return GestureDetector(
-//     onTap: () {
-//       Get.snackbar(foodModels.fo, "Tapped");
-//     },
-//     child: Container(
-//       child:Image.network(
-//           food. food_image, // ใช้ฟิลด์ food.image เพื่อระบุ URL ของรูปภาพ
-//           fit: BoxFit.cover, // ปรับขนาดรูปภาพให้พอดีกับพื้นที่ที่กำหนด
-//           height: 150, // กำหนดความสูงของรูปภาพ
-//           width: double.infinity, // กำหนดความกว้างของรูปภาพเต็มพื้นที่ที่มีอยู่
-//         )
-        
-//         // ... โค้ดส่วนอื่น ๆ ของรายการอาหาร
-//     ),
-//   );
-// }
 
 
 
@@ -142,6 +148,35 @@ class _UserProfileState extends State<UserProfile> {
       );
     }
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 60,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        flexibleSpace: ClipPath(
+          clipper: AppbarCustom(), //Appbar custom
+          child: Container(
+            height: 150,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 127, 8),
+                  Color.fromARGB(255, 255, 198, 55),
+                ],
+              ),
+            ),
+            child: const Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           
@@ -178,7 +213,7 @@ class _UserProfileState extends State<UserProfile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: (){Get.snackbar("Check", "currect $userid");},
+                    ElevatedButton(onPressed: (){Get.snackbar("Check", "currect $getUserID");},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,
                       shape: RoundedRectangleBorder(
@@ -188,7 +223,7 @@ class _UserProfileState extends State<UserProfile> {
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
                       child: Text(
-                        "แก้ไขโปรไฟล์",
+                        "ติดตาม",
                         style: TextStyle(
                         fontSize: 14,
                         color: kTextColor,
@@ -196,28 +231,7 @@ class _UserProfileState extends State<UserProfile> {
                       ),
                     ),
                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: FittedBox(
-                        child: FloatingActionButton(
-                          elevation: 2,
-                          backgroundColor: Colors.redAccent,
-                          onPressed: () {
-                            logout();
-                            AuthenticationController().signOut();
-                          },
-                          child: const Icon(
-                            Icons.logout,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    ),
+                    
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -287,25 +301,3 @@ class _UserProfileState extends State<UserProfile> {
                   );
   }
 }
-
-
-// //Button EditProfile
-                // ElevatedButton(onPressed: (){},
-                // style: ElevatedButton.styleFrom(
-                //   backgroundColor: kPrimaryColor,
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(100),
-                //   ),
-                // ),
-                // child: Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 50.0,vertical: 15),
-                //   child: Text(
-                //     "แก้ไขโปรไฟล์",
-                //     style: TextStyle(
-                //     fontSize: 14,
-                //     color: kTextColor,
-                //     fontWeight: FontWeight.w600),
-                //   ),
-                // ),
-                //  ),
-

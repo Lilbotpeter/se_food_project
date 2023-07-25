@@ -1,11 +1,21 @@
+import 'dart:io';
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
+import 'package:se_project_food/Screen/Detail/detail.dart';
+import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
+import 'package:se_project_food/Widgets/food_slide.dart';
+import 'package:se_project_food/Widgets/title_cus_more.dart';
 //import 'package:se_project_food/Screen/Profile/my_food.dart';
 //import 'package:se_project_food/constants.dart';
 
 import '../../Models/foodmodels.dart';
 import '../../Widgets/food_card.dart';
+import '../../global.dart';
 
 
 class FeedPage extends StatefulWidget {
@@ -16,22 +26,59 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
+
+  
   AuthenticationController auth = AuthenticationController.instanceAuth;
   List<FoodModel> foodModels = [];
   final TextEditingController edit_name = TextEditingController();
   final TextEditingController edit_description = TextEditingController();
   final TextEditingController edit_ingredients = TextEditingController();
+    //User
+  String? name = '';
+  String? image = '';
+  String? email = '';
+  String? phone = '';
+  File? imageXFile;
+  
 
+   final userid = FirebaseAuth.instance.currentUser!.uid;
+   
   @override
   void initState() {
     super.initState();
     readData();
+    _getUserDataFromDatabase();
   }
   
+  Future<void> _getUserDataFromDatabase() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userid)
+          .get();
+
+      if (snapshot.exists) {
+        setState(() {
+          name = snapshot.data()!["Name"];
+          email = snapshot.data()!["Email"];
+          phone = snapshot.data()!["Phone"];
+          image = snapshot.data()!["ImageP"];
+        });
+      } else {
+        print("ไม่พบข้อมูลผู้ใช้ใน Firestore");
+      }
+    } catch (e) {
+      print("เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้: $e");
+    }
+  }
 
 
   Future<void> readData() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+   setState(() {
+      showProgressBar = true;// เริ่มแสดง CircularProgressIndicator
+    });
 
   CollectionReference collectionReference = firestore.collection('Foods');
   final snapshots = await collectionReference.get();
@@ -62,7 +109,7 @@ class _FeedPageState extends State<FeedPage> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
           primary: Colors.red,
-          textStyle: TextStyle(
+          textStyle: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
           )),
@@ -71,215 +118,282 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  //Show All
-  Widget showImage(int index) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.5,
-      height: MediaQuery.of(context).size.width * 0.5,
-      child: Image.network(
-        foodModels[index].food_image,
-      ),
-    );
-  }
-
-  Widget showName(int index) {
-    return Text(
-      foodModels[index].food_name,
-      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget showDescription(int index) {
-    return Text(
-      foodModels[index].food_description,
-    );
-  }
-
-  Widget showIngredients(int index) {
-    return Text(
-      foodModels[index].food_ingredients,
-    );
-  }
-
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-      return SafeArea(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: foodModels.length,
-              itemBuilder: (BuildContext buildContext, int index) {
-                return Container(
-                    child: Column(children: <Widget>[
-                      ShowFoodCard(image: foodModels[index].food_image, title: foodModels[index].food_name, owner: foodModels[index].user_id, rating: 4.4, press: (){}),
-                      
-                    ]),
+    //Size size = MediaQuery.of(context).size;
+      return Material(
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              SizedBox(height: 0,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left:15.0,bottom: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("ยินดีต้อนรับ",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black54,
+                        ),),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Row(
+                          children: [
+                            Icon(Icons.person,color: Colors.orange,),
+                            Text(" คุณ $name",
+                                style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ],
+                    ),
+                  ),
+                  Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right:10.0,bottom: 25),
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            margin: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: NetworkImage("$image"),
+                                fit: BoxFit.cover,
+                              )
+                            ),
+                          ),
+                        ),
+                        //Red Dot Profile
+                        // Positioned(child: Container(
+                        //   margin: EdgeInsets.all(5),
+                        //   padding: EdgeInsets.all(5),
+                        //   decoration: BoxDecoration(
+                        //     border: Border.all(color: Colors.white,width: 3),
+                        //     color: Colors.red,
+                        //     shape: BoxShape.circle,
+                        //   ),
+                        // )),
 
-                );
-              },
-            ),
-          );
+                      ],
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width/1.1,
+
+                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(136, 212, 212, 212),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  child: Center(
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "ค้นหาสูตรอาหาร",
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.search), 
+                      ),
+                    ),
+                  ),
+                    ),
+                ],
+              ),
+                SizedBox(height: 20,),
+                TitleCustomWithMore(text: "หมวดหมู่"),
+                SizedBox(height: 20,),
+                SizedBox(
+                height: 150,
+                child: Container(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: 6,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: 100,
+                        margin: EdgeInsets.only(left: 15),
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              "images/food.jpg",
+                              height: 80,
+                              width: 80,
+                            ),
+                            Text("หมวดทดลอง"),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+                SizedBox(height: 20,),
+                TitleCustomWithMore(text: "เมนูแนะนำ!"),
+                SizedBox(height: 20,),
+                CarouseSlide(foodModels: foodModels),
+
+                SizedBox(height: 25,),
+                TitleCustomWithMore(text: "เมนูใหม่"),
+                SizedBox(height: 15,),
+                Container(
+                              height: 200,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: foodModels.length,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext buildContext, int index) {
+                                  return Container(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Column(children: <Widget>[
+                                        ShowFoodCard(image: foodModels[index].food_image, title: foodModels[index].food_name, owner: foodModels[index].user_id, rating: 4.4, press: (){
+                                          Get.to(DetailFood(), arguments: foodModels[index].food_id);
+                                        }),
+                                      
+                                      ]
+                                      ),
+                                  );
+                                },  
+                              ),
+                            ),
+                
+            ],
+          ),
+        ),
+      );
 
   }
 }
 
-//   SafeArea(
-//         child: Column(
-//           children: <Widget>[
-//             //Search box
-//             HeadSearch(size: size,curuser: "Worapong", image: "images/james-person-1.jpg",),//<-uid.name
-//             //Recommend
-//             TitleCustomWithMore(text: "เมนูแนะนำ",),
-//             SizedBox(height: 10,),
+class CarouseSlide extends StatelessWidget {
+  const CarouseSlide({
+    super.key,
+    required this.foodModels,
+  });
 
-//             //New menu
-//             Row(
-//               children: [
-//                 ListView.builder(
-//                    itemCount: foodModels.length,
-//                    itemBuilder: (BuildContext buildContext, int index) {
-//                     return Row(
-//                     children: <Widget>[
-//                       ShowFoodCard(
-//                         image: foodModels[index].food_image,
-//                         title: foodModels[index].food_name,
-//                         owner: foodModels[index].user_id,
-//                         rating: 4.4,
-//                         press: (){
-//                         },
-//                       ),
-//                     ],
-//                     );
-            
-//                    }
-//                 ),
-//               ],
-//             ),
-  
+  final List<FoodModel> foodModels;
 
-//             //New menu title
-//             TitleCustomWithMore(text: "เมนูเก่า"),
-//             SizedBox(height: 10,),
-//             //New Menu card
-
-//              //New menu title
-//             TitleCustomWithMore(text: "เมนูที่ติดตาม"),
-//             SizedBox(height: 10,),
-//             //New Menu card
-            
-
-//           ],
-//         ),
-//       );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+                height: 200,
+                child: CarouselSlider(
+                  options: CarouselOptions(
+      height: 200,
+      enableInfiniteScroll: true,
+      autoPlay: true,
+                  ),
+                  items: foodModels.map((foodModel) {
+      return Builder(
+        builder: (BuildContext context) {
+          return Container(
+            padding: EdgeInsets.only(right: 10),
+            child: SlideFoodCard(
+              image: foodModel.food_image,
+              title: foodModel.food_name,
+              owner: foodModel.user_id,
+              rating: 4.4,
+              press: () {
+                Get.to(DetailFood(), arguments: foodModel.food_id);
+              },
+            ),
+          );
+        },
+      );
+                  }).toList(),
+                ),
+              );
+  }
+}
 
 
-//Scaffold(
-    //   body: ListView(
-    //     padding: EdgeInsets.zero,
-    //     children: <Widget>[
-    //       Container(
-    //         padding: const EdgeInsets.only(top: 50,left: 20,right: 20),
-    //         height: 180,
-    //         width: double.infinity,
-    //         decoration: const BoxDecoration(
-    //           color: Colors.orange,
-    //           borderRadius: const BorderRadius.only(
-    //             bottomRight: Radius.circular(20),
-    //             bottomLeft: Radius.circular(20),
-    //           ),
-    //           gradient: LinearGradient(
-    //             colors:[
-    //               Color.fromARGB(255, 255, 127, 8),
-    //               Color.fromARGB(255, 255, 198, 55),],
-    //               begin: Alignment.topLeft,
-    //               end: Alignment.bottomRight, 
-    //             ),
-    //         ),
-    //         child: Column(
-    //           children: [
-    //             const SizedBox(height:30),
-    //             ListTile(
-    //               title: Text("Hi You!",style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-    //                 color: Colors.white
-    //               )),
-    //               subtitle: Text("welcome!",style: Theme.of(context).textTheme.titleSmall?.copyWith(
-    //                 color: Colors.white
-    //               )),
-    //               trailing: CircleAvatar(
-    //                 radius: 30,
-    //                 //backgroundImage: AssetImage('assets/images/logo.png'),
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
 
-    //   ),
 
-// Center(
-//                       child: ElevatedButton(
-//                         style: ElevatedButton.styleFrom(
-//                             primary: Color.fromARGB(255, 255, 115, 0),
-//                             textStyle: TextStyle(
-//                               fontSize: 15,
-//                               fontWeight: FontWeight.bold,
-                              
-                              
-//                             )),
-//                         onPressed: () {
-//                           print('Show Start');
-//                           readData();
-//                           showDialog<void>(
-//                             context: context,
-//                             barrierDismissible: false, // user must tap button!
-//                             builder: (BuildContext context) {
-//                               return AlertDialog(
-//                                 title: const Text('รายละเอียด:'),
-//                                 content: SingleChildScrollView(
-//                                   child: ListBody(
-//                                     children: <Widget>[
-//                                       Text("ชื่อสูตรอาหาร : "),
-//                                       SizedBox(
-//                                         height: 10.0,
-//                                       ),
-//                                       Text(
-//                                         foodModels[index].food_name,
-//                                       ),
-//                                       SizedBox(
-//                                         height: 10.0,
-//                                       ),
-//                                       Text("วัตถุดิบ : "),
-//                                       SizedBox(
-//                                         height: 10.0,
-//                                       ),
-//                                       Text(
-//                                         foodModels[index].food_ingredients,
-//                                       ),
-//                                       SizedBox(
-//                                         height: 10.0,
-//                                       ),
-//                                       Text("รายละเอียด : "),
-//                                       SizedBox(
-//                                         height: 10.0,
-//                                       ),
-//                                       Text(
-//                                         foodModels[index].food_description,
-//                                       ),
-//                                       SizedBox(
-//                                         height: 10.0,
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ),
-                              
-//                               );
-//                             },
-//                           );
-//                         },
-//                         child: Text('ดูสูตรอาหาร'),
-//                       ),
-//                     ),
+
+//SafeArea(
+      //       child: Padding(
+      // padding: const EdgeInsets.symmetric(vertical: 30),
+      // child: Column(
+      //   children: [
+      //     TitleCustomWithMore(text: "เมนูวันนี้"),
+      //     SizedBox(height: 20),
+      //     Container(
+      //       height: 200,
+      //       child: CarouselSlider(
+      //         options: CarouselOptions(
+      //           height: 200,
+      //           enableInfiniteScroll: true,
+      //           autoPlay: true,
+      //         ),
+      //         items: foodModels.map((foodModel) {
+      //           return Builder(
+      //             builder: (BuildContext context) {
+      //               return Container(
+      //                 padding: EdgeInsets.only(right: 10),
+      //                 child: SlideFoodCard(
+      //                   image: foodModel.food_image,
+      //                   title: foodModel.food_name,
+      //                   owner: foodModel.user_id,
+      //                   rating: 4.4,
+      //                   press: () {
+      //                     Get.to(DetailFood(), arguments: foodModel.food_id);
+      //                   },
+      //                 ),
+      //               );
+      //             },
+      //           );
+      //         }).toList(),
+      //       ),
+      //     ),
+      //     SizedBox(height: 25,),
+      //     TitleCustomWithMore(text: "เมนูใหม่"),
+      //     SizedBox(height: 15,),
+      //             Expanded(
+      //               child: Container(
+      //                   height: 200,
+      //                   child: ListView.builder(
+      //                     scrollDirection: Axis.horizontal,
+      //                     itemCount: foodModels.length,
+      //                     shrinkWrap: true,
+      //                     itemBuilder: (BuildContext buildContext, int index) {
+      //                       return Container(
+      //                           padding: EdgeInsets.only(right: 10),
+      //                           child: Column(children: <Widget>[
+      //                             ShowFoodCard(image: foodModels[index].food_image, title: foodModels[index].food_name, owner: foodModels[index].user_id, rating: 4.4, press: (){
+      //                               Get.to(DetailFood(), arguments: foodModels[index].food_id);
+      //                             }),
+                                
+      //                           ]
+      //                           ),
+      //                       );
+      //                     },  
+      //                   ),
+      //                 ),
+      //               ),
+                  
+                
+      //           ],
+      //         ),
+      //       ),
+      //     );

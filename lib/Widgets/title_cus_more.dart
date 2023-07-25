@@ -21,11 +21,10 @@ class TitleCustomWithMore extends StatelessWidget {
           Spacer(),//ตัวคั่นกลาง
           InkWell(
                   onTap: (){
-                    //move user to login paage
-                    Get.to(MyFoods());
+                    
                   },
                   child: const Text(
-                    " +เพิ่มเติม",
+                    "",
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.orange,

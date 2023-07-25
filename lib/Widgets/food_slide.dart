@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 
-class ShowFoodCard extends StatelessWidget {
-  const ShowFoodCard({
+class SlideFoodCard extends StatelessWidget {
+  const SlideFoodCard({
     super.key, required this.image, required this.title, required this.owner, required this.rating, required this.press,
   });
 
@@ -22,7 +22,7 @@ class ShowFoodCard extends StatelessWidget {
       return InkWell(
         onTap: (){press();},
         child: Container(
-          width: 160,
+          width: 350,
           padding: EdgeInsets.all(90),
           margin: EdgeInsets.only(left: 15),
           decoration: BoxDecoration(
