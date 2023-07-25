@@ -30,7 +30,7 @@ class _SearchPageState extends State<SearchPageStream> {
 
   _onSearchChanged() {
     searchResultList();
-    print('123');
+ 
   }
 
   searchResultList() {
@@ -101,7 +101,7 @@ class _SearchPageState extends State<SearchPageStream> {
                       try {
                         Get.to(UserLinkProfile(), arguments: user['Uid']);
                       } catch (e) {
-                        Get.to(FeedPage());
+                        Get.back();
                         Get.snackbar('พบข้อผิดพลาด', 'ลองใหม่อีกครั้ง');
                       }
                     },
