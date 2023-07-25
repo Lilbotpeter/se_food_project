@@ -13,15 +13,14 @@ class SearchPageStream extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPageStream> {
-   bool _showListView = false;
+  bool _showListView = false;
   List _allResult = [];
   List _resultList = [];
   final TextEditingController _searchController = TextEditingController();
 
   Future<QuerySnapshot> getDataFoods() async {
-  return await FirebaseFirestore.instance.collection('Foods').get();
-}
-
+    return await FirebaseFirestore.instance.collection('Foods').get();
+  }
 
   @override
   void initState() {
@@ -31,9 +30,10 @@ class _SearchPageState extends State<SearchPageStream> {
 
   _onSearchChanged() {
     searchResultList();
+    print('123');
   }
 
- searchResultList() {
+  searchResultList() {
     var showResult = [];
     if (_searchController.text != "") {
       for (var dataSnap in _allResult) {
@@ -47,7 +47,8 @@ class _SearchPageState extends State<SearchPageStream> {
     }
     setState(() {
       _resultList = showResult;
-      _showListView = _resultList.isNotEmpty; // กำหนดค่าตัวแปร _showListView ให้เป็น true เมื่อมีผลลัพธ์
+      _showListView = _resultList
+          .isNotEmpty; // กำหนดค่าตัวแปร _showListView ให้เป็น true เมื่อมีผลลัพธ์
     });
   }
 
@@ -59,11 +60,14 @@ class _SearchPageState extends State<SearchPageStream> {
   }
 
   void getDataStream() async {
-    var data = await FirebaseFirestore.instance.collection('users').orderBy('Name').get();
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('Name')
+        .get();
 
     setState(() {
       _allResult = data.docs;
-      _resultList = data.docs; 
+      _resultList = data.docs;
     });
   }
 
@@ -74,7 +78,6 @@ class _SearchPageState extends State<SearchPageStream> {
   }
 
   @override
-@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -86,7 +89,8 @@ class _SearchPageState extends State<SearchPageStream> {
       body: Column(
         children: [
           Visibility(
-            visible: _showListView, // กำหนดการแสดงผลของ ListView ตามค่า _showListView
+            visible:
+                _showListView, // กำหนดการแสดงผลของ ListView ตามค่า _showListView
             child: Expanded(
               child: ListView.builder(
                 itemCount: _resultList.length,
@@ -94,14 +98,13 @@ class _SearchPageState extends State<SearchPageStream> {
                   var user = _resultList[index];
                   return GestureDetector(
                     onTap: () {
-                  try{
-                    Get.to(UserLinkProfile(),arguments: user['Uid']);
-                  }catch(e){
-                    Get.to(FeedPage());
-                    Get.snackbar('พบข้อผิดพลาด', 'ลองใหม่อีกครั้ง');
-                  }
-                  
-                },
+                      try {
+                        Get.to(UserLinkProfile(), arguments: user['Uid']);
+                      } catch (e) {
+                        Get.to(FeedPage());
+                        Get.snackbar('พบข้อผิดพลาด', 'ลองใหม่อีกครั้ง');
+                      }
+                    },
                     child: ListTile(
                       title: Text(user['Name']),
                       subtitle: Text(user['Email']),
@@ -112,7 +115,8 @@ class _SearchPageState extends State<SearchPageStream> {
             ),
           ),
           Visibility(
-            visible: !_showListView, // กำหนดการแสดงผลของข้อความ "No Data" ตามค่า _showListView
+            visible:
+                !_showListView, // กำหนดการแสดงผลของข้อความ "No Data" ตามค่า _showListView
             child: Center(
               child: Text('ไม่พบข้อมูล'),
             ),
