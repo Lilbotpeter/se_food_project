@@ -10,6 +10,7 @@ import 'package:se_project_food/Screen/Profile/user_profile.dart';
 import 'package:se_project_food/Widgets/custom_icon.dart';
 import 'package:se_project_food/Widgets/follow_button.dart';
 import 'package:se_project_food/Widgets/profile_picture.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../../Models/foodmodels.dart';
 
@@ -73,6 +74,31 @@ class _DetailFoodState extends State<DetailFood> {
       });
       await _getUserDataFromDatabase(user_id);
     }
+  }
+}
+Future<void> _getDataFromStorage() async {
+  final List<String> imagePaths = [];
+  try {
+    final firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+
+    List<String> downloadURLs = []; // สร้างรายการเพื่อเก็บ URL ของรูปภาพ
+
+    for (String imagePath in imagePaths) {
+      final firebase_storage.Reference ref = storage.ref(imagePath);
+
+      // ดึง URL ของรูปภาพจาก Firebase Storage
+      final String downloadURL = await ref.getDownloadURL();
+
+      downloadURLs.add(downloadURL); // เพิ่ม URL ของรูปภาพเข้าสู่รายการ
+    }
+
+    // สามารถใช้ downloadURLs เพื่อแสดงรูปภาพในแอปพลิเคชันหรือใช้ต่อไปตามที่ต้องการ
+    for (String url in downloadURLs) {
+      print("URL ของรูปภาพ: $url");
+    }
+  } catch (e) {
+    print("เกิดข้อผิดพลาดในการดึงรูปภาพ: $e");
   }
 }
 //เอาข้อมูลผู้ใช้ออกมา
