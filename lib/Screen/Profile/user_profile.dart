@@ -229,9 +229,9 @@ class _UserProfileState extends State<UserProfile> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     //Status
-                    StatusText(12,'สูตรอาหาร'),
-                    StatusText(54.2,'ผู้ติดตาม'),
-                    StatusText(4.4,'เรทติ้ง'),
+                    StatusText(foodModels.length,'สูตรอาหาร'),
+                    StatusText(54,'ผู้ติดตาม'),
+                    StatusText(4,'เรทติ้ง'),
                   ],
                 )
                 ),
@@ -268,7 +268,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
 //Status Text
-  Column StatusText(double number,String title) {
+  Column StatusText(int number,String title) {
     return Column(
                     children: [
                       Text(
