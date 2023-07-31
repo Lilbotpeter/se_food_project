@@ -116,7 +116,7 @@ class _SearchPageState extends State<SearchPageStream> {
           ),
           Visibility(
             visible:
-                !_showListView, // กำหนดการแสดงผลของข้อความ "No Data" ตามค่า _showListView
+                !_showListView, 
             child: Center(
               child: Text('ไม่พบข้อมูล'),
             ),

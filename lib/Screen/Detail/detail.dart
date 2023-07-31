@@ -14,6 +14,7 @@ import 'package:se_project_food/Widgets/profile_picture.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../../Models/foodmodels.dart';
+import '../../global.dart';
 
 class DetailFood extends StatefulWidget {
   const DetailFood({super.key});
@@ -302,7 +303,7 @@ Future<void> _getImagesFromStorage(String? id) async {
                   child: Expanded(
                     child: Container(
                       margin: EdgeInsets.fromLTRB(20.0, 215, 20, 5),
-                      height: 90,
+                      height: 200,
                       width: double.infinity,
                       decoration: BoxDecoration(
                       color: Colors.white,
@@ -324,13 +325,18 @@ Future<void> _getImagesFromStorage(String? id) async {
                       fontWeight: FontWeight.w600
                     ),),
                         SizedBox(width: 5,),
-                        Text('$description_food',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600
+                        text_more(text: '$description_food',),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isExpanded = !isExpanded;
+                            });
+                          },
+                          child: Text(
+                            isExpanded ? 'ย่อ' : 'เพิ่มเติม',
+                            style: TextStyle(color: Colors.orange),
+                          ),
                         ),
-                        
-                    ),
                                   ],
                                 ),
                                 Text(''),
@@ -350,6 +356,27 @@ Future<void> _getImagesFromStorage(String? id) async {
         ],
         
       )
+    );
+  }
+}
+
+class text_more extends StatelessWidget {
+  const text_more({
+    super.key, required this.text,
+  });
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: isExpanded
+            ? text
+            : '$text' , 
+        style: TextStyle(fontSize: 16,color: Colors.black),
+      ),
+      overflow: TextOverflow.fade, 
+      maxLines: 1,
     );
   }
 }

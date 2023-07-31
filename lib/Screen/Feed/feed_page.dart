@@ -9,6 +9,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
+import 'package:se_project_food/Screen/Search/search_page.dart';
 import 'package:se_project_food/Widgets/food_slide.dart';
 import 'package:se_project_food/Widgets/title_cus_more.dart';
 //import 'package:se_project_food/Screen/Profile/my_food.dart';
@@ -31,15 +32,18 @@ class _FeedPageState extends State<FeedPage> {
   
   AuthenticationController auth = AuthenticationController.instanceAuth;
   List<FoodModel> foodModels = [];
-  final TextEditingController edit_name = TextEditingController();
-  final TextEditingController edit_description = TextEditingController();
-  final TextEditingController edit_ingredients = TextEditingController();
     //User
   String? name = '';
   String? image = '';
   String? email = '';
   String? phone = '';
   File? imageXFile;
+
+  String? uname = '';
+  String? uimage = '';
+  String? uemail = '';
+  String? uphone = '';
+  
   
 
    final userid = FirebaseAuth.instance.currentUser!.uid;
@@ -49,6 +53,7 @@ class _FeedPageState extends State<FeedPage> {
     super.initState();
     readData();
     _getUserDataFromDatabase();
+    //_getUserToDataFromDatabase();
   }
   
   Future<void> _getUserDataFromDatabase() async {
@@ -72,6 +77,28 @@ class _FeedPageState extends State<FeedPage> {
       print("เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้: $e");
     }
   }
+
+  // Future<void> _getUserToDataFromDatabase() async {
+  //   try {
+  //     final snapshot = await FirebaseFirestore.instance
+  //         .collection("users")
+  //         .doc()
+  //         .get();
+
+  //     if (snapshot.exists) {
+  //       setState(() {
+  //         uname = snapshot.data()!["Name"];
+  //         uemail = snapshot.data()!["Email"];
+  //         uphone = snapshot.data()!["Phone"];
+  //         uimage = snapshot.data()!["ImageP"];
+  //       });
+  //     } else {
+  //       print("ไม่พบข้อมูลผู้ใช้ใน Firestore");
+  //     }
+  //   } catch (e) {
+  //     print("เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้: $e");
+  //   }
+  // }
 
 
   Future<void> readData() async {
@@ -100,12 +127,6 @@ class _FeedPageState extends State<FeedPage> {
     '';
   }
 }
-
-
-  // //logout *
-  // Future<void> signOut() async {
-  //   await AuthenticationController().signOut();
-  // }
 
   //Widget Logout Button *
   Widget _signOutButton() {
@@ -209,24 +230,28 @@ class _FeedPageState extends State<FeedPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width/1.1,
-
-                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(135, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  child: Center(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "ค้นหาสูตรอาหาร",
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search), 
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(SearchPageStream());
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width/1.1,
+                  
+                      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 13),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(135, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    child: const Center(
+                      child: Row(
+                        children: [
+                          Icon(Icons.search,color: Colors.black45,),
+                          Text("ค้นหาอาหาร",style: TextStyle(color: Colors.black45),),
+                        ],
                       ),
                     ),
+                      ),
                   ),
-                    ),
                 ],
               ),
                 const SizedBox(height: 20,),
@@ -271,7 +296,7 @@ class _FeedPageState extends State<FeedPage> {
                 SizedBox(height: 20,),
                 TitleCustomWithMore(text: "เมนูแนะนำ!"),
                 SizedBox(height: 20,),
-                CarouseSlide(foodModels: foodModels),
+                CarouseSlide(foodModels: foodModels,ownername: '$uname',),
 
                 SizedBox(height: 25,),
                 TitleCustomWithMore(text: "เมนูใหม่"),
@@ -309,40 +334,85 @@ class _FeedPageState extends State<FeedPage> {
 class CarouseSlide extends StatelessWidget {
   const CarouseSlide({
     super.key,
-    required this.foodModels,
+    required this.foodModels, required this.ownername,
   });
 
   final List<FoodModel> foodModels;
+  final String ownername;
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
                 height: 200,
                 child: CarouselSlider(
-                  options: CarouselOptions(
-      height: 200,
-      enableInfiniteScroll: true,
-      autoPlay: true,
-                  ),
-                  items: foodModels.map((foodModel) {
-      return Builder(
-        builder: (BuildContext context) {
-          return Container(
-            padding: EdgeInsets.only(right: 10),
-            child: SlideFoodCard(
-              image: foodModel.food_image,
-              title: foodModel.food_name,
-              owner: foodModel.user_id,
-              rating: 4.4,
-              press: () {
-                Get.to(DetailFood(), arguments: foodModel.food_id , transition: Transition.rightToLeft);
-              },
+  options: CarouselOptions(
+    height: 200,
+    enableInfiniteScroll: true,
+    autoPlay: true,
+  ),
+  items: foodModels.map((foodModel) {
+    return Builder(
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    offset: Offset.infinite,
+                    blurRadius: 10,
+                    spreadRadius: 10,
+                    
+                    )
+                ]
+              ),
+              padding: EdgeInsets.only(right: 10),
+              child: SlideFoodCard(
+                image: foodModel.food_image,
+                title: foodModel.food_name,
+                owner: foodModel.user_id,
+                rating: 4.4,
+                press: () {
+                  Get.to(DetailFood(), arguments: foodModel.food_id , transition: Transition.rightToLeft);
+                },
+              ),
             ),
-          );
-        },
-      );
-                  }).toList(),
+            Positioned(
+              bottom: 0,
+              left: 15,
+              right: 10,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10)
+                  
                 ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      foodModel.food_name,
+                      style: TextStyle(color: Colors.white, fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                    ),
+                    Text('โดย $ownername',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    )
+                  ],
+                ),
+                
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }).toList(),
+),
+
               );
   }
 }

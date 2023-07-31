@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class ProfilePicture extends StatelessWidget {
@@ -20,7 +19,7 @@ class ProfilePicture extends StatelessWidget {
       child: CircleAvatar(
         radius: 50.0,
         backgroundImage: imageXFile == null
-            ? NetworkImage(image ?? '')
+            ? (image != null ? NetworkImage(image!) : null)
             : Image.file(imageXFile!).image,
       ),
     );
