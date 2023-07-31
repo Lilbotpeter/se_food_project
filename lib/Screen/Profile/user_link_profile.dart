@@ -169,7 +169,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                  Text('',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
 
                 ],
               ),

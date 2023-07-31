@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
@@ -24,6 +25,9 @@ class DetailFood extends StatefulWidget {
 class _DetailFoodState extends State<DetailFood> {
   //Food
   List<FoodModel> foodModels = [];
+  List<String> imageUrls=[];
+  List<String> videoUrls=[];
+
   String? name_food = '';
   String? description_food = '';
   String? level_food = '';
@@ -33,6 +37,7 @@ class _DetailFoodState extends State<DetailFood> {
   String? time_food = '';
   String? type_food = '';
   String? solution_food,image_food= '';
+  String? id_food = '';
   String? user_id;
   //User
   String? name = '';
@@ -70,35 +75,11 @@ class _DetailFoodState extends State<DetailFood> {
         time_food = data["Food_Time"];
         type_food = data["Food_Type"];
         image_food = data["Food_Image"];
+        id_food = data['Food_id'];
         user_id = data["User_id"]; // อัปเดตค่า user_id ด้วยข้อมูลใน Firestore
       });
       await _getUserDataFromDatabase(user_id);
     }
-  }
-}
-Future<void> _getDataFromStorage() async {
-  final List<String> imagePaths = [];
-  try {
-    final firebase_storage.FirebaseStorage storage =
-        firebase_storage.FirebaseStorage.instance;
-
-    List<String> downloadURLs = []; // สร้างรายการเพื่อเก็บ URL ของรูปภาพ
-
-    for (String imagePath in imagePaths) {
-      final firebase_storage.Reference ref = storage.ref(imagePath);
-
-      // ดึง URL ของรูปภาพจาก Firebase Storage
-      final String downloadURL = await ref.getDownloadURL();
-
-      downloadURLs.add(downloadURL); // เพิ่ม URL ของรูปภาพเข้าสู่รายการ
-    }
-
-    // สามารถใช้ downloadURLs เพื่อแสดงรูปภาพในแอปพลิเคชันหรือใช้ต่อไปตามที่ต้องการ
-    for (String url in downloadURLs) {
-      print("URL ของรูปภาพ: $url");
-    }
-  } catch (e) {
-    print("เกิดข้อผิดพลาดในการดึงรูปภาพ: $e");
   }
 }
 //เอาข้อมูลผู้ใช้ออกมา
@@ -126,11 +107,39 @@ Future<void> _getDataFromStorage() async {
   }
 }
 
+  //get images storage
+Future<void> _getImagesFromStorage(String? id) async {
+  try {
+    final firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+
+    // ดึงรายการรูปภาพจากโฟลเดอร์ "Image" ในโฟลเดอร์ที่มีชื่อเป็น id
+    final firebase_storage.ListResult result =
+        await storage.ref().child('files').child('$id').child('Image').listAll();
+
+    // ตรวจสอบว่ามีรูปภาพในโฟลเดอร์ "Image" หรือไม่
+    if (result.items.isNotEmpty) {
+      for (var imageRef in result.items) {
+        // ดึง URL ของรูปภาพและเพิ่มในรายการ imageUrls
+        final imageUrl = await imageRef.getDownloadURL();
+        setState(() {
+          imageUrls.add(imageUrl);
+          print('$imageUrl');
+        });
+      }
+    }
+  } catch (e) {
+    print("เกิดข้อผิดพลาดในการดึงรูปภาพ: $e");
+  }
+}
+
+
     @override
   void initState() {
     super.initState();
     _getDataFromDatabase();
     _getUserDataFromDatabase(user_id);
+    _getImagesFromStorage(id_food);
   }
   @override
   Widget build(BuildContext context) {
@@ -160,6 +169,8 @@ Future<void> _getDataFromStorage() async {
                 //   fit: BoxFit.cover,
                 // ),
                 ),
+                
+                //Slide
                 child: Column(
                   children: [
                     SizedBox(
@@ -194,6 +205,7 @@ Future<void> _getDataFromStorage() async {
               physics: AlwaysScrollableScrollPhysics(),
               child: Stack(
                 children: <Widget>[
+                  //Name Card
                     cardDetail(title: name_food, subtitle: type_food,rating: point_food,),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

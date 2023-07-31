@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
@@ -75,7 +76,6 @@ class _FeedPageState extends State<FeedPage> {
 
   Future<void> readData() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
    setState(() {
       showProgressBar = true;// เริ่มแสดง CircularProgressIndicator
     });
@@ -92,10 +92,13 @@ class _FeedPageState extends State<FeedPage> {
 
     newFoodModels.add(foodModel); // เพิ่ม FoodModel เข้าในรายการใหม่
   }
-
+  try{
   setState(() {
     foodModels = newFoodModels; // อัปเดต foodModels ด้วยรายการใหม่
   });
+  }catch(e){
+    '';
+  }
 }
 
 
@@ -125,6 +128,17 @@ class _FeedPageState extends State<FeedPage> {
       return Material(
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
+          
+          child: Container(
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 253, 249), const Color.fromARGB(255, 255, 255, 255)],
+            stops: [0.1, 0.5, 0.9],
+              ),
+          ),
+
           child: Column(
             children: [
               SizedBox(height: 0,),
@@ -136,21 +150,22 @@ class _FeedPageState extends State<FeedPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("ยินดีต้อนรับ",
+                        const Text("ยินดีต้อนรับ",
                         style: TextStyle(
                           fontSize: 18,
-                          color: Colors.black54,
+                          color: Color.fromARGB(134, 255, 255, 255),
+                          fontWeight: FontWeight.w800,
                         ),),
                       Padding(
                         padding: const EdgeInsets.only(right: 15),
                         child: Row(
                           children: [
-                            Icon(Icons.person,color: Colors.orange,),
+                            Icon(Icons.person,color: Color.fromARGB(255, 255, 182, 134),),
                             Text(" คุณ $name",
-                                style: TextStyle(
+                                style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black,
+                                color: Color.fromARGB(255, 255, 255, 255),
                               ),
                             ),
                           ],
@@ -199,7 +214,7 @@ class _FeedPageState extends State<FeedPage> {
 
                     padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(136, 212, 212, 212),
+                      color: Color.fromARGB(135, 255, 255, 255),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   child: Center(
@@ -214,9 +229,7 @@ class _FeedPageState extends State<FeedPage> {
                     ),
                 ],
               ),
-                SizedBox(height: 20,),
-                TitleCustomWithMore(text: "หมวดหมู่"),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 SizedBox(
                 height: 150,
                 child: Container(
@@ -230,7 +243,13 @@ class _FeedPageState extends State<FeedPage> {
                         margin: EdgeInsets.only(left: 15),
                         padding: EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(
-                          color: Colors.amber,
+                          color: Colors.white70,
+                        //   gradient: LinearGradient(
+                        // begin: Alignment.topCenter,
+                        // end: Alignment.bottomCenter,
+                        // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
+                        // stops: [0.1, 0.5, 0.9],
+                        //   ),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Column(
@@ -268,7 +287,7 @@ class _FeedPageState extends State<FeedPage> {
                                       padding: EdgeInsets.only(right: 10),
                                       child: Column(children: <Widget>[
                                         ShowFoodCard(image: foodModels[index].food_image, title: foodModels[index].food_name, owner: foodModels[index].user_id, rating: 4.4, press: (){
-                                          Get.to(DetailFood(), arguments: foodModels[index].food_id);
+                                          Get.to(DetailFood(), arguments: foodModels[index].food_id, transition: Transition.rightToLeft);
                                         }),
                                       
                                       ]
@@ -281,6 +300,7 @@ class _FeedPageState extends State<FeedPage> {
             ],
           ),
         ),
+        )
       );
 
   }
@@ -315,7 +335,7 @@ class CarouseSlide extends StatelessWidget {
               owner: foodModel.user_id,
               rating: 4.4,
               press: () {
-                Get.to(DetailFood(), arguments: foodModel.food_id);
+                Get.to(DetailFood(), arguments: foodModel.food_id , transition: Transition.rightToLeft);
               },
             ),
           );

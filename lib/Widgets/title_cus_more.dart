@@ -27,7 +27,7 @@ class TitleCustomWithMore extends StatelessWidget {
                     "",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.orange,
+                      color: Color.fromARGB(255, 255, 0, 0),
                       fontWeight: FontWeight.bold
                     ),
                   ),
@@ -62,7 +62,7 @@ class TitleCustim extends StatelessWidget {
           child:Container(
             margin: EdgeInsets.only(right: kDefaultPadding/4),
           height: 7,
-          color: kPrimaryColor.withOpacity(0.1),
+          color: Colors.red.withOpacity(0.1),
           
         ),
         )

@@ -44,8 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60,
-        backgroundColor: Colors.transparent,
+        toolbarHeight: 50,
+        backgroundColor: Color.fromARGB(255, 255, 194, 102),
         elevation: 0.0,
         flexibleSpace: ClipPath(
           clipper: AppbarCustom(), //Appbar custom
