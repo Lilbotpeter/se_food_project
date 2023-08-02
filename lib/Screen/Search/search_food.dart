@@ -33,7 +33,7 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
     var showResult = [];
     if (_searchController.text != "") {
       for (var dataSnap in _allResult) {
-        var name = dataSnap['Name'].toString().toLowerCase();
+        var name = dataSnap['Food_name'].toString().toLowerCase();
         if (name.contains(_searchController.text.toLowerCase())) {
           showResult.add(dataSnap);
         }
@@ -91,7 +91,7 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
                   return GestureDetector(
                     onTap: () {
                   try{
-                    Get.to(UserLinkProfile(),arguments: user['Uid']);
+                    //Get.to(UserLinkProfile(),arguments: user['Uid']);
                   }catch(e){
                     Get.back();
                     Get.snackbar('พบข้อผิดพลาด', 'ลองใหม่อีกครั้ง');
@@ -99,8 +99,8 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
                   
                 },
                     child: ListTile(
-                      title: Text(user['Name']),
-                      subtitle: Text(user['Email']),
+                      title: Text(user['Food_name']),
+                      //subtitle: Text(user['']),
                     ),
                   );
                 },

@@ -54,7 +54,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
 
-  Future<void> readData() async {
+  Future<void> readData() async { 
   // Clear existing data
   setState(() {
     foodModels.clear();
@@ -220,28 +220,44 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 SizedBox(
                   height: 200,
                   width:300,
                 //Stat Row
                 child :Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //Status
                     StatusText(foodModels.length,'สูตรอาหาร'),
+                    const VerticalDivider(
+                      thickness: 1,
+                      indent: 10,
+                      endIndent: 160,
+                    ),
                     StatusText(54,'ผู้ติดตาม'),
+                    const VerticalDivider(
+                      thickness: 1,
+                      indent: 10,
+                      endIndent: 160,
+                    ),
                     StatusText(4,'เรทติ้ง'),
                   ],
                 )
                 ),
                 
-
+              
               ],
             ),
             
             ),
-
+         const Divider(
+                height: 660,
+                thickness: 2,
+                color: Colors.black12,
+              ),
+        
           
         Positioned(
           top: 335,

@@ -223,6 +223,7 @@ class _EditFoodsState extends State<EditFoods> {
     if (sd.exists) {
       foodid = data!['Food_id'];
     }
+    try{
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
@@ -239,7 +240,12 @@ class _EditFoodsState extends State<EditFoods> {
         imageUrl = null;
       });
     }
+        }catch(e){
+      print("");
+    };
+
   }
+  
 
   String? foodid;
   Future<void> uploadImageToFirebase() async {

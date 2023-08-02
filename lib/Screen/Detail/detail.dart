@@ -5,13 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
-import 'package:se_project_food/Screen/Profile/user_profile.dart';
 import 'package:se_project_food/Widgets/custom_icon.dart';
-import 'package:se_project_food/Widgets/follow_button.dart';
 import 'package:se_project_food/Widgets/profile_picture.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:se_project_food/constants.dart';
 
 import '../../Models/foodmodels.dart';
 import '../../global.dart';
@@ -150,236 +150,376 @@ Future<void> _getImagesFromStorage(String? id) async {
      //ตัวรับ Parameter
     return Scaffold(
       backgroundColor: Color.fromARGB(239, 255, 255, 255),
-      body: Column(
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      offset: Offset(0.0,2.0),
-                      blurRadius: 6.0,
-                    ),
-                  ],
-                //   image: DecorationImage( //ทำให้ภาพออกแบบไม่ค้าง
-                //   image: NetworkImage(image_food ?? ''),
-                //   fit: BoxFit.cover,
-                // ),
-                ),
-                
-                //Slide
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.width,
-                      width: double.infinity,
-                      child: AnotherCarousel(images: [
-                        NetworkImage(image_food ?? ''),
-                      ],
-                      dotSize: 4,
-                      indicatorBgPadding: 5.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 40),
-                child: Row(
-                  children: <Widget>[
-                    CustomIconButton(icon: Icon(Icons.arrow_back), press: (){
-                      Get.back();
-                    }),
-                    
-                  ],
-                ),
-              ),
-            ],
-          ),
-          
-          Expanded(
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Stack(
-                children: <Widget>[
-                  //Name Card
-                    cardDetail(title: name_food, subtitle: type_food,rating: point_food,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+      //Floating Menu
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          //Menu Home Work
+          SpeedDialChild(
+            child: Icon(Icons.menu_book_outlined),
+            label: 'ส่งการบ้าน',
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            onTap: (){
+              showModalBottomSheet(
+                isScrollControlled: false,
+                context: context,
+                 builder: (BuildContext context){
+                  return  SizedBox(
+                    height: 400,
+                    child: Center(
                       child: Container(
-                      margin: EdgeInsets.fromLTRB(20.0, 110, 20, 5),
-                      height: 90,
-                      width: 220,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    //Profile User
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 70,
-                                width: 100,
-                                child: ProfilePicture(imageXFile: imageXFile, image: image))
-                            ],
-                          ),
-                        ),
-                        Padding(////////////Card Profile
-                          padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left:20.0,top: 10),
-                              child: Text('$name',style: TextStyle(fontWeight: FontWeight.w600),),
-                            ),
-                            SizedBox(height: 9,),
-                            SizedBox(
-                              height: 30,
-                              width: 100,
-                              child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 156, 7)), // สีพื้นหลังเมื่อปุ่มไม่ได้ถูกกด
-                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // สีของข้อความ
-                              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.symmetric(horizontal: 25, vertical: 1), // การขยับของข้อความภายในปุ่ม
-                            ),
-                              textStyle: MaterialStateProperty.all<TextStyle>(
-                                TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                              ), // สไตล์ข้อความ
-                            ),
-                            onPressed: () {
-                              // ตรวจสอบโค้ดเมื่อปุ่มถูกกด
-                              Get.to(UserLinkProfile(), arguments: user_id);
-                            },
-                            child: Text('ดูโปรไฟล์'),
-                          ),
-                              
-                            ),
-                            
-                            ],
-                          ),
-                        ),
                         
-                      ],
-                    ),
                       ),
                     ),
-                    //Time Card
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(250.0, 110, 20, 5),
-                        height: 90,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 252, 158, 19),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("$time_food",style: TextStyle(fontSize: 30,fontWeight: FontWeight.w600,color: Colors.white),),
-                            Text("นาที",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.white),),
-                            
-                          ],
-                        ),
-                        ),
-                    ),
-                //Detail
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Expanded(
-                    child: Container(
-                      margin: EdgeInsets.fromLTRB(20.0, 215, 20, 5),
-                      height: 200,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+                  );
+                 },
+              );
+            }
+          ),
+          //Menu Comment
+          SpeedDialChild(
+            child: Icon(Icons.comment),
+            label: 'คอมเม้นท์',
+            backgroundColor: Colors.orange,
+            foregroundColor: Colors.white,
+            onTap: (){
+              showModalBottomSheet(
+                isScrollControlled: false,
+                context: context,
+                 builder: (BuildContext context){
+                  return  SizedBox(
+                    height: 400,
+                    child: Center(
+                      child: ElevatedButton(
+                        child: Text('Close'),
+                        onPressed: (){Get.snackbar('title', 'message');},
                       ),
-                    child:  Padding(
-                      padding:  EdgeInsets.all(10.0),
-                      child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                    Text('รายละเอียด', 
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600
-                    ),),
-                        SizedBox(width: 5,),
-                        text_more(text: '$description_food',),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isExpanded = !isExpanded;
-                            });
-                          },
-                          child: Text(
-                            isExpanded ? 'ย่อ' : 'เพิ่มเติม',
-                            style: TextStyle(color: Colors.orange),
-                          ),
-                        ),
-                                  ],
-                                ),
-                                Text(''),
-                                const SizedBox(height: 10,),
-                      ]),
                     ),
+                  );
+                 },
+              );
+            }
+          ),
+          //Menu Review
+          SpeedDialChild(
+            child: Icon(Icons.reviews),
+            label: 'รีวิว',
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            onTap: (){
+              showModalBottomSheet(
+                isScrollControlled: false,
+                context: context,
+                 builder: (BuildContext context){
+                  return  SizedBox(
+                    height: 400,
+                    child: Center(
+                      child: ElevatedButton(
+                        child: Text('Close'),
+                        onPressed: (){Get.snackbar('title', 'message');},
+                      ),
                     ),
-                  ),
-                ),
-                ],//แปะได้
-                
+                  );
+                 },
+              );
+            }
+          ),
+
+        ],
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        
+      ),
+      //Tab view เด้อจ้าาา
+      body: DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          appBar: AppBar(
+            flexibleSpace: ClipPath(
+          
+          child: Container(
+            height: 500,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 127, 8),
+                  Color.fromARGB(255, 255, 198, 55),
+                ],
+              ),
+            ),
+            child: const Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+
+                ],
               ),
             ),
           ),
-          
-         
-        ],
-        
+        ),
+            bottom: const TabBar(
+              indicatorColor: Color.fromARGB(255, 0, 0, 0),
+              labelColor: Color.fromARGB(255, 255, 255, 255),
+              unselectedLabelColor: Colors.black,
+              tabs: [
+                Tab(
+                  icon: Icon(Icons.notes_outlined),
+                ),
+                Tab(
+                  icon: Icon(Icons.menu_book_outlined),
+                ),
+                Tab(
+                  icon: Icon(Icons.comment),
+                ),
+                Tab(
+                  icon: Icon(Icons.reviews),
+                )
+              ],
+            ),
+          ),
+          backgroundColor: Colors.white38,
+          body: TabBarView(
+//Detail Tab**
+            children: [
+              Column(
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Positioned(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(0.0,2.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          //   image: DecorationImage( //ทำให้ภาพออกแบบไม่ค้าง
+                          //   image: NetworkImage(image_food ?? ''),
+                          //   fit: BoxFit.cover,
+                          // ),
+                          ),
+                          
+                          //Slide
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 350,
+                                width: double.infinity,
+                                child: AnotherCarousel(images: [
+                                  NetworkImage(image_food ?? ''),
+                                ],
+                                dotSize: 4,
+                                indicatorBgPadding: 5.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 40),
+                        child: Row(
+                          children: <Widget>[
+//Bookmark Button
+                            CustomIconButton(icon: Icon(Icons.bookmark_outline_sharp), press: (){
+                              
+                            }),
+                            
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  Flexible(
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Stack(
+                        children: <Widget>[
+                          //Name Card
+                            cardDetail(title: name_food, subtitle: type_food,rating: point_food,),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                              margin: EdgeInsets.fromLTRB(20.0, 110, 20, 5),
+                              height: 90,
+                              width: 220,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            //Profile User
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 70,
+                                        width: 100,
+                                        child: ProfilePicture(imageXFile: imageXFile, image: image))
+                                    ],
+                                  ),
+                                ),
+                                Padding(////////////Card Profile
+                                  padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 5),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:20.0,top: 10),
+                                      child: Text('$name',style: TextStyle(fontWeight: FontWeight.w600),),
+                                    ),
+                                    SizedBox(height: 9,),
+                                    SizedBox(
+                                      height: 30,
+                                      width: 100,
+                                      child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 156, 7)), // สีพื้นหลังเมื่อปุ่มไม่ได้ถูกกด
+                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // สีของข้อความ
+                                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      EdgeInsets.symmetric(horizontal: 25, vertical: 1), // การขยับของข้อความภายในปุ่ม
+                                    ),
+                                      textStyle: MaterialStateProperty.all<TextStyle>(
+                                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                                      ), // สไตล์ข้อความ
+                                    ),
+                                    onPressed: () {
+                                      // ตรวจสอบโค้ดเมื่อปุ่มถูกกด
+                                      Get.to(UserLinkProfile(), arguments: user_id);
+                                    },
+                                    child: Text('ดูโปรไฟล์'),
+                                  ),
+                                      
+                                    ),
+                                    
+                                    ],
+                                  ),
+                                ),
+                                
+                              ],
+                            ),
+                              ),
+                            ),
+                            //Time Card
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                margin: EdgeInsets.fromLTRB(250.0, 110, 20, 5),
+                                height: 90,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                  gradient: kgradeint,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("$time_food",style: TextStyle(fontSize: 30,fontWeight: FontWeight.w600,color: Colors.white),),
+                                    Text("นาที",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.white),),
+                                    
+                                  ],
+                                ),
+                                ),
+                            ),
+                        //Detail
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Expanded(
+                              child: Container(
+                                margin: EdgeInsets.fromLTRB(20.0, 215, 20, 5),
+                                
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                ),
+                              child:  Padding(
+                                padding:  EdgeInsets.all(10.0),
+                                child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                              Text('รายละเอียด', 
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600
+                              ),),
+                                  SizedBox(width: 5,),
+                                  //Description
+                                  ExpansionTile(
+                                    title: const Text('วิธีการทำ',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w700),),
+                                    trailing: Icon(
+                                      isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                                      color: Colors.amber,
+                                    ),
+                                    children:  <Widget>[
+                                      ListTile(
+                                        title: Text(description_food?? ''),
+                                      ),
+                                    ],
+                                    onExpansionChanged: (bool expanded){
+                                      setState(() => isExpanded = expanded);
+                                    },
+
+                                  ),
+                                            ],
+                                          ),
+                                          Text(''),
+                                          const SizedBox(height: 10,),
+                                ]),
+                              ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        ],//แปะได้
+                        
+                      ),
+                    ),
+                  ),
+                  
+                 
+                ],
+                
+              ),
+//Home Work Tab
+              Container(
+                color: Colors.amber,
+              ),
+//Comment Tab
+              Container(
+                color: Colors.red,
+              ),
+//Review Tab
+              Container(
+                color: Colors.blue,
+              ),
+            ],
+          ),
+        ),
       )
     );
   }
 }
 
-class text_more extends StatelessWidget {
-  const text_more({
-    super.key, required this.text,
-  });
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        text: isExpanded
-            ? text
-            : '$text' , 
-        style: TextStyle(fontSize: 16,color: Colors.black),
-      ),
-      overflow: TextOverflow.fade, 
-      maxLines: 1,
-    );
-  }
-}
 
 class cardDetail extends StatelessWidget {
   const cardDetail({
@@ -401,7 +541,7 @@ class cardDetail extends StatelessWidget {
         height: 90,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromARGB(255, 0, 0, 0),
           borderRadius: BorderRadius.circular(20),
         ),
       child: Padding(
@@ -416,15 +556,21 @@ class cardDetail extends StatelessWidget {
             children: <Widget>[
               Text('$title', 
               style: const TextStyle(
+                color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.w600
-              ),),
+              ),
+              
+              overflow: TextOverflow.fade, 
+              maxLines: 1,
+              ),
           Row(
                 children: [
-                  Icon(Icons.star,color: Color.fromARGB(255, 255, 136, 0)),
-                  SizedBox(width: 5,),
+                  const Icon(Icons.star,color: Color.fromARGB(255, 255, 136, 0)),
+                  const SizedBox(width: 5,),
                   Text('$rating   ',
-                  style: TextStyle(
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w600
                   ),
@@ -433,7 +579,9 @@ class cardDetail extends StatelessWidget {
               ),
             ],
           ),
-          Text('$subtitle'),
+          Text('$subtitle',style: const TextStyle(
+            color: Colors.white,
+          ),),
           const SizedBox(height: 10,),
         ]),
       ),

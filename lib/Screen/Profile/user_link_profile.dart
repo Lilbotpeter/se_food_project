@@ -240,12 +240,23 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                   width:300,
                 //Stat Row
                 child :Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //Status
                     StatusText(foodModels.length,'สูตรอาหาร'),
+                    const VerticalDivider(
+                      thickness: 1,
+                      indent: 10,
+                      endIndent: 160,
+                    ),
                     StatusText(54,'ผู้ติดตาม'),
-                    StatusText(4,'กำลังติดตาม'),
+                    const VerticalDivider(
+                      thickness: 1,
+                      indent: 10,
+                      endIndent: 160,
+                    ),
+                    StatusText(4,'เรทติ้ง'),
                   ],
                 )
                 ),
@@ -255,7 +266,11 @@ class UserLinkProfileState extends State<UserLinkProfile> {
             ),
             
             ),
-
+        const Divider(
+                height: 660,
+                thickness: 2,
+                color: Colors.black12,
+              ),
           
         Positioned(
           top: 335,

@@ -9,6 +9,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
+import 'package:se_project_food/Screen/Profile/user_profile.dart';
+import 'package:se_project_food/Screen/Search/search_food.dart';
 import 'package:se_project_food/Screen/Search/search_page.dart';
 import 'package:se_project_food/Widgets/food_slide.dart';
 import 'package:se_project_food/Widgets/title_cus_more.dart';
@@ -77,6 +79,18 @@ class _FeedPageState extends State<FeedPage> {
       print("เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้: $e");
     }
   }
+
+  void onMenuProffile() {
+    // เรียกใช้ฟังก์ชัน GetX ที่ต้องการ
+    Get.to((UserProfile())
+    );
+  }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+
 
   // Future<void> _getUserToDataFromDatabase() async {
   //   try {
@@ -183,6 +197,9 @@ class _FeedPageState extends State<FeedPage> {
                           children: [
                             Icon(Icons.person,color: Color.fromARGB(255, 255, 182, 134),),
                             Text(" คุณ $name",
+                                overflow: TextOverflow.fade, 
+                                maxLines: 1,
+                                textWidthBasis: TextWidthBasis.longestLine,
                                 style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -197,18 +214,32 @@ class _FeedPageState extends State<FeedPage> {
                   ),
                   Stack(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right:10.0,bottom: 25),
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            margin: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: DecorationImage(
-                                image: NetworkImage("$image"),
-                                fit: BoxFit.cover,
-                              )
+                        PopupMenuButton(
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(child: Text('โปรไฟล์'),value: 1,),
+                            const PopupMenuItem(child: Text('ออกจากระบบ'),value: 2,)
+                          ],
+                          onSelected: (value){
+                              if(value ==1){
+                                onMenuProffile();
+                              }else if(value==2){
+                                signOut();
+                              }
+                          },
+                          
+                          child: Padding(
+                            padding: const EdgeInsets.only(right:10.0,bottom: 25),
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              margin: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  image: NetworkImage("$image"),
+                                  fit: BoxFit.cover,
+                                )
+                              ),
                             ),
                           ),
                         ),
@@ -232,7 +263,7 @@ class _FeedPageState extends State<FeedPage> {
                 children: [
                   GestureDetector(
                     onTap: (){
-                      Get.to(SearchPageStream());
+                      Get.to(SearchFoodStream());
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -368,12 +399,12 @@ class CarouseSlide extends StatelessWidget {
                     )
                 ]
               ),
-              padding: EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(right: 10),
               child: SlideFoodCard(
                 image: foodModel.food_image,
                 title: foodModel.food_name,
                 owner: foodModel.user_id,
-                rating: 4.4,
+                rating: foodModel.food_point,
                 press: () {
                   Get.to(DetailFood(), arguments: foodModel.food_id , transition: Transition.rightToLeft);
                 },
@@ -397,9 +428,16 @@ class CarouseSlide extends StatelessWidget {
                       foodModel.food_name,
                       style: TextStyle(color: Colors.white, fontSize: 24,
                       fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis, 
+                      maxLines: 1,
                     ),
-                    Text('โดย $ownername',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    Row(
+                      children: [
+                        Icon(Icons.star,color: Color.fromARGB(255, 240, 179, 11),),
+                        Text(foodModel.food_point,
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
                     )
                   ],
                 ),

@@ -11,7 +11,7 @@ class SlideFoodCard extends StatelessWidget {
   });
 
   final String image,title,owner;
-  final double rating;
+  final String rating;
   final Function press;
 
 
