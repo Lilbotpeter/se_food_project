@@ -20,15 +20,11 @@ class EditFoods extends StatefulWidget {
 }
 
 class _EditFoodsState extends State<EditFoods> {
-  final String getfoodID = Get.arguments as String;
   List<FoodModel> foodModels = [];
   PlatformFile? pickedFile;
-  String? edit_nation = 'ไทย';
-  String? edit_level = 'ง่าย';
-  String? edit_type = 'ฟาสต์ฟู้ด';
-  // String? edit_nation = 'ไทย';
-  // String? edit_level = '';
-  // String? edit_type = '';
+  String? edit_nation = 'ไม่มี';
+  String? edit_level = 'ไม่มี';
+  String? edit_type = 'ไม่มี';
   String? imageUrl;
 
   final TextEditingController edit_name = TextEditingController();
@@ -51,9 +47,9 @@ class _EditFoodsState extends State<EditFoods> {
 
   Widget nation(context) {
     // กำหนดค่าเริ่มต้น
-
+    // readData();
     return DropdownButtonFormField<String>(
-      //value: edit_nation,
+      value: edit_nation,
       onChanged: (value1) {
         //setState(() {
         edit_nation = value1.toString();
@@ -72,6 +68,10 @@ class _EditFoodsState extends State<EditFoods> {
       ),
       items: const <DropdownMenuItem<String>>[
         DropdownMenuItem<String>(
+          value: 'ไม่มี',
+          child: Text('ไม่มี'),
+        ),
+        DropdownMenuItem<String>(
           value: 'ไทย',
           child: Text('ไทย'),
         ),
@@ -87,17 +87,13 @@ class _EditFoodsState extends State<EditFoods> {
           value: 'อิตาลี',
           child: Text('อิตาลี'),
         ),
-        // DropdownMenuItem<String>(
-        //   value: 'สเปน',
-        //   child: Text('สเปน'),
-        // ),
       ],
     );
   }
 
   Widget level(context) {
     return DropdownButtonFormField<String>(
-      //value: edit_level,
+      value: edit_level,
       onChanged: (value2) {
         //setState(() {
         edit_level = value2.toString();
@@ -116,7 +112,11 @@ class _EditFoodsState extends State<EditFoods> {
         filled: true,
         contentPadding: const EdgeInsets.all(8),
       ),
-      items: <DropdownMenuItem<String>>[
+      items: const <DropdownMenuItem<String>>[
+        DropdownMenuItem<String>(
+          value: 'ไม่มี',
+          child: Text('ไม่มี'),
+        ),
         DropdownMenuItem<String>(
           value: 'ง่าย',
           child: Text('ง่าย'),
@@ -135,7 +135,7 @@ class _EditFoodsState extends State<EditFoods> {
 
   Widget type(context) {
     return DropdownButtonFormField<String>(
-      // value: edit_type,
+      value: edit_type,
       onChanged: (value3) {
         //setState(() {
         edit_type = value3.toString();
@@ -152,7 +152,11 @@ class _EditFoodsState extends State<EditFoods> {
         filled: true,
         contentPadding: const EdgeInsets.all(8),
       ),
-      items: <DropdownMenuItem<String>>[
+      items: const <DropdownMenuItem<String>>[
+        DropdownMenuItem<String>(
+          value: 'ไม่มี',
+          child: Text('ไม่มี'),
+        ),
         DropdownMenuItem<String>(
           value: 'ฟาสต์ฟู้ด',
           child: Text('ฟาสต์ฟู้ด'),
@@ -173,7 +177,7 @@ class _EditFoodsState extends State<EditFoods> {
     );
   }
 
-  //ตัวรับ
+  final String getfoodID = Get.arguments as String; //ตัวรับ
 
   Future<void> readData() async {
     final DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -191,23 +195,31 @@ class _EditFoodsState extends State<EditFoods> {
     Map<String, dynamic>? data = sd.data() as Map<String, dynamic>?;
     if (sd.exists) {
       // ถ้ามีข้อมูลในเอกสาร คุณสามารถนำข้อมูลมาใช้ได้ตามต้องการ
-
+      edit_level = data!['Food_Level'];
+      edit_nation = data!['Food_Nation'];
+      edit_type = data!['Food_Type'];
       // เช่น ถ้าคุณมีค่าของ key 'name' ในเอกสาร สามารถเข้าถึงได้ดังนี้
       setState(() {
-        edit_name.text = data!["Food_Name"];
-        edit_level = data!['Food_Level'];
-        edit_ingredients.text = data!['Food_Ingredients'];
-        edit_solution.text = data!['Food_Solution'];
-        edit_type = data!['Food_Type'];
         edit_description.text = data!['Food_Description'];
-        edit_time.text = data!['Food_Time'];
-        edit_nation = data!['Food_Nation'];
-        edit_point.text = data!['Food_Point'];
-
         imageUrl = data!['Food_Image'];
+        edit_ingredients.text = data!['Food_Ingredients'];
+
+        edit_name.text = data!["Food_Name"];
+
+        edit_point.text = data!['Food_Point'];
+        edit_solution.text = data!['Food_Solution'];
+        edit_time.text = data!['Food_Time'];
       });
 
       print('Image URL: $imageUrl');
+      print('edit_name =');
+      print(edit_name.text);
+      print('edit_level =');
+      print(edit_level.toString());
+      print('edit_type =');
+      print(edit_type.toString());
+      print('edit_nation =');
+      print(edit_nation.toString());
     } else {
       // ถ้าไม่มีข้อมูลในเอกสาร
       print('Document not found!');
@@ -231,27 +243,22 @@ class _EditFoodsState extends State<EditFoods> {
     if (sd.exists) {
       foodid = data!['Food_id'];
     }
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-      );
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
 
-      if (result != null) {
-        setState(() {
-          pickedFile = result.files.single;
-          pickedFile?.path!;
+    if (result != null) {
+      setState(() {
+        pickedFile = result.files.single;
+        pickedFile?.path!;
 
-          // Upload the image to Firebase Storage
-          uploadImageToFirebase();
+        // Upload the image to Firebase Storage
+        uploadImageToFirebase();
 
-          // Set imageUrl to null temporarily (to avoid showing the old image while the new one is uploading)
-          imageUrl = null;
-        });
-      }
-    } catch (e) {
-      print("");
+        // Set imageUrl to null temporarily (to avoid showing the old image while the new one is uploading)
+        imageUrl = null;
+      });
     }
-    ;
   }
 
   String? foodid;
@@ -286,6 +293,16 @@ class _EditFoodsState extends State<EditFoods> {
   Widget build(BuildContext context) {
     //_readData();
     //readData();
+    print('Kuay');
+    print('Image URL: $imageUrl');
+    print('edit_name =');
+    print(edit_name.text);
+    print('edit_level =');
+    print(edit_level.toString());
+    print('edit_type =');
+    print(edit_type.toString());
+    print('edit_nation =');
+    print(edit_nation.toString());
 
     return Scaffold(
       body: ListView(children: <Widget>[
@@ -443,6 +460,7 @@ class _EditFoodsState extends State<EditFoods> {
                 'Food_Image': imageUrl,
               });
               Navigator.of(context).pop();
+              //
             },
             child: const Text('ยืนยันการแก้ไข'))
       ]),
