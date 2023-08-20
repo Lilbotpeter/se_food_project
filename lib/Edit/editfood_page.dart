@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
@@ -26,7 +27,7 @@ class _EditFoodsState extends State<EditFoods> {
   String? edit_level = 'ไม่มี';
   String? edit_type = 'ไม่มี';
   String? imageUrl;
-
+  List<String> imageUrls = [];
   final TextEditingController edit_name = TextEditingController();
   final TextEditingController edit_description = TextEditingController();
   final TextEditingController edit_ingredients = TextEditingController();
@@ -186,7 +187,6 @@ class _EditFoodsState extends State<EditFoods> {
         .get();
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-
     // ทำการเรียกข้อมูลเอกสารจาก Firebase
     DocumentSnapshot sd =
         await firestore.collection('Foods').doc(getfoodID).get();
@@ -195,9 +195,11 @@ class _EditFoodsState extends State<EditFoods> {
     Map<String, dynamic>? data = sd.data() as Map<String, dynamic>?;
     if (sd.exists) {
       // ถ้ามีข้อมูลในเอกสาร คุณสามารถนำข้อมูลมาใช้ได้ตามต้องการ
+      foodid = data!['Food_id'];
       edit_level = data!['Food_Level'];
       edit_nation = data!['Food_Nation'];
       edit_type = data!['Food_Type'];
+      _fetchImages();
       // เช่น ถ้าคุณมีค่าของ key 'name' ในเอกสาร สามารถเข้าถึงได้ดังนี้
       setState(() {
         edit_description.text = data!['Food_Description'];
@@ -210,21 +212,48 @@ class _EditFoodsState extends State<EditFoods> {
         edit_solution.text = data!['Food_Solution'];
         edit_time.text = data!['Food_Time'];
       });
-
-      print('Image URL: $imageUrl');
-      print('edit_name =');
-      print(edit_name.text);
-      print('edit_level =');
-      print(edit_level.toString());
-      print('edit_type =');
-      print(edit_type.toString());
-      print('edit_nation =');
-      print(edit_nation.toString());
     } else {
       // ถ้าไม่มีข้อมูลในเอกสาร
       print('Document not found!');
     }
+
+    print('Hello Than');
   }
+
+  // Future<void> pickImage() async {
+  //   final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+  //       .collection("Foods")
+  //       .doc(getfoodID)
+  //       .get();
+
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  //   // ทำการเรียกข้อมูลเอกสารจาก Firebase
+  //   DocumentSnapshot sd =
+  //       await firestore.collection('Foods').doc(getfoodID).get();
+
+  //   // ตรวจสอบว่ามีข้อมูลหรือไม่
+  //   Map<String, dynamic>? data = sd.data() as Map<String, dynamic>?;
+  //   if (sd.exists) {
+  //     foodid = data!['Food_id'];
+  //   }
+  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //     type: FileType.image,
+  //   );
+
+  //   if (result != null) {
+  //     setState(() {
+  //       pickedFile = result.files.single;
+  //       pickedFile?.path!;
+
+  //       // Upload the image to Firebase Storage
+  //       uploadImageToFirebase();
+
+  //       // Set imageUrl to null temporarily (to avoid showing the old image while the new one is uploading)
+  //       imageUrl = null;
+  //     });
+  //   }
+  // }
 
   Future<void> pickImage() async {
     final DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -243,27 +272,27 @@ class _EditFoodsState extends State<EditFoods> {
     if (sd.exists) {
       foodid = data!['Food_id'];
     }
+
+    // เลือกรูปภาพ
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
 
     if (result != null) {
-      setState(() {
-        pickedFile = result.files.single;
-        pickedFile?.path!;
+      // ไฟล์รูปที่ถูกเลือก
+      PlatformFile pickedImage = result.files.single;
 
-        // Upload the image to Firebase Storage
-        uploadImageToFirebase();
+      // Upload the image to Firebase Storage
+      await uploadImageToFirebase(pickedImage);
 
-        // Set imageUrl to null temporarily (to avoid showing the old image while the new one is uploading)
-        imageUrl = null;
-      });
+      // Set imageUrl to null temporarily (to avoid showing the old image while the new one is uploading)
+      imageUrl = null;
     }
   }
 
   String? foodid;
-  Future<void> uploadImageToFirebase() async {
-    if (pickedFile == null) return;
+  Future<void> uploadImageToFirebase(PlatformFile pickedImage) async {
+    if (pickedImage == null) return;
 
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -275,7 +304,7 @@ class _EditFoodsState extends State<EditFoods> {
           .child(fileName);
 
       firebase_storage.UploadTask uploadTask =
-          ref.putFile(File(pickedFile!.path!));
+          ref.putFile(File(pickedImage.path!));
 
       firebase_storage.TaskSnapshot taskSnapshot =
           await uploadTask.whenComplete(() => null);
@@ -288,22 +317,132 @@ class _EditFoodsState extends State<EditFoods> {
       print('Error uploading image: $e');
     }
   }
+  // Future<void> uploadImageToFirebase(PlatformFile pickedImage) async {
+  //   if (pickedImage == null) return;
+
+  //   try {
+  //     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+  //     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+  //         .ref()
+  //         .child('files')
+  //         .child(foodid!)
+  //         .child('Image')
+  //         .child(fileName);
+
+  //     // Convert PlatformFile to File
+  //     File file = File(pickedImage.path!);
+
+  //     firebase_storage.UploadTask uploadTask = ref.putFile(file);
+
+  //     firebase_storage.TaskSnapshot taskSnapshot =
+  //         await uploadTask.whenComplete(() => null);
+  //     String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+  //     setState(() {
+  //       imageUrl = downloadURL;
+  //     });
+  //   } catch (e) {
+  //     print('Error uploading image: $e');
+  //   }
+  // }
+  // Future<void> _fetchImages() async {
+  //   try {
+  //     FirebaseStorage storage = FirebaseStorage.instance;
+  //     ListResult result = await storage
+  //         .ref()
+  //         .child('files')
+  //         .child(foodid!)
+  //         .child('Image')
+  //         .listAll();
+
+  //     List<String> imageUrls = [];
+  //     for (Reference ref in result.items) {
+  //       String imageURL = await ref.getDownloadURL();
+  //       imageUrls.add(imageURL);
+  //     }
+  //     print("imageUrls : $imageUrls");
+  //   } catch (e) {
+  //     print("Error fetching images: $e");
+  //   }
+  // }
+  Future<void> _fetchImages() async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      ListResult result = await storage
+          .ref()
+          .child('files')
+          .child(foodid!)
+          .child('Image')
+          .listAll();
+
+      List<String> urls = [];
+      for (Reference ref in result.items) {
+        String imageURL = await ref.getDownloadURL();
+        urls.add(imageURL);
+      }
+
+      setState(() {
+        imageUrls = urls;
+      });
+    } catch (e) {
+      print("Error fetching images: $e");
+    }
+  }
+
+  void _showImagePopup(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(imageUrl),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      // เรียกใช้ฟังก์ชัน deleteImage เพื่อลบรูปภาพ
+                      deleteImage(imageUrl);
+                      Navigator.of(context).pop(); // ปิด Dialog
+                    },
+                    icon: Icon(Icons.delete),
+                    color: Colors.red,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // โค้ดที่จะทำเมื่อคลิกปุ่มเพิ่ม
+                    },
+                    icon: Icon(Icons.add),
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteImage(String imageUrl) async {
+    if (imageUrl == null) return;
+
+    try {
+      // Convert image URL to firebase_storage.Reference
+      firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.refFromURL(imageUrl);
+
+      // Delete the image from Firebase Storage
+      await ref.delete();
+    } catch (e) {
+      print('Error deleting image: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    //_readData();
-    //readData();
-    print('Kuay');
-    print('Image URL: $imageUrl');
-    print('edit_name =');
-    print(edit_name.text);
-    print('edit_level =');
-    print(edit_level.toString());
-    print('edit_type =');
-    print(edit_type.toString());
-    print('edit_nation =');
-    print(edit_nation.toString());
-
     return Scaffold(
       body: ListView(children: <Widget>[
         Expanded(
@@ -312,20 +451,59 @@ class _EditFoodsState extends State<EditFoods> {
               SizedBox(
                 height: MediaQuery.of(context).size.width,
                 width: double.infinity,
-                child: AnotherCarousel(
-                  images: [
-                    NetworkImage(imageUrl ?? ''),
-                    //displayImage(),
-                  ],
-                  dotSize: 4,
-                  indicatorBgPadding: 5.0,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: imageUrls.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: GestureDetector(
+                        onTap: () {
+                          _showImagePopup(context, imageUrls[index]);
+                        },
+                        child: Image.network(imageUrls[index]),
+                      ),
+                    );
+                  },
                 ),
               ),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.width,
+              //   width: double.infinity,
+              //   child: ListView.builder(
+              //     scrollDirection: Axis.horizontal,
+              //     itemCount: imageUrls.length,
+              //     itemBuilder: (BuildContext context, int index) {
+              //       return Slidable(
+              //         actionPane: SlidableDrawerActionPane(),
+              //         actionExtentRatio: 0.25,
+              //         child: GestureDetector(
+              //           onTap: () {
+              //             _showImagePopup(context, imageUrls[index]);
+              //           },
+              //           child: Image.network(imageUrls[index]),
+              //         ),
+              //         // secondaryActions: [
+              //         //   IconSlideAction(
+              //         //     caption: 'ลบ',
+              //         //     color: Colors.red,
+              //         //     icon: Icons.delete,
+              //         //     onTap: () {
+              //         //       // เพิ่มโค้ดที่ต้องการให้ลบรูปภาพที่ index นี้
+              //         //       // อาจเรียกฟังก์ชัน deleteImage() หรืออื่น ๆ
+              //         //     },
+              //         //   ),
+              //         // ],
+              //       );
+              //     },
+              //   ),
+              // ),
               ElevatedButton(
                 onPressed: () {
                   pickImage(); // Function to pick a new image
                 },
-                child: Text('เลือกรูปภาพใหม่'),
+                child: Text('เพิ่มรูปภาพ'),
               ),
             ],
           ),
@@ -447,6 +625,7 @@ class _EditFoodsState extends State<EditFoods> {
 
               final docker =
                   FirebaseFirestore.instance.collection('Foods').doc(getfoodID);
+
               docker.update({
                 'Food_Name': _editname,
                 'Food_Description': _editdescription,
@@ -459,6 +638,7 @@ class _EditFoodsState extends State<EditFoods> {
                 'Food_Type': _edittype,
                 'Food_Image': imageUrl,
               });
+
               Navigator.of(context).pop();
               //
             },
