@@ -54,17 +54,23 @@ class _UploadFoodState extends State<UploadFood> {
   List<File> files = []; // List เก็บรูปภาพที่ถูกเลือก
 
   Future<void> selectFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true, // เปลี่ยนเป็น true เพื่อให้เลือกหลายไฟล์
-    );
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true, // เปลี่ยนเป็น true เพื่อให้เลือกหลายไฟล์
+      );
 
-    if (result == null) return;
+      if (result == null) return;
 
-    setState(() {
-      files = result.paths
-          .map((path) => File(path!))
-          .toList(); // แปลงรายการเป็นรายการของ File
-    });
+      setState(() {
+        files = result.paths
+            .map((path) => File(path!))
+            .toList(); // แปลงรายการเป็นรายการของ File
+      });
+    } catch (e) {
+      print('Error selecting files: $e');
+      // ทำการจัดการกับข้อผิดพลาดที่เกิดขึ้น ตามที่คุณต้องการ
+      // เช่น แสดงข้อความแจ้งเตือนหรือบันทึกล็อกข้อผิดพลาดไว้เพื่อตรวจสอบในภายหลัง
+    }
   }
 
   bool _isImageFile(String filename) {
@@ -78,110 +84,6 @@ class _UploadFoodState extends State<UploadFood> {
     food_video = extension(filename).toLowerCase();
     return videoExtensions.contains(food_video);
   }
-
-  // Widget showDialog(context) {
-  //   return AlertDialog(
-  //     title: Text("Upload Complete"),
-  //     content: Text("Files have been uploaded successfully."),
-  //     actions: [
-  //       TextButton(
-  //         child: Text("OK"),
-  //         onPressed: () {
-  //           Navigator.of(context).pop();
-  //           // Navigate to the Feed page
-  //           Navigator.of(context).push(
-  //             MaterialPageRoute(builder: (context) => FeedPage()),
-  //           );
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Future<void> uploadFile() async {
-  //   String? assignImage = '';
-  //   String? ProfileImage = '';
-  //   String? assignVideo = '';
-  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //   final DocumentSnapshot snapshot =
-  //       await FirebaseFirestore.instance.collection("Foods").doc().get();
-  //   food_id = snapshot.id;
-
-  //   // Check if files are not selected
-  //   if (files.isEmpty) return;
-
-  //   // Loop through the selected files and upload them
-  //   for (int i = 0; i < files.length; i++) {
-  //     File file = files[i];
-  //     final filename = basename(file.path);
-  //     // Check the file extension to determine if it's an image or a video
-  //     bool isImage = _isImageFile(filename);
-  //     bool isVideo = _isVideoFile(filename);
-
-  //     if (isImage) {
-  //       final destination = 'files/$food_id/Image/$filename';
-  //       // Process the file as an image
-  //       task = FirebaseApi.uploadFile(
-  //           destination, file); // Assuming you have an 'uploadImage' method
-  //       //setState(() {});
-
-  //       if (task == null) continue;
-
-  //       final snapshot2 = await task!.whenComplete(() {});
-  //       urlDownload = await snapshot2.ref.getDownloadURL();
-  //       assignImage = urlDownload.toString();
-  //       if (i == 0) {
-  //         assignImage = urlDownload.toString();
-  //         ProfileImage = assignImage;
-  //         //break;
-  //       }
-  //     } else if (isVideo) {
-  //       final destination = 'files/$food_id/Video/$filename';
-  //       // Process the file as a video
-  //       task = FirebaseApi.uploadFile(
-  //           destination, file); // Assuming you have an 'uploadVideo' method
-  //       //setState(() {});
-
-  //       if (task == null) continue;
-
-  //       final snapshot2 = await task!.whenComplete(() {});
-  //       food_video = await snapshot2.ref.getDownloadURL();
-  //       assignVideo = food_video.toString();
-  //     } else {
-  //       // Handle other types of files (if necessary)
-  //     }
-  //   }
-
-  //   try {
-  //     Map<String, dynamic> dataMap = Map();
-  //     //setState(() {
-  //     dataMap['Food_id'] = food_id;
-  //     dataMap['Food_Name'] = food_name!.isNotEmpty ? food_name : 'N/A';
-  //     dataMap['Food_Image'] = ProfileImage!.isNotEmpty
-  //         ? ProfileImage
-  //         : 'https://firebasestorage.googleapis.com/v0/b/project-food-c14c5.appspot.com/o/files%2FsEumU49bYOWAdBkmHa8Y%2FImage%2Fpexels-jan-n-g-u-y-e-n-%F0%9F%8D%81-699953.jpg?alt=media&token=76353871-b2c3-4d9b-b484-71814e30328a';
-  //     dataMap['Food_Video'] = assignVideo!.isNotEmpty ? assignVideo : 'N/A';
-  //     dataMap['Food_Level'] = food_level!.isNotEmpty ? food_level : 'ไม่มี';
-  //     dataMap['Food_Ingredients'] =
-  //         food_ingredients!.isNotEmpty ? food_ingredients : 'N/A';
-  //     dataMap['Food_Solution'] =
-  //         food_solution!.isNotEmpty ? food_solution : 'N/A';
-  //     dataMap['Food_Type'] = food_type!.isNotEmpty ? food_type : 'ไม่มี';
-  //     dataMap['Food_Description'] =
-  //         food_description!.isNotEmpty ? food_description : 'N/A';
-  //     dataMap['Food_Time'] = food_time!.isNotEmpty ? food_time : 'N/A';
-  //     dataMap['Food_Nation'] = food_nation!.isNotEmpty ? food_nation : 'ไม่มี';
-  //     dataMap['Food_Point'] = food_point!.isNotEmpty ? food_point : 'N/A';
-  //     dataMap['User_id'] = user?.uid;
-  //     //});
-
-  //     await firestore.collection('Foods').doc().set(dataMap).then((value) {
-  //       //Get.to(FeedPage(), arguments: 'Success');
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   Future<void> uploadFile() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -208,7 +110,7 @@ class _UploadFoodState extends State<UploadFood> {
         'Food_Point': food_point!.isNotEmpty ? food_point : 'N/A',
         'User_id': user?.uid,
       };
-      String? profileImage;
+      //String? profileImage;
       // Loop through the selected files and upload them
       for (int i = 0; i < files.length; i++) {
         File file = files[i];
@@ -227,13 +129,13 @@ class _UploadFoodState extends State<UploadFood> {
           final snapshot2 = await task!.whenComplete(() {});
           final downloadURL = await snapshot2.ref.getDownloadURL();
 
-          if (i == 0) {
-            profileImage = downloadURL;
-          }
+          // if (i == 0) {
+          //   profileImage = downloadURL;
+          // }
 
           if (isImage) {
-            dataMap['Food_Image'] = profileImage;
-            profileImage = null;
+            dataMap['Food_Image'] = downloadURL;
+            //profileImage = null;
           } else {
             dataMap['Food_Video'] = downloadURL;
           }
@@ -251,29 +153,6 @@ class _UploadFoodState extends State<UploadFood> {
       print("Error: $e");
     }
   }
-
-  //Upload Status %
-  // Widget buildUploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
-  //       stream: task.snapshotEvents,
-  //       builder: (context, snapshot) {
-  //         if (snapshot.hasData) {
-  //           final snap = snapshot.data!; //snapshot data
-  //           final progress = snap.bytesTransferred /
-  //               snap.totalBytes; //% progress raw percent
-  //           final percen =
-  //               (progress * 100).toStringAsFixed(2); //Percent 100% 0.00
-  //           return Text(
-  //             '$percen %',
-  //             style: TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //                 color: Colors.black),
-  //           );
-  //         } else {
-  //           return Container();
-  //         }
-  //       },
-  //     );
 
   Widget name(context) {
     return TextField(
