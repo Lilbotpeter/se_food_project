@@ -14,6 +14,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:se_project_food/constants.dart';
 
 import '../../Models/foodmodels.dart';
+import '../../follow.dart';
 import '../../global.dart';
 
 class DetailFood extends StatefulWidget {
@@ -26,8 +27,11 @@ class DetailFood extends StatefulWidget {
 class _DetailFoodState extends State<DetailFood> {
   //Food
   List<FoodModel> foodModels = [];
+  final followerService = FollowerService();
   List<String> imageUrls=[];
   List<String> videoUrls=[];
+
+  late String getIDbook;
 
   String? name_food = '';
   String? description_food = '';
@@ -141,7 +145,14 @@ Future<void> _getImagesFromStorage(String? id) async {
     _getDataFromDatabase();
     _getUserDataFromDatabase(user_id);
     _getImagesFromStorage(id_food);
+    followerService.getBookmarkID(userid, getfoodID).then((bookmarkID) {
+      setState(() {
+        getIDbook = bookmarkID;
+      });
+    });
+      
   }
+
   @override
   Widget build(BuildContext context) {
     //Follower
@@ -308,9 +319,9 @@ Future<void> _getImagesFromStorage(String? id) async {
                           
                           //Slide
                           child: Column(
-                            children: [
+                            children: <Widget>[
                               SizedBox(
-                                height: 350,
+                                height: 300,
                                 width: double.infinity,
                                 child: AnotherCarousel(images: [
                                   NetworkImage(image_food ?? ''),
@@ -326,11 +337,22 @@ Future<void> _getImagesFromStorage(String? id) async {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 40),
                         child: Row(
-                          children: <Widget>[
+                          children: [
 //Bookmark Button
-                            CustomIconButton(icon: Icon(Icons.bookmark_outline_sharp), press: (){
-                              
-                            }),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(35)
+                              ),
+                              child: IconButton(
+                                onPressed: ()async{
+                                    setState(() {
+                                      isBookmarked = !isBookmarked;
+                                  });
+                                isBookmarked ? await followerService.addBookmark(userid, getfoodID) : await followerService.unBookmark(userid, getfoodID);
+                              },
+                                icon: Icon(isBookmarked ? Icons.bookmark : Icons.bookmark_outline,color: isBookmarked ? Colors.amber : Colors.white,size: 35,),),
+                            ),
                             
                           ],
                         ),

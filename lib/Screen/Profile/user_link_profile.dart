@@ -12,6 +12,7 @@ import '../../Models/foodmodels.dart';
 import '../../Widgets/appbar_custom.dart';
 import '../../Widgets/profile_picture.dart';
 import '../../constants.dart';
+import '../../follow.dart';
 
 //Authen Current User
 final User? user = AuthenticationController().currentUser;
@@ -34,7 +35,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 
   List<FoodModel> foodModels = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
-  final String getUserID = Get.arguments as String; //รับ Food ID
+  final String getUserID = Get.arguments as String; 
+  final followerService = FollowerService();
 
  Future<void> _getUserFromDatabase() async {
   final DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -213,7 +215,9 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(onPressed: (){Get.snackbar("Check", "currect $getUserID");},
+                    ElevatedButton(onPressed: ()async{
+                      await followerService.addFollower(userid, getUserID);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,
                       shape: RoundedRectangleBorder(

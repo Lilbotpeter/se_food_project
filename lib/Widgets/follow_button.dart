@@ -22,8 +22,8 @@ class FollowButton extends StatelessWidget {
         if (!isFollowing) {
           if (!currentUserFollows.contains(userid)) {
             currentUserFollows.add(userid);
-            await FirebaseFirestore.instance.collection('follows').doc(currentUserId).set({
-              'follows': currentUserFollows,
+            await FirebaseFirestore.instance.collection('followers').doc(currentUserId).set({
+              'followers': currentUserFollows,
             });
           }
         }
@@ -31,8 +31,8 @@ class FollowButton extends StatelessWidget {
         else {
           if (currentUserFollows.contains(userid)) {
             currentUserFollows.remove(userid);
-            await FirebaseFirestore.instance.collection('follows').doc(currentUserId).set({
-              'follows': currentUserFollows,
+            await FirebaseFirestore.instance.collection('followers').doc(currentUserId).set({
+              'followers': currentUserFollows,
             });
           }
         }
