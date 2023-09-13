@@ -96,7 +96,7 @@ Future<String> getBookmarkID (String userid,String foodid) async{
   if (querySnapshot.docs.isNotEmpty) {
     return querySnapshot.docs.first.id;
   } else {
-    return ''; // หรือค่าเริ่มต้นที่เหมาะสมตามที่คุณต้องการ
+    return '';
   }
 }
  
