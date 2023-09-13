@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
+import 'package:se_project_food/Screen/Detail/detail_service.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
 import 'package:se_project_food/Screen/Search/search_food.dart';
@@ -45,8 +46,8 @@ class _FeedPageState extends State<FeedPage> {
   String? uimage = '';
   String? uemail = '';
   String? uphone = '';
-  
-  
+
+   
 
    final userid = FirebaseAuth.instance.currentUser!.uid;
    
