@@ -21,6 +21,7 @@ import 'package:se_project_food/constants.dart';
 
 import '../../Authen/authen_part.dart';
 import '../../Models/foodmodels.dart';
+import '../../calculator.dart';
 import '../../follow.dart';
 import '../../global.dart';
 import 'detail_service.dart';
@@ -1160,12 +1161,24 @@ class _DetailFoodState extends State<DetailFood> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              setState(() {
+                              setState(() async {
                                 // _fetchImagesModify();
                                 _fetch();
+                                CalculatorService calculatorService =
+                                    CalculatorService();
+                                //String foodID = 'your_food_id_here';
+
+                                try {
+                                  await calculatorService.calRating(
+                                      5, id_food!);
+                                  // ทำสิ่งที่คุณต้องการกับผลลัพธ์หลังจากการคำนวณคะแนน
+                                } catch (e) {
+                                  // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
+                                  print('เกิดข้อผิดพลาด: $e');
+                                }
                               });
                             },
-                            child: Text('รีเฟรช'),
+                            child: Text('รีเฟรช2'),
                           ),
                         ],
                       ),
