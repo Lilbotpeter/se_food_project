@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:se_project_food/Admin/AdminPage.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Login.dart';
 
