@@ -5,38 +5,33 @@ import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Login.dart';
 
-void main() async{
-   WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-   await Firebase.initializeApp().then((value)
-   {
-     Get.put(AuthenticationController());    
-   });
-
+  await Firebase.initializeApp().then((value) {
+    Get.put(AuthenticationController());
+  });
 
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Test',
       theme: ThemeData(
-       
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      
       home: LoginScreen(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-
   const MyHomePage({super.key, required this.title});
 
   final String title;
@@ -46,15 +41,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-    @override
+  @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      
-    );
+    return const Scaffold();
   }
-} 
+}
