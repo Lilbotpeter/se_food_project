@@ -129,13 +129,17 @@ class AuthenticationController extends GetxController {
   }
 
   //Each Screen
-  goToScreen(User? currentUser) {
+  goToScreen(User? currentUser) async {
     //when user isn't already logged-in
     print('currentUser = ');
     print(currentUser);
     if (currentUser == null) {
-      Get.offAll(RegisterScreen());
+      Get.offAll(LoginScreen());
     } else if (currentUser!.email == 'admin@admin.com') {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: 'admin@admin.com',
+        password: '123456',
+      );
       Get.offAll(AdminPage());
     }
     //when user is already logged-in
