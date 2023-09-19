@@ -179,21 +179,7 @@ class _EditUserState extends State<EditUser> {
           // SizedBox(
           //   height: 10.0,
           // ),
-          Text('อีเมล'),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextField(
-            controller: emial,
-            decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              labelText: 'กรอกข้อมูล',
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
+
           Text('เบอร์โทร'),
           SizedBox(
             height: 10.0,
