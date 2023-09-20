@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:se_project_food/Admin/rep_user.dart';
 
 import '../Authen/authen_part.dart';
 
@@ -99,11 +100,12 @@ class _AdminPageState extends State<AdminPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 
                 children: [
-                  inkWellAd(title: 'User Report',icon:Icon(Icons.person),onFun: (){
-
+                  inkWellAd(title: 'User Report',icon:Icon(Icons.person,color: Colors.white,),onFun: (){
+                      print('Tap User');
+                      Get.to(UserReport());
                   },),
-                  inkWellAd(title: 'Foods Report',icon:Icon(Icons.food_bank),onFun: (){
-                    
+                  inkWellAd(title: 'Foods Report',icon:Icon(Icons.food_bank,color: Colors.white,),onFun: (){
+                      print('Tap Food');
                   },)
                 ],
               ),
@@ -141,7 +143,7 @@ class inkWellAd extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        print('Tapped');
+        onFun();
       },
       child: Container(
         width: 150,
