@@ -163,4 +163,93 @@ class AuthenticationController extends GetxController {
   void signOut() async {
     await _firebaseAuth.signOut();
   }
+
+  Future<void> changePassword(String newPassword) async {
+    try {
+      // รับผู้ใช้ปัจจุบัน
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        // ผู้ใช้ไม่ได้เข้าสู่ระบบ ให้ทำการเข้าสู่ระบบก่อนเปลี่ยนรหัสผ่าน
+        print('กรุณาเข้าสู่ระบบก่อนที่จะเปลี่ยนรหัสผ่าน');
+        return;
+      }
+
+      // เปลี่ยนรหัสผ่าน
+      await user.updatePassword(newPassword);
+
+      print('รหัสผ่านถูกเปลี่ยนแล้ว');
+    } catch (e) {
+      print('เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน: $e');
+    }
+  }
+
+  void UpdatepassWORD(
+      String Email, String Password, String ConfirmPassword) async {
+    try {
+      String email = Email; // รับอีเมลของผู้ใช้
+      String password = Password; // รับรหัสผ่านปัจจุบัน
+
+      // เข้าสู่ระบบด้วยอีเมลและรหัสผ่านปัจจุบัน
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // หลังจากเข้าสู่ระบบแล้ว ค่อยทำการเปลี่ยนรหัสผ่าน
+      await changePassword(ConfirmPassword);
+
+      print('เปลี่ยนรหัสผ่านสำเร็จ');
+    } catch (e) {
+      print('เกิดข้อผิดพลาด: $e');
+    }
+  }
+
+  // void updateEmail(String? newEmail) async {
+  //   try {
+  //     // Get the current user
+  //     User? user = FirebaseAuth.instance.currentUser;
+  //     print('user!.email = ');
+  //     print(user!.email);
+  //     if (user!.email == null) {
+  //       print('User is not signed in');
+
+  //       return;
+  //     }
+
+  //     // Update the email
+  //      user!.email = newEmail!;
+  //     //await user.updateEmail(newEmail);
+
+  //     print('Email updated successfully');
+  //   } catch (e) {
+  //     print('Error updating email: $e');
+  //   }
+  // }
+
+  Future<void> updateEmail(String newEmail, String password) async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        print('User is not signed in');
+        return;
+      }
+
+      // Re-authenticate the user by signing in again
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      // Update the email
+      await user.updateEmail(newEmail);
+
+      print('Email updated successfully');
+    } catch (e) {
+      print('Error updating email: $e');
+    }
+  }
 }
