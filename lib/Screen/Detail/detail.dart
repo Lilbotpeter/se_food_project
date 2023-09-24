@@ -21,14 +21,12 @@ import 'package:se_project_food/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:se_project_food/service.dart';
 
-
 import '../../Authen/authen_part.dart';
 import '../../Models/foodmodels.dart';
 import '../../calculator.dart';
 import '../../follow.dart';
 import '../../global.dart';
 import 'detail_service.dart';
-
 
 class DetailFood extends StatefulWidget {
   const DetailFood({super.key});
@@ -285,11 +283,12 @@ class _DetailFoodState extends State<DetailFood> {
   Future<void> _getUserDataFromDatabase(String? id) async {
     if (id != null) {
       try {
-        List<dynamic> reviewList =
-          await DetailService().fetchReviewData('Review', '6kWGTLvH3DCd0lT4Rj6c', 'ReviewID');
-        
+        List<dynamic> reviewList = await DetailService()
+            .fetchReviewData('Review', '6kWGTLvH3DCd0lT4Rj6c', 'ReviewID');
+
         setState(() {
-          dataUser = reviewList; // กำหนดค่า dataUser เป็น List<dynamic> ที่ได้จากการเรียกใช้ fetchReviewData
+          dataUser =
+              reviewList; // กำหนดค่า dataUser เป็น List<dynamic> ที่ได้จากการเรียกใช้ fetchReviewData
         });
         final snapshot =
             await FirebaseFirestore.instance.collection("users").doc(id).get();
@@ -597,6 +596,16 @@ class _DetailFoodState extends State<DetailFood> {
                                         commentReview = Review.text;
                                         print('Success');
                                         uploadFileReview();
+                                        CalculatorService calculatorService =
+                                            CalculatorService();
+
+                                        try {
+                                          await calculatorService.calRating();
+                                          // ทำสิ่งที่คุณต้องการกับผลลัพธ์หลังจากการคำนวณคะแนน
+                                        } catch (e) {
+                                          // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
+                                          print('เกิดข้อผิดพลาด: $e');
+                                        }
                                       },
                                       child: const Text('ส่ง')),
                                   // บริเวณอื่น ๆ ของป๊อปอัพเมนู
@@ -967,8 +976,7 @@ class _DetailFoodState extends State<DetailFood> {
                   ],
                 ),
 
-
-/////////////////////////ALL TAB///////////////////////////////////////// 
+/////////////////////////ALL TAB/////////////////////////////////////////
 //Home Work Tab
                 FutureBuilder<void>(
                   //ทำให้รีหน้าอัตโนมัติ
@@ -979,44 +987,44 @@ class _DetailFoodState extends State<DetailFood> {
                     return Container(
                       color: Colors.yellowAccent,
                       child: Column(
-                        
                         children: [
                           Expanded(
-
                             child: ListView.builder(
                               itemCount: AllImageAllImageModify.length,
                               itemBuilder: (BuildContext context, int index) {
                                 Map<String, dynamic> modifyData =
                                     modifyList[index];
-                                    Timestamp timestamp = modifyData['Time'] as Timestamp;
-                                    DateTime dateTime = timestamp.toDate();
-                                    String thaiDateTime = DateFormat.yMMMMd('th_TH').add_Hms().format(dateTime);
+                                Timestamp timestamp =
+                                    modifyData['Time'] as Timestamp;
+                                DateTime dateTime = timestamp.toDate();
+                                String thaiDateTime = DateFormat.yMMMMd('th_TH')
+                                    .add_Hms()
+                                    .format(dateTime);
                                 return Container(
-                                  decoration: BoxDecoration(color:Colors.white,
-                                  border: Border.all(width: 5)
-                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(width: 5)),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        children: [
-                                          
-                                        ],
+                                        children: [],
                                       ),
                                       SizedBox(
                                         height: 100,
                                         child: ListView(
                                           scrollDirection: Axis.horizontal,
-                                          children: AllImageAllImageModify[index]
-                                              .map((imageURLs) {
+                                          children:
+                                              AllImageAllImageModify[index]
+                                                  .map((imageURLs) {
                                             return Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                  
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Image.network(
                                                 imageURLs,
                                                 width: 100,
                                                 fit: BoxFit.cover,
-                                                
                                               ),
                                             );
                                           }).toList(),
@@ -1024,10 +1032,22 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                       // Text('ID_Food : ${modifyData['ID_Food']}'),
                                       // Text('ID_Mod : ${modifyData['ID_Mod']}'),
-                                      Text('User : ${modifyData['Uid']}',style: TextStyle(fontSize: 20),maxLines: 5),
-                                      Text('คอมเม้นต์ : ${modifyData['Comment']}',style: TextStyle(fontSize: 20),maxLines: 5),
-                                      Text('โพสต์เมื่อ : $thaiDateTime',style: TextStyle(color: Colors.black.withOpacity(0.5)),),
-                                      SizedBox(height: 10,)
+                                      Text('User : ${modifyData['Uid']}',
+                                          style: TextStyle(fontSize: 20),
+                                          maxLines: 5),
+                                      Text(
+                                          'คอมเม้นต์ : ${modifyData['Comment']}',
+                                          style: TextStyle(fontSize: 20),
+                                          maxLines: 5),
+                                      Text(
+                                        'โพสต์เมื่อ : $thaiDateTime',
+                                        style: TextStyle(
+                                            color:
+                                                Colors.black.withOpacity(0.5)),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      )
                                     ],
                                   ),
                                 );
@@ -1039,18 +1059,18 @@ class _DetailFoodState extends State<DetailFood> {
                               setState(() async {
                                 // _fetchImagesModify();
                                 _fetch();
-                                CalculatorService calculatorService =
-                                    CalculatorService();
-                                //String foodID = 'your_food_id_here';
+                                // CalculatorService calculatorService =
+                                //     CalculatorService();
+                                // //String foodID = 'your_food_id_here';
 
-                                try {
-                                  await calculatorService.calRating(
-                                      5, id_food!);
-                             
-                                } catch (e) {
-                                  // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
-                                  print('เกิดข้อผิดพลาด: $e');
-                                }
+                                // try {
+                                //   await calculatorService.calRating(
+                                //       5, id_food!);
+
+                                // } catch (e) {
+                                //   // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
+                                //   print('เกิดข้อผิดพลาด: $e');
+                                // }
                               });
                             },
                             child: Text('รีเฟรช2'),
