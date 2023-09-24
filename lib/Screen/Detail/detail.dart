@@ -18,6 +18,9 @@ import 'package:se_project_food/Widgets/custom_icon.dart';
 import 'package:se_project_food/Widgets/profile_picture.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:se_project_food/constants.dart';
+import 'package:intl/intl.dart';
+import 'package:se_project_food/service.dart';
+
 
 import '../../Authen/authen_part.dart';
 import '../../Models/foodmodels.dart';
@@ -25,6 +28,7 @@ import '../../calculator.dart';
 import '../../follow.dart';
 import '../../global.dart';
 import 'detail_service.dart';
+
 
 class DetailFood extends StatefulWidget {
   const DetailFood({super.key});
@@ -80,6 +84,7 @@ class _DetailFoodState extends State<DetailFood> {
   String? urlDownload, food_video, commentModifyfood = '', commentReview = '';
   List<List<String>> imageUrlsList = [];
   List<List<String>> imageUrlsListMofify = [];
+  List<dynamic>? dataUser;
 
   //get index => null; // รายการของรายการรูปภาพในแต่ละรีวิว
 
@@ -280,6 +285,12 @@ class _DetailFoodState extends State<DetailFood> {
   Future<void> _getUserDataFromDatabase(String? id) async {
     if (id != null) {
       try {
+        List<dynamic> reviewList =
+          await DetailService().fetchReviewData('Review', '6kWGTLvH3DCd0lT4Rj6c', 'ReviewID');
+        
+        setState(() {
+          dataUser = reviewList; // กำหนดค่า dataUser เป็น List<dynamic> ที่ได้จากการเรียกใช้ fetchReviewData
+        });
         final snapshot =
             await FirebaseFirestore.instance.collection("users").doc(id).get();
 
@@ -329,86 +340,6 @@ class _DetailFoodState extends State<DetailFood> {
     }
   }
 
-  // List<Map<String, dynamic>> reviewDataList = [];
-  // List<Map<String, dynamic>> modifyDataList = [];
-
-  // Future<void> _fetchImages() async {
-  //   try {
-  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //     FirebaseStorage storage = FirebaseStorage.instance;
-  //     imageUrlsList = [];
-
-  //     QuerySnapshot querySnapshot = await firestore
-  //         .collection("Review")
-  //         .doc(id_food!)
-  //         .collection("ReviewID")
-  //         .get();
-
-  //     for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
-  //       String reviewId = docSnapshot.id;
-
-  //       ListResult result = await storage
-  //           .ref()
-  //           .child('Review')
-  //           .child(reviewId)
-  //           .child('Image')
-  //           .listAll();
-
-  //       List<String> urls = [];
-
-  //       for (Reference ref in result.items) {
-  //         String imageURL = await ref.getDownloadURL();
-  //         urls.add(imageURL);
-  //       }
-  //       String idxReview = reviewId;
-  //       DocumentSnapshot reviewFirestoreDoc = await firestore
-  //           .collection("Review")
-  //           .doc(id_food!)
-  //           .collection("ReviewID")
-  //           .doc(idxReview)
-  //           .get();
-
-  //       if (reviewFirestoreDoc.exists) {
-  //         Map<String, dynamic> reviewData =
-  //             reviewFirestoreDoc.data() as Map<String, dynamic>;
-
-  //         reviewDataList.add({
-  //           'ID_Food': reviewData['ID_Food'],
-  //           'ID_Mod': reviewData['ID_Mod'],
-  //           'Comment': reviewData['Comment'],
-  //           'Rating': reviewData['Rating'],
-  //           'Time': reviewData['Time'],
-  //           'Video': reviewData['Video'],
-  //         });
-  //         // ส่วนของการเพิ่ม URLs ลงใน imageUrlsList
-  //         imageUrlsList.add(urls);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching images: $e");
-  //   }
-  // }
-// List<List<String>> AllImageAllImageModify = [];
-//   List<List<String>> AllImageAllImageReview = [];
-
-  // Future<void> _fetch() async {
-  //   List<List<String>> imageUrlsReview =
-  //       await DetailService().fetchImagesReview('Review', id_food!, 'ReviewID');
-  //   AllImageAllImageReview = imageUrlsReview;
-
-  //   List<List<String>> imageUrlsModify =
-  //       await DetailService().fetchImagesModify('ModFood', id_food!, 'FoodID');
-  //   AllImageAllImageModify = imageUrlsModify;
-
-  //   List<dynamic> MofifyList =
-  //       await DetailService().fetchReviewData('ModFood', id_food!, 'FoodID');
-  //   modifyList = MofifyList;
-
-  //   List<dynamic> ReviewList =
-  //       await DetailService().fetchReviewData('Review', id_food!, 'ReviewID');
-  //   reviewList = ReviewList;
-  // }
-
   Future<void> _fetch() async {
     try {
       List<List<String>> imageUrlsReview = await DetailService()
@@ -446,74 +377,6 @@ class _DetailFoodState extends State<DetailFood> {
       print('Error in fetchReviewData (Review): $e');
     }
   }
-
-  // print('Review');
-  // print(ReviewList);
-  // print('Modify');
-  // print(MofifyList);
-  // print('AllImageAllImageModify');
-  // print(AllImageAllImageModify);
-  // print('AllImageAllImageReview');
-  // print(AllImageAllImageReview);
-
-  // Future<void> _fetchImagesModify() async {
-  //   try {
-  //     String isSupport = id_food!;
-  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //     FirebaseStorage storage = FirebaseStorage.instance;
-  //     imageUrlsListMofify = [];
-
-  //     QuerySnapshot querySnapshot = await firestore
-  //         .collection("ModFood")
-  //         .doc(isSupport)
-  //         .collection("FoodID")
-  //         .get();
-
-  //     for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
-  //       String modId = docSnapshot.id;
-
-  //       ListResult result = await storage
-  //           .ref()
-  //           .child('modify')
-  //           .child(modId)
-  //           .child('Image')
-  //           .listAll();
-
-  //       List<String> urls = [];
-
-  //       for (Reference ref in result.items) {
-  //         String imageURLs = await ref.getDownloadURL();
-  //         urls.add(imageURLs);
-  //       }
-  //       String idxModify = modId;
-  //       DocumentSnapshot modifyFirestoreDoc = await firestore
-  //           .collection("ModFood")
-  //           .doc(id_food!)
-  //           .collection("FoodID")
-  //           .doc(idxModify)
-  //           .get();
-
-  //       if (modifyFirestoreDoc.exists) {
-  //         Map<String, dynamic> modifyData =
-  //             modifyFirestoreDoc.data() as Map<String, dynamic>;
-
-  //         modifyDataList.add({
-  //           'ID_Food': modifyData['ID_Food'],
-  //           'ID_Mod': modifyData['ID_Mod'],
-  //           'Comment': modifyData['Comment'],
-  //           'Time': modifyData['Time'],
-  //           'Video': modifyData['Video'],
-  //         });
-  //         // ส่วนของการเพิ่ม URLs ลงใน imageUrlsList
-  //         imageUrlsListMofify.add(urls);
-  //         print('imageUrlsListMofify');
-  //         print(imageUrlsListMofify);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching images: $e");
-  //   }
-  // }
 
   @override
   void initState() {
@@ -824,7 +687,7 @@ class _DetailFoodState extends State<DetailFood> {
                               // ),
                             ),
 
-                            //Slide
+//Slide
                             child: Column(
                               children: <Widget>[
                                 SizedBox(
@@ -884,7 +747,7 @@ class _DetailFoodState extends State<DetailFood> {
                         physics: AlwaysScrollableScrollPhysics(),
                         child: Stack(
                           children: <Widget>[
-                            //Name Card
+//Name Card
                             cardDetail(
                               title: name_food,
                               subtitle: type_food,
@@ -900,7 +763,7 @@ class _DetailFoodState extends State<DetailFood> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                //Profile User
+//Profile User
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -918,7 +781,7 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                     ),
                                     Padding(
-                                      ////////////Card Profile
+////////////Card Profile
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 0, vertical: 5),
                                       child: Column(
@@ -986,7 +849,7 @@ class _DetailFoodState extends State<DetailFood> {
                                 ),
                               ),
                             ),
-                            //Time Card
+//Time Card
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
@@ -1019,7 +882,7 @@ class _DetailFoodState extends State<DetailFood> {
                                 ),
                               ),
                             ),
-                            //Detail
+//Detail
                             Flexible(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -1057,7 +920,7 @@ class _DetailFoodState extends State<DetailFood> {
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                //Description
+//Description
                                                 ExpansionTile(
                                                   title: const Text(
                                                     'วิธีการทำ',
@@ -1104,57 +967,69 @@ class _DetailFoodState extends State<DetailFood> {
                   ],
                 ),
 
+
+/////////////////////////ALL TAB///////////////////////////////////////// 
 //Home Work Tab
                 FutureBuilder<void>(
                   //ทำให้รีหน้าอัตโนมัติ
                   // ใส่รหัส FutureBuilder ที่ต้องการใช้งานในนี้
-                  future: _fetch(), // แทนคำสั่งดึงข้อมูลของคุณที่ต้องการแสดง
+                  future: _fetch(), // คำสั่งดึงข้อมูลที่แสดง
                   builder:
                       (BuildContext context, AsyncSnapshot<void> snapshot) {
                     return Container(
                       color: Colors.yellowAccent,
                       child: Column(
+                        
                         children: [
                           Expanded(
+
                             child: ListView.builder(
                               itemCount: AllImageAllImageModify.length,
                               itemBuilder: (BuildContext context, int index) {
                                 Map<String, dynamic> modifyData =
                                     modifyList[index];
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'ปรับสูตรที่ ${index + 1}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                    Timestamp timestamp = modifyData['Time'] as Timestamp;
+                                    DateTime dateTime = timestamp.toDate();
+                                    String thaiDateTime = DateFormat.yMMMMd('th_TH').add_Hms().format(dateTime);
+                                return Container(
+                                  decoration: BoxDecoration(color:Colors.white,
+                                  border: Border.all(width: 5)
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          
+                                        ],
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 100,
-                                      child: ListView(
-                                        scrollDirection: Axis.horizontal,
-                                        children: AllImageAllImageModify[index]
-                                            .map((imageURLs) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.network(
-                                              imageURLs,
-                                              width: 100,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          );
-                                        }).toList(),
+                                      SizedBox(
+                                        height: 100,
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: AllImageAllImageModify[index]
+                                              .map((imageURLs) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                  
+                                              child: Image.network(
+                                                imageURLs,
+                                                width: 100,
+                                                fit: BoxFit.cover,
+                                                
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
-                                    ),
-                                    Text('ID_Food : ${modifyData['ID_Food']}'),
-                                    Text('ID_Mod : ${modifyData['ID_Mod']}'),
-                                    Text('Comment : ${modifyData['Comment']}'),
-                                    Text('Time : ${modifyData['Time']}'),
-                                    Text('Video : ${modifyData['Video']}'),
-                                  ],
+                                      // Text('ID_Food : ${modifyData['ID_Food']}'),
+                                      // Text('ID_Mod : ${modifyData['ID_Mod']}'),
+                                      Text('User : ${modifyData['Uid']}',style: TextStyle(fontSize: 20),maxLines: 5),
+                                      Text('คอมเม้นต์ : ${modifyData['Comment']}',style: TextStyle(fontSize: 20),maxLines: 5),
+                                      Text('โพสต์เมื่อ : $thaiDateTime',style: TextStyle(color: Colors.black.withOpacity(0.5)),),
+                                      SizedBox(height: 10,)
+                                    ],
+                                  ),
                                 );
                               },
                             ),
@@ -1171,7 +1046,7 @@ class _DetailFoodState extends State<DetailFood> {
                                 try {
                                   await calculatorService.calRating(
                                       5, id_food!);
-                                  // ทำสิ่งที่คุณต้องการกับผลลัพธ์หลังจากการคำนวณคะแนน
+                             
                                 } catch (e) {
                                   // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
                                   print('เกิดข้อผิดพลาด: $e');
@@ -1261,65 +1136,6 @@ class _DetailFoodState extends State<DetailFood> {
                     );
                   },
                 ),
-                // Container(
-                //   color: Colors.yellowAccent,
-                //   child: Column(
-                //     children: [
-                //       Expanded(
-                //         child: ListView.builder(
-                //           itemCount: AllImageAllImageReview.length,
-                //           itemBuilder: (BuildContext context, int index) {
-                //             Map<String, dynamic> reviewData = reviewList[index];
-                //             return Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Padding(
-                //                   padding: const EdgeInsets.all(8.0),
-                //                   child: Text(
-                //                     'รีวิวที่ ${index + 1}', // แสดงไอดีของรีวิว
-                //                     style:
-                //                         TextStyle(fontWeight: FontWeight.bold),
-                //                   ),
-                //                 ),
-                //                 SizedBox(
-                //                   height: 100, // กำหนดความสูงของรูปภาพ
-                //                   child: ListView(
-                //                     scrollDirection: Axis.horizontal,
-                //                     children: AllImageAllImageReview[index]
-                //                         .map((imageUrl) {
-                //                       return Padding(
-                //                         padding: const EdgeInsets.all(8.0),
-                //                         child: Image.network(
-                //                           imageUrl,
-                //                           width: 100, // กำหนดความกว้างของรูปภาพ
-                //                           fit: BoxFit
-                //                               .cover, // ปรับขนาดรูปให้พอดีกับช่องที่กำหนด
-                //                         ),
-                //                       );
-                //                     }).toList(),
-                //                   ),
-                //                 ),
-                //                 Text('ID_Food : ${reviewData['ID_Food']}'),
-                //                 Text('ID_Mod : ${reviewData['ID_Mod']}'),
-                //                 Text('Comment : ${reviewData['Comment']}'),
-                //                 Text('Rating : ${reviewData['Rating']}'),
-                //                 Text('Time : ${reviewData['Time']}'),
-                //               ],
-                //             );
-                //           },
-                //         ),
-                //       ),
-                //       ElevatedButton(
-                //         onPressed: () {
-                //           setState(() {
-                //             _fetch();
-                //           });
-                //         },
-                //         child: Text('รีเฟรช'),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),

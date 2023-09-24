@@ -49,6 +49,7 @@ class DetailService {
             'Rating': reviewData['Rating'],
             'Time': reviewData['Time'],
             'Video': reviewData['Video'],
+            'Uid' : reviewData['Uid'],
           });
         }
       }
@@ -63,7 +64,7 @@ class DetailService {
       String mainCollection, String docID, String subCollection) async {
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      List<dynamic> reviewDataList = [];
+      List<dynamic> modDataList = [];
 
       QuerySnapshot querySnapshot = await firestore
           .collection(mainCollection)
@@ -84,19 +85,20 @@ class DetailService {
             .get();
 
         if (docFirestoreDoc.exists) {
-          Map<String, dynamic> reviewData =
+          Map<String, dynamic> modData =
               docFirestoreDoc.data() as Map<String, dynamic>;
 
-          reviewDataList.add({
-            'ID_Food': reviewData['ID_Food'],
-            'ID_Mod': reviewData['ID_Mod'],
-            'Comment': reviewData['Comment'],
-            'Time': reviewData['Time'],
-            'Video': reviewData['Video'],
+          modDataList.add({
+            'ID_Food': modData['ID_Food'],
+            'ID_Mod': modData['ID_Mod'],
+            'Comment': modData['Comment'],
+            'Time': modData['Time'],
+            'Video': modData['Video'],
+            'Uid' : modData['Uid'],
           });
         }
       }
-      return reviewDataList;
+      return modDataList;
     } catch (e) {
       print("Error fetching images: $e");
       throw e;

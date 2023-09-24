@@ -5,8 +5,12 @@ import 'package:get/get.dart';
 import 'package:se_project_food/Admin/AdminPage.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Login.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 void main() async {
+  await initializeDateFormatting('th_TH', null);
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp().then((value) {
