@@ -171,7 +171,12 @@ class UserLinkProfileState extends State<UserLinkProfile> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                  
+                  Text('',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),
+                  
+                  
+                  ),
+                  
 
                 ],
               ),
@@ -194,6 +199,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                 const SizedBox(height: 20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  
                   children: [
                     Text(
                       name ?? '', //Show Name เด้อจ้า
@@ -235,6 +241,13 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                       ),
                     ),
                      ),
+
+                     //Report Button
+                    IconButton(onPressed: (){
+                      //ใส่ ฟังชันรีพอร์ตตรงนี้นะจ้ะ
+                    }, icon: Icon(Icons.report_problem,color: Colors.red,))
+                    
+                    
                     
                   ],
                 ),
