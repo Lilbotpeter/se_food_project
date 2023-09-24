@@ -73,38 +73,55 @@ class CalculatorService {
       }
 // เก็บคะแนนเฉลี่ยที่ถูกปรับเศษในตัวแปร formattedRatingAverage หรือทำสิ่งที่คุณต้องการในอนาคต
       try {
-        // สร้าง DocumentReference สำหรับเก็บข้อมูลใน Firebase Firestore
-        DocumentReference docRef = FirebaseFirestore.instance
-            .collection("RatingMenu")
-            .doc(foodDocId)
-            .collection("ReviewPoint")
-            .doc();
+        DocumentReference docRef =
+            FirebaseFirestore.instance.collection("RatingMenu").doc(foodDocId);
 
-        DocumentSnapshot docSnapshot = await docRef.get();
-        if (docSnapshot.exists) {
-          // ข้อมูลมีอยู่แล้ว ไม่ต้องเพิ่มซ้ำ
-          print("Data already exists for Food: $foodDocId");
-        } else {
-          String ID = foodDocId.toString();
-          String Rating = formattedRatingAverage.toString();
-// สร้าง dataMap ด้วยข้อมูลที่คุณต้องการเก็บ
-          Map<String, dynamic> dataMap = {
-            'Rating_Average': Rating,
-          };
-          try {
-            // เขียนข้อมูลลง Firebase Firestore ด้วย await
+        DocumentReference docRefFood =
+            FirebaseFirestore.instance.collection("Foods").doc(foodDocId);
+
+        try {
+          DocumentSnapshot docSnapshot = await docRef.get();
+          if (docSnapshot.exists) {
+            String ratingAverageString = formattedRatingAverage.toString();
+
+            Map<String, dynamic> dataMap = {
+              'Rating_Average': ratingAverageString,
+            };
+
+            Map<String, dynamic> dataMapFood = {
+              'Food_Point': ratingAverageString,
+            };
+
+            await docRefFood.update(dataMapFood);
+            await docRef.update(dataMap);
+
+            print("Data updated for Food: $foodDocId");
+          } else {
+            String foodDocIdString = foodDocId.toString();
+            String ratingAverageString = formattedRatingAverage.toString();
+
+            Map<String, dynamic> dataMap = {
+              'Food_id': foodDocIdString,
+              'Rating_Average': ratingAverageString,
+            };
+            Map<String, dynamic> dataMapFood = {
+              'Food_id': foodDocIdString,
+              'Food_Point': ratingAverageString,
+            };
+
+            await docRefFood.update(dataMapFood);
             await docRef.set(dataMap);
-            print("Upload complete");
-          } catch (e) {
-            print('Upload Error: $e');
-            // จัดการข้อผิดพลาดที่เกิดขึ้นที่นี่
+            print("Data added for Food: $foodDocId");
           }
-          print('Food: $foodDocId, Rating Average: $formattedRatingAverage');
+        } catch (e) {
+          print('Upload Error: $e');
+          // จัดการข้อผิดพลาดที่เกิดขึ้นที่นี่
         }
       } catch (e) {
         print('data Error: $e');
         // จัดการข้อผิดพลาดที่เกิดขึ้นที่นี่
       }
+      print('Food: $foodDocId, Rating Average: $formattedRatingAverage');
     }
 
     // print('ID_Food = ');
