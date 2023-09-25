@@ -126,11 +126,12 @@ class _DetailFoodState extends State<DetailFood> {
     try {
       Map<String, dynamic> dataMap = {
         'ID_Food': id_food,
-        'ID_Mod': userid,
+        'ID_Mod': '',
         'Image': urlDownload,
         'Video': food_video,
         'Comment': commentModifyfood,
         'Time': Timestamp.now(),
+        'Uid' : userid,
 
         //'Time' : Timestamp.now(),
       };
@@ -561,8 +562,8 @@ class _DetailFoodState extends State<DetailFood> {
                                   SizedBox(height: 20),
                                   Text(
                                     tempRating > 0
-                                        ? 'You gave $tempRating stars!'
-                                        : 'Please rate us.',
+                                        ? 'คุณให้ $tempRating ดาว!'
+                                        : 'ให้คะแนนสูตร',
                                     style: TextStyle(fontSize: 18),
                                   ),
                                   ButtonWidget(
@@ -570,7 +571,6 @@ class _DetailFoodState extends State<DetailFood> {
                                       icon: Icons.attach_file,
                                       text: 'เลือกไฟล์',
                                       onClick: () {
-                                        print('Fuck you ');
                                         selectFile();
                                       }),
                                   Text('ความคิดเห็นเกี่ยวกับการรีวิว'),
@@ -979,8 +979,6 @@ class _DetailFoodState extends State<DetailFood> {
 /////////////////////////ALL TAB/////////////////////////////////////////
 //Home Work Tab
                 FutureBuilder<void>(
-                  //ทำให้รีหน้าอัตโนมัติ
-                  // ใส่รหัส FutureBuilder ที่ต้องการใช้งานในนี้
                   future: _fetch(), // คำสั่งดึงข้อมูลที่แสดง
                   builder:
                       (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -1008,9 +1006,6 @@ class _DetailFoodState extends State<DetailFood> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [],
-                                      ),
                                       SizedBox(
                                         height: 100,
                                         child: ListView(
@@ -1032,7 +1027,7 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                       // Text('ID_Food : ${modifyData['ID_Food']}'),
                                       // Text('ID_Mod : ${modifyData['ID_Mod']}'),
-                                      Text('User : ${modifyData['Uid']}',
+                                      Text('${modifyData['Uid']}',
                                           style: TextStyle(fontSize: 20),
                                           maxLines: 5),
                                       Text(
@@ -1047,33 +1042,30 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                       SizedBox(
                                         height: 10,
-                                      )
+                                      ),
+                                      //Report Button
+                                      InkWell(
+                                        onTap: (){
+                                          Get.snackbar('${modifyData['ID_Mod']}', 'message');
+                                        },
+                                        child: Container(
+                                          width: 400,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                            
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 150,top: 10),
+                                            child: Text('ดูการตอบกกลับ',style: TextStyle(fontWeight: FontWeight.bold),),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 );
                               },
                             ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() async {
-                                // _fetchImagesModify();
-                                _fetch();
-                                // CalculatorService calculatorService =
-                                //     CalculatorService();
-                                // //String foodID = 'your_food_id_here';
-
-                                // try {
-                                //   await calculatorService.calRating(
-                                //       5, id_food!);
-
-                                // } catch (e) {
-                                //   // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
-                                //   print('เกิดข้อผิดพลาด: $e');
-                                // }
-                              });
-                            },
-                            child: Text('รีเฟรช2'),
                           ),
                         ],
                       ),
@@ -1096,48 +1088,97 @@ class _DetailFoodState extends State<DetailFood> {
                     return Container(
                       color: Colors.yellowAccent,
                       child: Column(
-                        children: [
+                        children: [                          
                           Expanded(
                             child: ListView.builder(
                               itemCount: AllImageAllImageReview.length,
                               itemBuilder: (BuildContext context, int index) {
                                 Map<String, dynamic> reviewData =
                                     reviewList[index];
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'รีวิวที่ ${index + 1}',
+                                Timestamp timestamp =
+                                    reviewData['Time'] as Timestamp;
+                                DateTime dateTime = timestamp.toDate();
+                                String thaiDateTime = DateFormat.yMMMMd('th_TH')
+                                    .add_Hms()
+                                    .format(dateTime);
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(width: 5)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 100,
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children:
+                                              AllImageAllImageReview[index]
+                                                  .map((imageURLs) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  Image.network(
+                                                    imageURLs,
+                                                    width: 100,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      Text('${reviewData['Uid']}',
+                                          style: TextStyle(fontSize: 20),
+                                          ),
+                                      Text(
+                                          'คอมเม้นต์ : ${reviewData['Comment']}',
+                                          style: TextStyle(fontSize: 20),
+                                          maxLines: 5),
+                                      Row(
+                                        children: [
+                                          
+                                          Text(
+                                              'คะแนน : ${reviewData['Rating']}',
+                                              style: TextStyle(fontSize: 20),
+                                              maxLines: 5),
+                                              Icon(Icons.star, color:Colors.amber),
+                                        ],
+                                      ),
+                                      Text(
+                                        'โพสต์เมื่อ : $thaiDateTime',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                            color:
+                                                Colors.black.withOpacity(0.5)),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 100,
-                                      child: ListView(
-                                        scrollDirection: Axis.horizontal,
-                                        children: AllImageAllImageReview[index]
-                                            .map((imageURLs) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.network(
-                                              imageURLs,
-                                              width: 100,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          );
-                                        }).toList(),
+                                      SizedBox(
+                                        height: 10,
                                       ),
-                                    ),
-                                    Text('ID_Food : ${reviewData['ID_Food']}'),
-                                    Text('ID_Mod : ${reviewData['ID_Mod']}'),
-                                    Text('Comment : ${reviewData['Comment']}'),
-                                    Text('Rating : ${reviewData['Rating']}'),
-                                    Text('Time : ${reviewData['Time']}'),
-                                    Text('Video : ${reviewData['Video']}'),
-                                  ],
+                                      //Report Button
+                                      InkWell(
+                                        onTap: (){
+                                          Get.snackbar('tap', 'message');
+                                        },
+                                        child: Container(
+                                          width: 400,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                            
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 150,top: 10),
+                                            child: Text('ดูการตอบกกลับ',style: TextStyle(fontWeight: FontWeight.bold),),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                             ),
