@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:se_project_food/Admin/rep_food.dart';
 import 'package:se_project_food/Admin/rep_user.dart';
 
 import '../Authen/authen_part.dart';
@@ -27,7 +28,7 @@ class _AdminPageState extends State<AdminPage> {
             fontSize: 15,
             fontWeight: FontWeight.bold,
           )),
-      onPressed: (){
+      onPressed: () {
         signOut();
       },
       child: const Text('ออกจากระบบ'),
@@ -39,81 +40,105 @@ class _AdminPageState extends State<AdminPage> {
     return Material(
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 253, 249), const Color.fromARGB(255, 255, 255, 255)],
-            stops: [0.1, 0.5, 0.9],
-              ),
-
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 255, 145, 0),
+                Color.fromARGB(255, 255, 253, 249),
+                const Color.fromARGB(255, 255, 255, 255)
+              ],
+              stops: [0.1, 0.5, 0.9],
+            ),
           ),
-        child: Column(
+          child: Column(
             children: [
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left:15.0,bottom: 30),
+                    padding: const EdgeInsets.only(left: 15.0, bottom: 30),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Text("ยินดีต้อนรับ",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(133, 104, 96, 96),
-                          fontWeight: FontWeight.w800,
-                        ),),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Row(
-                          children: [
-                            Icon(Icons.person,color: Color.fromARGB(255, 255, 255, 255),),
-                            Text("Admin",
-                                overflow: TextOverflow.fade, 
+                        const Text(
+                          "ยินดีต้อนรับ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(133, 104, 96, 96),
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                              Text(
+                                "Admin",
+                                overflow: TextOverflow.fade,
                                 maxLines: 1,
                                 textWidthBasis: TextWidthBasis.longestLine,
                                 style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 7, 0, 0),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color.fromARGB(255, 7, 0, 0),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                       ],
                     ),
                   ),
-                  IconButton(onPressed: (){
-                    signOut();
-                  }, icon: Icon(Icons.logout)),
-                
+                  IconButton(
+                      onPressed: () {
+                        signOut();
+                      },
+                      icon: Icon(Icons.logout)),
                 ],
               ),
-              SizedBox(height: 100,),
+              SizedBox(
+                height: 100,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                
                 children: [
-                  inkWellAd(title: 'User Report',icon:Icon(Icons.person,color: Colors.white,),onFun: (){
+                  inkWellAd(
+                    title: 'User Report',
+                    icon: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                    onFun: () {
                       print('Tap User');
                       Get.to(UserReport());
-                  },),
-                  inkWellAd(title: 'Foods Report',icon:Icon(Icons.food_bank,color: Colors.white,),onFun: (){
+                    },
+                  ),
+                  inkWellAd(
+                    title: 'Foods Report',
+                    icon: Icon(
+                      Icons.food_bank,
+                      color: Colors.white,
+                    ),
+                    onFun: () {
                       print('Tap Food');
-                  },)
+                      Get.to(FoodReport());
+                    },
+                  )
                 ],
               ),
-              
-              
-              
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );
@@ -124,8 +149,6 @@ class _AdminPageState extends State<AdminPage> {
     //   // ]),
     // );
   }
-
-  
 }
 
 class inkWellAd extends StatelessWidget {
@@ -142,7 +165,7 @@ class inkWellAd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         onFun();
       },
       child: Container(
@@ -150,15 +173,14 @@ class inkWellAd extends StatelessWidget {
         height: 150,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.amber,
-          borderRadius: BorderRadius.circular(10)
-        ),
+            color: Colors.amber, borderRadius: BorderRadius.circular(10)),
         child: Padding(
           padding: const EdgeInsets.only(top: 50),
           child: Column(
             children: [
               icon,
-              Text(title,
+              Text(
+                title,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,

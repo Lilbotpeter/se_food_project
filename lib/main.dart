@@ -8,7 +8,6 @@ import 'package:se_project_food/Screen/Login.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-
 void main() async {
   await initializeDateFormatting('th_TH', null);
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,3 +56,4 @@ class _MyHomePageState extends State<MyHomePage> {
     return const Scaffold();
   }
 }
+//
