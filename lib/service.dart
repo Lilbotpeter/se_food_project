@@ -61,6 +61,28 @@ class DataService {
           });
         }
         return userDataList;
-    }  
+    }
+
+     Future<List<dynamic>> getReview(String? IDreview) async {
+    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(IDreview)
+        .get();
+    List<dynamic> reviewDataList = [];
+
+    if (snapshot.exists) {
+      final Map<String, dynamic>? data =
+          snapshot.data() as Map<String, dynamic>?;
+
+          reviewDataList.add({
+            'Email': data?['Email'],
+            'ImageP': data?['ImageP'],
+            'Name': data?['Name'],
+            'Phone': data?['Phone'],
+            'Uid': data?['Uid'],
+          });
+        }
+        return reviewDataList;
+    }    
   }
 

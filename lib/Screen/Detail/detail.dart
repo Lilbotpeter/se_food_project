@@ -131,7 +131,7 @@ class _DetailFoodState extends State<DetailFood> {
         'Video': food_video,
         'Comment': commentModifyfood,
         'Time': Timestamp.now(),
-        'Uid' : userid,
+        'Uid': userid,
 
         //'Time' : Timestamp.now(),
       };
@@ -1045,19 +1045,82 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                       //Report Button
                                       InkWell(
-                                        onTap: (){
-                                          Get.snackbar('${modifyData['ID_Mod']}', 'message');
+                                        onTap: () {
+                                          Get.dialog(
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 40),
+                                                  child: Container(
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(20),
+                                                      ),
+                                                    ),
+                                                    child: const Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20.0),
+                                                      child: Material(
+                                                        child: Column(
+                                                          children: [
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            const Text(
+                                                              "Title Text",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 15),
+                                                            const Text(
+                                                              "Message Text",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 20),
+                                                            //Buttons
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Text('xa'),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
                                         },
                                         child: Container(
                                           width: 400,
                                           height: 40,
                                           decoration: BoxDecoration(
                                             color: Colors.amber,
-                                            
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(left: 150,top: 10),
-                                            child: Text('ดูการตอบกกลับ',style: TextStyle(fontWeight: FontWeight.bold),),
+                                            padding: const EdgeInsets.only(
+                                                left: 150, top: 10),
+                                            child: Text(
+                                              'ดูการตอบกกลับ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -1088,7 +1151,7 @@ class _DetailFoodState extends State<DetailFood> {
                     return Container(
                       color: Colors.yellowAccent,
                       child: Column(
-                        children: [                          
+                        children: [
                           Expanded(
                             child: ListView.builder(
                               itemCount: AllImageAllImageReview.length,
@@ -1126,28 +1189,27 @@ class _DetailFoodState extends State<DetailFood> {
                                                     width: 100,
                                                     fit: BoxFit.cover,
                                                   ),
-                                                  
                                                 ],
                                               ),
                                             );
                                           }).toList(),
                                         ),
                                       ),
-                                      Text('${reviewData['Uid']}',
-                                          style: TextStyle(fontSize: 20),
-                                          ),
+                                      Text(
+                                        '${reviewData['Uid']}',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
                                       Text(
                                           'คอมเม้นต์ : ${reviewData['Comment']}',
                                           style: TextStyle(fontSize: 20),
                                           maxLines: 5),
                                       Row(
                                         children: [
-                                          
                                           Text(
                                               'คะแนน : ${reviewData['Rating']}',
                                               style: TextStyle(fontSize: 20),
                                               maxLines: 5),
-                                              Icon(Icons.star, color:Colors.amber),
+                                          Icon(Icons.star, color: Colors.amber),
                                         ],
                                       ),
                                       Text(
@@ -1161,7 +1223,7 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                       //Report Button
                                       InkWell(
-                                        onTap: (){
+                                        onTap: () {
                                           Get.snackbar('tap', 'message');
                                         },
                                         child: Container(
@@ -1169,11 +1231,15 @@ class _DetailFoodState extends State<DetailFood> {
                                           height: 40,
                                           decoration: BoxDecoration(
                                             color: Colors.amber,
-                                            
                                           ),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(left: 150,top: 10),
-                                            child: Text('ดูการตอบกกลับ',style: TextStyle(fontWeight: FontWeight.bold),),
+                                            padding: const EdgeInsets.only(
+                                                left: 150, top: 10),
+                                            child: Text(
+                                              'ดูการตอบกกลับ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
                                       ),
