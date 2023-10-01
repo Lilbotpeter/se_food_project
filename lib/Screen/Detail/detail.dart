@@ -1046,66 +1046,8 @@ class _DetailFoodState extends State<DetailFood> {
                                       //Report Button
                                       InkWell(
                                         onTap: () {
-                                          Get.dialog(
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 40),
-                                                  child: Container(
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(20),
-                                                      ),
-                                                    ),
-                                                    child: const Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              20.0),
-                                                      child: Material(
-                                                        child: Column(
-                                                          children: [
-                                                            const SizedBox(
-                                                                height: 10),
-                                                            const Text(
-                                                              "Title Text",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 15),
-                                                            const Text(
-                                                              "Message Text",
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 20),
-                                                            //Buttons
-                                                            Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  child: Text('xa'),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                          Get.snackbar(
+                                              '${modifyData['ID_Mod']}',
                                         },
                                         child: Container(
                                           width: 400,
