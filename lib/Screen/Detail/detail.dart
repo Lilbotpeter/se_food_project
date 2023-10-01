@@ -73,6 +73,9 @@ class _DetailFoodState extends State<DetailFood> {
   // List<List<String>> AllImage = [];
   //AuthenticationController auth = AuthenticationController.instanceAuth;
 
+  String? FoodtypeReport = 'ใช้คำพูดที่ไม่เหมาะสม';
+  TextEditingController Fooddetail = TextEditingController();
+
   final String getfoodID = Get.arguments as String; //รับ Food ID
 
   final userid = FirebaseAuth.instance.currentUser!.uid;
@@ -113,12 +116,26 @@ class _DetailFoodState extends State<DetailFood> {
   }
 
   Future<void> uploadFileModify() async {
+    // final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+    //     .collection("ModFood")
+    //     .doc(id_food!)
+    //     .collection("FoodID")
+    //     .get();
+    // DocumentReference docRefFood = FirebaseFirestore.instance
+    //     .collection("ModFood")
+    //     .doc(id_food!)
+    //     .collection("FoodID")
+    //     .doc();
+    // DocumentSnapshot docSnapshot = await docRefFood.get();
+    // String IdModify = docSnapshot.id;
+
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference foodDocRef = firestore
-        .collection("ModFood")
+        .collection("ModifyFood")
         .doc(id_food!)
-        .collection("FoodID")
+        .collection("ModID")
         .doc();
+
     if (files.isEmpty) {
       print("No files selected");
       return;
@@ -126,7 +143,7 @@ class _DetailFoodState extends State<DetailFood> {
     try {
       Map<String, dynamic> dataMap = {
         'ID_Food': id_food,
-        'ID_Mod': '',
+        'ID_Mod': foodDocRef.id,
         'Image': urlDownload,
         'Video': food_video,
         'Comment': commentModifyfood,
@@ -146,7 +163,8 @@ class _DetailFoodState extends State<DetailFood> {
 
         if (isImage || isVideo) {
           final String mediaType = isImage ? 'Image' : 'Video';
-          final destination = 'ModFood/${foodDocRef.id}/$mediaType/$filename';
+          final destination =
+              'ModifyFood/${foodDocRef.id}/$mediaType/$filename';
           task = FirebaseApi.uploadFile(destination, file);
 
           if (task == null) continue;
@@ -182,7 +200,7 @@ class _DetailFoodState extends State<DetailFood> {
   Future<void> uploadFileReview() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference foodDocRef = firestore
-        .collection("Review")
+        .collection("ReviewFood")
         .doc(id_food!)
         .collection("ReviewID")
         .doc();
@@ -193,7 +211,7 @@ class _DetailFoodState extends State<DetailFood> {
     try {
       Map<String, dynamic> dataMap = {
         'ID_Food': id_food,
-        'ID_Mod': userid,
+        'ID_Review': foodDocRef.id,
         'Image': urlDownload,
         'Video': food_video,
         'Comment': commentReview,
@@ -211,7 +229,8 @@ class _DetailFoodState extends State<DetailFood> {
 
         if (isImage || isVideo) {
           final String mediaType = isImage ? 'Image' : 'Video';
-          final destination = 'Review/${foodDocRef.id}/$mediaType/$filename';
+          final destination =
+              'ReviewFood/${foodDocRef.id}/$mediaType/$filename';
           task = FirebaseApi.uploadFile(destination, file);
 
           if (task == null) continue;
@@ -284,8 +303,8 @@ class _DetailFoodState extends State<DetailFood> {
   Future<void> _getUserDataFromDatabase(String? id) async {
     if (id != null) {
       try {
-        List<dynamic> reviewList = await DetailService()
-            .fetchReviewData('Review', '6kWGTLvH3DCd0lT4Rj6c', 'ReviewID');
+        // List<dynamic> reviewList = await DetailService()
+        //     .fetchReviewData('Review', '6kWGTLvH3DCd0lT4Rj6c', 'ReviewID');
 
         setState(() {
           dataUser =
@@ -343,7 +362,7 @@ class _DetailFoodState extends State<DetailFood> {
   Future<void> _fetch() async {
     try {
       List<List<String>> imageUrlsReview = await DetailService()
-          .fetchImagesReview('Review', id_food!, 'ReviewID');
+          .fetchImagesReview('ReviewFood', id_food!, 'ReviewID');
       AllImageAllImageReview = imageUrlsReview;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchImagesReview ที่นี่
@@ -352,7 +371,7 @@ class _DetailFoodState extends State<DetailFood> {
 
     try {
       List<List<String>> imageUrlsModify = await DetailService()
-          .fetchImagesModify('ModFood', id_food!, 'FoodID');
+          .fetchImagesModify('ModifyFood', id_food!, 'ModID');
       AllImageAllImageModify = imageUrlsModify;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchImagesModify ที่นี่
@@ -360,8 +379,8 @@ class _DetailFoodState extends State<DetailFood> {
     }
 
     try {
-      List<dynamic> MofifyList =
-          await DetailService().fetchReviewData('ModFood', id_food!, 'FoodID');
+      List<dynamic> MofifyList = await DetailService()
+          .fetchReviewData('ModifyFood', id_food!, 'ModID');
       modifyList = MofifyList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData ที่นี่
@@ -369,8 +388,8 @@ class _DetailFoodState extends State<DetailFood> {
     }
 
     try {
-      List<dynamic> ReviewList =
-          await DetailService().fetchReviewData('Review', id_food!, 'ReviewID');
+      List<dynamic> ReviewList = await DetailService()
+          .fetchReviewData('ReviewFood', id_food!, 'ReviewID');
       reviewList = ReviewList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
@@ -405,6 +424,131 @@ class _DetailFoodState extends State<DetailFood> {
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           children: [
+            //Menu Home Work ReportFood
+            SpeedDialChild(
+                child: Icon(Icons.report_problem),
+                label: 'รายงานอาหาร',
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                onTap: () {
+                  showModalBottomSheet(
+                    isScrollControlled: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        height: 400,
+                        child: Center(
+                          child: Container(
+                            child: ListView(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text('รายงานปัญหาอาหาร'),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                    'กรุณาอธิบายปัญหาที่คุณพบเกี่ยวกับผู้ใช้:'),
+                                DropdownButtonFormField<String>(
+                                  value: FoodtypeReport,
+                                  onChanged: (value) {
+                                    //setState(() {
+                                    FoodtypeReport = value.toString();
+                                    // _FoodtypeReport = FoodtypeReport;
+                                    //});
+                                  },
+                                  decoration: InputDecoration(
+                                    icon: Icon(Icons.point_of_sale),
+                                    border: OutlineInputBorder(
+                                        borderSide:
+                                            Divider.createBorderSide(context)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                            Divider.createBorderSide(context)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            Divider.createBorderSide(context)),
+                                    filled: true,
+                                    contentPadding: const EdgeInsets.all(8),
+                                  ),
+                                  items: const <DropdownMenuItem<String>>[
+                                    DropdownMenuItem<String>(
+                                      value: 'ใช้คำพูดที่ไม่เหมาะสม',
+                                      child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: 'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร',
+                                      child:
+                                          Text('โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร'),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: 'ใช้รูปที่ไม่เหมาะสม',
+                                      child: Text('ใช้รูปที่ไม่เหมาะสม'),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: 'ให้ข้อมูลเท็จ',
+                                      child: Text('ให้ข้อมูลเท็จ'),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: 'อื่นๆ',
+                                      child: Text('อื่นๆ'),
+                                    ),
+                                  ],
+                                ),
+                                TextField(
+                                  maxLines: 4,
+                                  decoration:
+                                      InputDecoration(labelText: 'หมายเหตุ'),
+                                  controller: Fooddetail,
+                                ),
+                                TextButton(
+                                    onPressed: () async {
+                                      FirebaseFirestore firestore =
+                                          FirebaseFirestore.instance;
+                                      final DocumentReference foodReport =
+                                          firestore
+                                              .collection("FoodReport")
+                                              .doc();
+
+                                      try {
+                                        Map<String, dynamic> dataMap = {
+                                          'Report': FoodtypeReport,
+                                          'Detail': Fooddetail.text,
+                                          'Time': Timestamp.now(),
+                                          'ID_Food': id_food!,
+                                          'ID_Report': foodReport.id //เก็บไว้
+                                        };
+
+                                        await foodReport.set(dataMap);
+                                        print('Successfull');
+                                      } catch (e) {
+                                        print("Error: $e");
+                                      }
+                                      ;
+                                      // print('FoodID = ');
+                                      // print(id_food!);
+
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('ส่ง')),
+                                TextButton(
+                                    onPressed: () async {
+                                      print('Error404');
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('ยกเลิก')),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
+
+//-----------------------------------------------------
+
             //Menu Home Work
             SpeedDialChild(
                 child: Icon(Icons.menu_book_outlined),
@@ -451,6 +595,7 @@ class _DetailFoodState extends State<DetailFood> {
                                       print('Success');
                                       commentModifyfood = SenWork.text;
                                       uploadFileModify();
+                                      Navigator.of(context).pop();
                                     },
                                     child: const Text('ส่ง')),
                               ],
@@ -497,6 +642,7 @@ class _DetailFoodState extends State<DetailFood> {
                                   onPressed: () async {
                                     print('Success');
                                     //_fetch();
+                                    Navigator.of(context).pop();
                                   },
                                   child: const Text('ส่ง')),
                             ],
@@ -606,6 +752,7 @@ class _DetailFoodState extends State<DetailFood> {
                                           // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
                                           print('เกิดข้อผิดพลาด: $e');
                                         }
+                                        Navigator.of(context).pop();
                                       },
                                       child: const Text('ส่ง')),
                                   // บริเวณอื่น ๆ ของป๊อปอัพเมนู
@@ -1048,6 +1195,7 @@ class _DetailFoodState extends State<DetailFood> {
                                         onTap: () {
                                           Get.snackbar(
                                               '${modifyData['ID_Mod']}',
+                                              'message');
                                         },
                                         child: Container(
                                           width: 400,
