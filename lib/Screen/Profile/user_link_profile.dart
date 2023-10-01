@@ -16,8 +16,6 @@ import '../../follow.dart';
 
 //Authen Current User
 final User? user = AuthenticationController().currentUser;
-  
-  
 
 class UserLinkProfile extends StatefulWidget {
   const UserLinkProfile({Key? key}) : super(key: key);
@@ -35,33 +33,36 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 
   List<FoodModel> foodModels = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
-  final String getUserID = Get.arguments as String; 
+  final String getUserID = Get.arguments as String;
   final followerService = FollowerService();
 
- Future<void> _getUserFromDatabase() async {
-  final DocumentSnapshot snapshot = await FirebaseFirestore.instance
-    .collection("users")
-    .doc(getUserID)
-    .get();
-        
-  if (snapshot.exists) {
-    final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+  String? UsertypeReport = 'ใช้คำพูดที่ไม่เหมาะสม';
+  TextEditingController Userdetail = TextEditingController();
 
-    if (data != null) {
-      setState(() {
-        name = data["Name"];
-        image = data["ImageP"];
-        email = data["Email"];
-        phone = data["Phone"];
+  Future<void> _getUserFromDatabase() async {
+    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(getUserID)
+        .get();
 
-      });
+    if (snapshot.exists) {
+      final Map<String, dynamic>? data =
+          snapshot.data() as Map<String, dynamic>?;
+
+      if (data != null) {
+        setState(() {
+          name = data["Name"];
+          image = data["ImageP"];
+          email = data["Email"];
+          phone = data["Phone"];
+        });
+      }
     }
   }
-}
 
 // //Get data fromdatabase
 //   Future<void> _getDataFromDatabase() async {
-    
+
 //     await FirebaseFirestore.instance
 //         .collection("users")
 //         .doc(getUserID)
@@ -78,35 +79,32 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 //     });
 //   }
 
-
   Future<void> readData() async {
-  // Clear existing data
-  setState(() {
-    foodModels.clear();
-  });
+    // Clear existing data
+    setState(() {
+      foodModels.clear();
+    });
 
-  // Read data
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference collectionReference = firestore.collection('Foods');
-  await collectionReference.snapshots().listen((response) {
-    List<DocumentSnapshot> snapshots = response.docs;
-    for (var snapshot in snapshots) {
-      FoodModel foodModel = FoodModel.fromMap(snapshot.data() as Map<String, dynamic>);
-      foodModel.food_id = snapshot.id;
+    // Read data
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collectionReference = firestore.collection('Foods');
+    await collectionReference.snapshots().listen((response) {
+      List<DocumentSnapshot> snapshots = response.docs;
+      for (var snapshot in snapshots) {
+        FoodModel foodModel =
+            FoodModel.fromMap(snapshot.data() as Map<String, dynamic>);
+        foodModel.food_id = snapshot.id;
 
-      if (getUserID == foodModel.user_id) {
-        setState(() {
-          foodModels.add(foodModel);
-          
-        });
+        if (getUserID == foodModel.user_id) {
+          setState(() {
+            foodModels.add(foodModel);
+          });
+        }
       }
-    }
-  });
-}
+    });
+  }
 
-
-
-   Future<void> clearData() async {
+  Future<void> clearData() async {
     setState(() {
       foodModels.clear();
     });
@@ -114,11 +112,10 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 
   Future<void> logout() async {
     Get.snackbar('Logout', 'Logged out');
-    
+
     await clearData();
     await readData();
   }
-
 
   @override
   void initState() {
@@ -128,16 +125,15 @@ class UserLinkProfileState extends State<UserLinkProfile> {
     readData();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
     Widget buildFoodItem(int index) {
       return GestureDetector(
         onTap: () {
-          Get.snackbar(foodModels[index].food_name,foodModels[index].user_id);
-          Get.to(DetailFood(),arguments: foodModels[index].food_id); // ตัวส่ง Parameter
+          Get.snackbar(foodModels[index].food_name, foodModels[index].user_id);
+          Get.to(DetailFood(),
+              arguments: foodModels[index].food_id); // ตัวส่ง Parameter
         },
         child: Container(
           child: Image.network(
@@ -149,187 +145,295 @@ class UserLinkProfileState extends State<UserLinkProfile> {
         ),
       );
     }
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 60,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        flexibleSpace: ClipPath(
-          clipper: AppbarCustom(), //Appbar custom
-          child: Container(
-            height: 150,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 255, 127, 8),
-                  Color.fromARGB(255, 255, 198, 55),
-                ],
-              ),
-            ),
-            child: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  
-                  Text('',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),
-                  
-                  
-                  ),
-                  
 
-                ],
+    return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 60,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          flexibleSpace: ClipPath(
+            clipper: AppbarCustom(), //Appbar custom
+            child: Container(
+              height: 150,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 255, 127, 8),
+                    Color.fromARGB(255, 255, 198, 55),
+                  ],
+                ),
+              ),
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-      body: Stack(
-        children: [
-          
-          Positioned(
-            top: 10,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: <Widget>[
-                
-                //profile picture
-                ProfilePicture(imageXFile: imageXFile, image: image),
-                const SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  
-                  children: [
-                    Text(
-                      name ?? '', //Show Name เด้อจ้า
-                      style: TextStyle(fontSize: 25.0),
-                    ),
-                    
-                  ],
-                ),
-                const SizedBox(height: 5,),
-                Text(
-                  email ?? '',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black45
+        body: Stack(
+          children: [
+            Positioned(
+              top: 10,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: <Widget>[
+                  //profile picture
+                  ProfilePicture(imageXFile: imageXFile, image: image),
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-                const SizedBox(height: 3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(onPressed: ()async{
-                      await followerService.addFollower(userid, getUserID);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name ?? '', //Show Name เด้อจ้า
+                        style: TextStyle(fontSize: 25.0),
                       ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15,vertical: 2),
-                      child: Text(
-                        "ติดตาม",
-                        style: TextStyle(
-                        fontSize: 14,
-                        color: kTextColor,
-                        fontWeight: FontWeight.w600),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    email ?? '',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black45),
+                  ),
+                  const SizedBox(height: 3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          await followerService.addFollower(userid, getUserID);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kPrimaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                          child: Text(
+                            "ติดตาม",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: kTextColor,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
                       ),
-                    ),
-                     ),
 
-                     //Report Button
-                    IconButton(onPressed: (){
-                      //ใส่ ฟังชันรีพอร์ตตรงนี้นะจ้ะ
-                    }, icon: Icon(Icons.report_problem,color: Colors.red,))
-                    
-                    
-                    
-                  ],
-                ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  height: 200,
-                  width:300,
-                //Stat Row
-                child :Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    //Status
-                    StatusText(foodModels.length,'สูตรอาหาร'),
-                    const VerticalDivider(
-                      thickness: 1,
-                      indent: 10,
-                      endIndent: 160,
-                    ),
-                    StatusText(54,'ผู้ติดตาม'),
-                    const VerticalDivider(
-                      thickness: 1,
-                      indent: 10,
-                      endIndent: 160,
-                    ),
-                    StatusText(4,'เรทติ้ง'),
-                  ],
-                )
-                ),
-                
+                      //Report User Button
+                      IconButton(
+                        onPressed: () {
+                          print('Hello Report ');
+                          //ใส่ ฟังชันรีพอร์ตตรงนี้นะจ้ะ
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('รายงานปัญหาผู้ใช้'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                        'กรุณาอธิบายปัญหาที่คุณพบเกี่ยวกับผู้ใช้:'),
+                                    DropdownButtonFormField<String>(
+                                      value: UsertypeReport,
+                                      onChanged: (value) {
+                                        //setState(() {
+                                        UsertypeReport = value.toString();
+                                        //});
+                                      },
+                                      decoration: InputDecoration(
+                                        icon: Icon(Icons.point_of_sale),
+                                        border: OutlineInputBorder(
+                                            borderSide:
+                                                Divider.createBorderSide(
+                                                    context)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                                Divider.createBorderSide(
+                                                    context)),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                                Divider.createBorderSide(
+                                                    context)),
+                                        filled: true,
+                                        contentPadding: const EdgeInsets.all(8),
+                                      ),
+                                      items: const <DropdownMenuItem<String>>[
+                                        DropdownMenuItem<String>(
+                                          value: 'ใช้คำพูดที่ไม่เหมาะสม',
+                                          child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
+                                        ),
+                                        DropdownMenuItem<String>(
+                                          value:
+                                              'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร',
+                                          child: Text(
+                                              'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร'),
+                                        ),
+                                        DropdownMenuItem<String>(
+                                          value: 'ใช้รูปที่ไม่เหมาะสม',
+                                          child: Text('ใช้รูปที่ไม่เหมาะสม'),
+                                        ),
+                                        DropdownMenuItem<String>(
+                                          value: 'ให้ข้อมูลเท็จ',
+                                          child: Text('ให้ข้อมูลเท็จ'),
+                                        ),
+                                        DropdownMenuItem<String>(
+                                          value: 'อื่นๆ',
+                                          child: Text('อื่นๆ'),
+                                        ),
+                                      ],
+                                    ),
+                                    TextField(
+                                      maxLines: 4,
+                                      decoration: InputDecoration(
+                                          labelText: 'หมายเหตุ'),
+                                      controller: Userdetail,
+                                    ),
+                                  ],
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('ส่งรายงาน'),
+                                    onPressed: () async {
+                                      // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
+                                      FirebaseFirestore firestore =
+                                          FirebaseFirestore.instance;
+                                      final DocumentReference foodReport =
+                                          firestore
+                                              .collection("UserReport")
+                                              .doc();
 
-              ],
-            ),
-            
-            ),
-        const Divider(
-                height: 660,
-                thickness: 2,
-                color: Colors.black12,
+                                      try {
+                                        Map<String, dynamic> dataMap = {
+                                          'Report': UsertypeReport,
+                                          'Detail': Userdetail.text,
+                                          'Time': Timestamp.now(),
+                                          'ID_User': getUserID,
+                                          'ID_Report': foodReport.id
+                                        };
+
+                                        await foodReport.set(dataMap);
+                                      } catch (e) {
+                                        print("Error: $e");
+                                      }
+                                      ;
+                                      print('getUserID = ');
+                                      print(getUserID);
+
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('ยกเลิก'),
+                                    onPressed: () {
+                                      // ปิด Dialog
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: Icon(
+                          Icons.report_problem,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  SizedBox(
+                      height: 200,
+                      width: 300,
+                      //Stat Row
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          //Status
+                          StatusText(foodModels.length, 'สูตรอาหาร'),
+                          const VerticalDivider(
+                            thickness: 1,
+                            indent: 10,
+                            endIndent: 160,
+                          ),
+                          StatusText(54, 'ผู้ติดตาม'),
+                          const VerticalDivider(
+                            thickness: 1,
+                            indent: 10,
+                            endIndent: 160,
+                          ),
+                          StatusText(4, 'เรทติ้ง'),
+                        ],
+                      )),
+                ],
               ),
-          
-        Positioned(
-          top: 335,
-          right: 10,
-          left: 10,
-          bottom: 0,
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
-            mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
-            crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน
-            childAspectRatio: 1, // อัตราส่วนของความกว้างต่อความสูงของรายการ
-                  ),
-                  itemCount: foodModels.length, // จำนวนรายการใน GridView
-                  itemBuilder: (BuildContext buildContext, int index) {
-                    
-                    return buildFoodItem(index);
-                    },
-                  ),
-        ),
-
-        ],)
-    );
+            ),
+            const Divider(
+              height: 660,
+              thickness: 2,
+              color: Colors.black12,
+            ),
+            Positioned(
+              top: 335,
+              right: 10,
+              left: 10,
+              bottom: 0,
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
+                  mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
+                  crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน
+                  childAspectRatio:
+                      1, // อัตราส่วนของความกว้างต่อความสูงของรายการ
+                ),
+                itemCount: foodModels.length, // จำนวนรายการใน GridView
+                itemBuilder: (BuildContext buildContext, int index) {
+                  return buildFoodItem(index);
+                },
+              ),
+            ),
+          ],
+        ));
   }
 
 //Status Text
-  Column StatusText(int number,String title) {
+  Column StatusText(int number, String title) {
     return Column(
-                    children: [
-                      Text(
-                        '$number',
-                        style: TextStyle(
-                          fontSize: 22,fontWeight: FontWeight.w500
-                        )
-                      ),
-                      Text(
-                            title,
-                            style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w400,color: Color.fromARGB(221, 129, 129, 129)
-                            ),
-                          ),
-                        ],
-                  );
+      children: [
+        Text('$number',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)),
+        Text(
+          title,
+          style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Color.fromARGB(221, 129, 129, 129)),
+        ),
+      ],
+    );
   }
 }
