@@ -295,12 +295,110 @@ class _UploadFoodState extends State<UploadFood> {
           child: Text('ไม่มี'),
         ),
         DropdownMenuItem<String>(
-          value: 'ฟาสต์ฟู้ด',
-          child: Text('ฟาสต์ฟู้ด'),
+          value: 'อาหารอีสาน',
+          child: Text('อาหารอีสาน'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารใต้',
+          child: Text('อาหารใต้'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารเหนือ',
+          child: Text('อาหารเหนือ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารเส้น',
+          child: Text('อาหารเส้น'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารสุขภาพ',
+          child: Text('อาหารสุขภาพ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารตามสั่ง',
+          child: Text('อาหารตามสั่ง'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารทะเล',
+          child: Text('อาหารทะเล'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'แฮมเบอเกอร์',
+          child: Text('แฮมเบอเกอร์'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ของทอด',
+          child: Text('ของทอด'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ชา/กาแฟ',
+          child: Text('ชา/กาแฟ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ชาบู/สุกี้',
+          child: Text('ชาบู/สุกี้'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ชานมไข่มุก',
+          child: Text('ชานมไข่มุก'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ซูชิ',
+          child: Text('ซูชิ'),
         ),
         DropdownMenuItem<String>(
           value: 'ของหวาน',
           child: Text('ของหวาน'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เบเกอรี่',
+          child: Text('เบเกอรี่'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เบรคฟาสต์',
+          child: Text('เบรคฟาสต์'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เค้ก',
+          child: Text('เค้ก'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เครื่องดื่ม',
+          child: Text('เครื่องดื่ม'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ฟาสต์ฟู้ด',
+          child: Text('ฟาสต์ฟู้ด'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'หม่าล่า',
+          child: Text('หม่าล่า'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ของหวาน',
+          child: Text('ของหวาน'),
+        ),
+        //--------------------------------
+        DropdownMenuItem<String>(
+          value: 'น้ำผลไม้',
+          child: Text('น้ำผลไม้'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อาหารจานด่วน',
+          child: Text('อาหารจานด่วน'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'โจ๊ก',
+          child: Text('โจ๊ก'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'โยเกิร์ต/ไอศกรีม',
+          child: Text('โยเกิร์ต/ไอศกรีม'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ปิ้งย่าง/บาร์บีคิว',
+          child: Text('ปิ้งย่าง/บาร์บีคิว'),
+          //--------------------------------
         ),
         DropdownMenuItem<String>(
           value: 'เครื่องดื่ม/น้ำผลไม้',
@@ -309,6 +407,30 @@ class _UploadFoodState extends State<UploadFood> {
         DropdownMenuItem<String>(
           value: 'อาหารเจ',
           child: Text('อาหารเจ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'โรตี',
+          child: Text('โรตี'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'สเต็ก',
+          child: Text('สเต็ก'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ส้มตำ',
+          child: Text('ส้มตำ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ของทานเล่น/ขนมขบเขี้ยว',
+          child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ติ่มซำ',
+          child: Text('ติ่มซำ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ยำ',
+          child: Text('ยำ'),
         ),
       ],
     );
