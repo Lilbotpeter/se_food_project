@@ -295,6 +295,15 @@ class _DetailFoodState extends State<DetailFood> {
           user_id = data["User_id"]; // อัปเดตค่า user_id ด้วยข้อมูลใน Firestore
         });
         await _getUserDataFromDatabase(user_id);
+        CalculatorService calculatorService = CalculatorService();
+
+        try {
+          await calculatorService.calRating();
+          // ทำสิ่งที่คุณต้องการกับผลลัพธ์หลังจากการคำนวณคะแนน
+        } catch (e) {
+          // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
+          print('เกิดข้อผิดพลาด: $e');
+        }
       }
     }
   }

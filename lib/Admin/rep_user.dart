@@ -1,11 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
+import '../Screen/Profile/user_link_profile.dart';
+import '../Screen/Profile/user_profile.dart';
 import 'AdminService.dart';
 
 class UserReport extends StatefulWidget {
@@ -18,6 +23,8 @@ class UserReport extends StatefulWidget {
 class _UserReportState extends State<UserReport> {
   bool isLoading = true;
   List<dynamic> UserReportList = [];
+  List<dynamic> FoodReportList = [];
+  List<String> imageUrls = [];
 
   @override
   void initState() {
@@ -34,9 +41,14 @@ class _UserReportState extends State<UserReport> {
 
   Future<void> fetchUserReportData() async {
     try {
-      List<dynamic> reportList =
+      List<dynamic> reportUserList =
           await AdminService().fetchReportUserData('UserReport');
-      UserReportList = reportList;
+      UserReportList = reportUserList;
+
+      List<dynamic> reportFoodList =
+          await AdminService().fetchReportFoodData('FoodReport');
+      FoodReportList = reportFoodList;
+
       setState(() {
         // dataUser = reviewList;
         // isLoading = false;
@@ -57,11 +69,11 @@ class _UserReportState extends State<UserReport> {
         child: Center(
           child: Card(
             child: ListView.builder(
-              itemCount:
-                  UserReportList.length, // Replace with the actual data length
+              itemCount: UserReportList.length,
+              // FoodReportList.length, // Replace with the actual data length
               itemBuilder: (context, index) {
-                // Replace yourFirestoreData[index] with the actual data structure
-                final reportData = UserReportList[index];
+                final reportUserData = UserReportList[index];
+                //final reportfoodData = FoodReportList[index];
 
                 return Column(
                   children: <Widget>[
@@ -72,12 +84,12 @@ class _UserReportState extends State<UserReport> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                                'ไอดีผู้ใช้ที่ถูกรายงาน : ${reportData['ID_User']}',
+                                'ไอดีผู้ใช้ที่ถูกรายงาน : ${reportUserData['ID_User']}',
                                 style: TextStyle(fontSize: 10),
                                 maxLines: 5),
-                            Text('หัวข้อรายงาน : ${reportData['Report']}',
+                            Text('หัวข้อรายงาน : ${reportUserData['Report']}',
                                 style: TextStyle(fontSize: 10), maxLines: 5),
-                            Text('รายละเอียด : ${reportData['Detail']}',
+                            Text('รายละเอียด : ${reportUserData['Detail']}',
                                 style: TextStyle(fontSize: 10), maxLines: 5),
                           ],
                         ),
@@ -90,10 +102,10 @@ class _UserReportState extends State<UserReport> {
                             ),
                           ),
                           onPressed: () async {
-                            print(reportData['ID_Report']);
+                            print(reportUserData['ID_Report']);
                             final docker = FirebaseFirestore.instance
                                 .collection('UserReport')
-                                .doc(reportData['ID_Report']);
+                                .doc(reportUserData['ID_Report']);
 
                             try {
                               await docker.delete();
@@ -102,7 +114,7 @@ class _UserReportState extends State<UserReport> {
                                     content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
                               );
                               setState(() {
-                                reportData.removeAt(index);
+                                reportUserData.removeAt(index);
                               });
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +140,10 @@ class _UserReportState extends State<UserReport> {
                             ),
                           ),
                           onPressed: () async {
-                            // Implement view user data functionality
+                            print('ID_User = ');
+                            print(reportUserData['ID_User']);
+                            Get.to(UserLinkProfile(),
+                                arguments: reportUserData['ID_User']);
                           },
                           child: Text('ดูข้อมูลผู้ใช้'),
                         ),
@@ -141,7 +156,67 @@ class _UserReportState extends State<UserReport> {
                             ),
                           ),
                           onPressed: () async {
-                            // Implement delete user functionality
+                            print(reportUserData['ID_User']);
+                            final user = FirebaseAuth.instance.currentUser;
+                            try {
+                              // print('user = ');
+                              // print(reportUserData['ID_User']);
+                              // await reportUserData['ID_User'].delete();
+                              print("User deleted successfully");
+                            } catch (e) {
+                              print("Error deleting user: $e");
+                            }
+
+                            // //ลบข้อมูลผู้ใช้
+                            // final deleteDataUser = FirebaseFirestore.instance
+                            //     .collection('users')
+                            //     .doc(reportUserData['ID_User']);
+
+                            // //ลบข้อมูลผู้ใช้
+                            // final deleteReportUser = FirebaseFirestore.instance
+                            //     .collection('UserReport')
+                            //     .doc(reportUserData['ID_User']);
+
+                            FirebaseStorage storage = FirebaseStorage.instance;
+                            final deleteStorageUser = await storage
+                                .ref()
+                                .child('Profile Picture')
+                                .child(reportUserData['ID_User']);
+                            String fullPath = deleteStorageUser.fullPath;
+                            List<String> pathSegments = fullPath.split('/');
+                            String fileName = pathSegments.last;
+                            print('Downloaded File Name: $fileName');
+
+                            // for (Reference ref in result.items) {
+                            //   String imageURL = await ref.getDownloadURL();
+                            //   print('Downloaded URL: $imageURL');
+                            // }
+                            try {
+                              //   for (final deleteStorageUser in result.items) {
+                              // print('deleteStorageUser = ');
+                              // print(result);
+                              //     // ลบแต่ละไฟล์
+
+                              //   }
+
+                              //await deleteStorageUser.delete();
+                              // await deleteDataUser.delete();
+                              // await deleteReportUser.delete();
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
+                              );
+                              setState(() {
+                                // reportUserData.removeAt(index);
+                              });
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content:
+                                        Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
+                              );
+                            }
                           },
                           child: Text('ลบข้อมูลผู้ใช้'),
                         ),
@@ -159,137 +234,6 @@ class _UserReportState extends State<UserReport> {
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: Text('User Report'),
-  //     ),
-  //     body: SafeArea(
-  //       child: Center(
-  //         child: Card(
-  //           child: Column(
-  //             children: <Widget>[
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Row(
-  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                         children: [
-  //                           Column(
-  //                             crossAxisAlignment: CrossAxisAlignment.start,
-  //                             children: [
-  //                               Text('หัวข้อรายงาน: '),
-  //                               Text('รายละเอียด: '),
-  //                               Text('ไอดีที่ถูกรายงาน: '),
-  //                             ],
-  //                           ),
-  //                           ElevatedButton(
-  //                             style: ElevatedButton.styleFrom(
-  //                               primary: Colors.redAccent,
-  //                               textStyle: TextStyle(
-  //                                 fontSize: 15,
-  //                                 fontWeight: FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                             onPressed: () async {
-  //                               fetchReportData();
-  //                             },
-  //                             child: Text('ลบข้อมูลรายงาน'),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                       Row(
-  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                         children: [
-  //                           ElevatedButton(
-  //                             style: ElevatedButton.styleFrom(
-  //                               primary: Colors.blueAccent,
-  //                               textStyle: TextStyle(
-  //                                 fontSize: 15,
-  //                                 fontWeight: FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                             onPressed: () async {},
-  //                             child: Text('ดูข้อมูลผู้ใช้'),
-  //                           ),
-  //                           ElevatedButton(
-  //                             style: ElevatedButton.styleFrom(
-  //                               primary: Colors.redAccent,
-  //                               textStyle: TextStyle(
-  //                                 fontSize: 15,
-  //                                 fontWeight: FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                             onPressed: () async {},
-  //                             child: Text('ลบข้อมูลผู้ใช้'),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ],
-  //                   )
-  //                 ],
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-
-  //   // return Scaffold(
-  //   //   appBar: AppBar(
-  //   //     title: Text('User Report'),
-  //   //   ),
-  //   //   //     body: ListView.builder(
-  //   //   //   itemCount: dataUser.length,
-  //   //   //   itemBuilder: (BuildContext context, int index) {
-
-  //   //   //   Map<String, dynamic> data = dataUser[index];
-  //   //   //   return Container(
-  //   //   //     padding: EdgeInsets.all(8),
-  //   //   //     decoration: BoxDecoration(
-  //   //   //       border: Border.all(
-  //   //   //         color: Colors.grey,
-  //   //   //         width: 0.0,
-  //   //   //       ),
-  //   //   //       borderRadius: BorderRadius.all(Radius.circular(8.0)),
-  //   //   //     ),
-  //   //   //     child: Column(
-  //   //   //       crossAxisAlignment: CrossAxisAlignment.start,
-  //   //   //       children: [
-
-  //   //   //         listTile(data: data, fun: () {
-  //   //   //           AwesomeDialog(
-  //   //   //             context: context,
-  //   //   //             dialogType: DialogType.info,
-  //   //   //             animType: AnimType.topSlide,
-  //   //   //             showCloseIcon: true,
-  //   //   //             title: 'Report',
-  //   //   //             body: Column(
-  //   //   //               children: [
-
-  //   //   //                 Text('Comment : ' + data['Comment']),
-  //   //   //                 Text(data['ID_Mod']),
-  //   //   //               ],
-  //   //   //             ),
-  //   //   //             btnOkOnPress: () {
-  //   //   //               Get.snackbar('title', 'message');
-  //   //   //             },
-  //   //   //             btnCancelOnPress: () {},
-  //   //   //           ).show();
-  //   //   //         }),
-  //   //   //       ],
-  //   //   //     ),
-  //   //   //   );
-  //   //   // }
-  //   //   //   )
-  //   // );
-  // }
 }
 
 class CardSkale extends StatelessWidget {

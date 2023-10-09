@@ -204,28 +204,6 @@ class AuthenticationController extends GetxController {
     }
   }
 
-  // void updateEmail(String? newEmail) async {
-  //   try {
-  //     // Get the current user
-  //     User? user = FirebaseAuth.instance.currentUser;
-  //     print('user!.email = ');
-  //     print(user!.email);
-  //     if (user!.email == null) {
-  //       print('User is not signed in');
-
-  //       return;
-  //     }
-
-  //     // Update the email
-  //      user!.email = newEmail!;
-  //     //await user.updateEmail(newEmail);
-
-  //     print('Email updated successfully');
-  //   } catch (e) {
-  //     print('Error updating email: $e');
-  //   }
-  // }
-
   Future<void> updateEmail(String newEmail, String password) async {
     try {
       // Get the current user
@@ -252,4 +230,37 @@ class AuthenticationController extends GetxController {
       print('Error updating email: $e');
     }
   }
+
+  // void deleteUser(String email, String password) async {
+  // try {
+  //   // อีกครั้ง, ให้คุณตรวจสอบว่าผู้ใช้เข้าสู่ระบบก่อนลบ
+  //   User? user = FirebaseAuth.instance.currentUser;
+
+  //   if (user == null) {
+  //     print('User is not signed in');
+  //     return;
+  //   }
+
+  //   // รีอะทูเนิคผู้ใช้โดยลงชื่อเข้าระบบอีกครั้ง
+  //   AuthCredential credential = EmailAuthProvider.credential(
+  //     email: email,
+  //     password: password,
+  //   );
+
+  //   await user.reauthenticateWithCredential(credential);
+
+  //   // ลบผู้ใช้
+  //   await user.delete();
+
+  //   print('User deleted successfully');
+  // } catch (e) {
+  //   print('Error deleting user: $e');
+  // }
+//}
+
+// void main() {
+//   // เรียกใช้ฟังก์ชันเพื่อลบผู้ใช้
+//   String userUidToDelete = "UID_OF_USER_TO_DELETE";
+//   deleteFirebaseUser(userUidToDelete);
+// }
 }

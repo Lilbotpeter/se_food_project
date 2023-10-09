@@ -21,12 +21,10 @@ class CalculatorService {
     }
 
     List<dynamic> documentIds = [];
-    List<dynamic> points = [];
-    double Allsum = 0.0;
 
     for (String foodDocId in ID_Food) {
       CollectionReference collection = FirebaseFirestore.instance
-          .collection('Review')
+          .collection('ReviewFood')
           .doc(foodDocId)
           .collection('ReviewID');
       QuerySnapshot querySnapshot_ID = await collection.get();
@@ -37,7 +35,7 @@ class CalculatorService {
       for (QueryDocumentSnapshot doc in querySnapshot_ID.docs) {
         documentIds.add(doc.id);
         final DocumentReference documentRef = FirebaseFirestore.instance
-            .collection("Review")
+            .collection("ReviewFood")
             .doc(foodDocId)
             .collection('ReviewID')
             .doc(doc.id);
@@ -46,9 +44,6 @@ class CalculatorService {
 
         if (snapshot.exists) {
           int rating = snapshot['Rating'];
-          if (rating is int) {
-            points.add(rating);
-          }
 
           // เพิ่มคะแนนไปยังผลรวมคะแนน
           ratingSum += rating;
@@ -59,7 +54,7 @@ class CalculatorService {
       }
 
       // คำนวณคะแนนเฉลี่ย (rating average)
-      double ratingAverage = ratingSum / reviewCount;
+      double ratingAverage = ratingSum / (reviewCount);
 
       // ปรับเศษให้เหลือ 2 ตำแหน่งทศนิยม
       String formattedRatingAverage;
@@ -92,8 +87,8 @@ class CalculatorService {
               'Food_Point': ratingAverageString,
             };
 
-            await docRefFood.update(dataMapFood);
             await docRef.update(dataMap);
+            await docRefFood.update(dataMapFood);
 
             print("Data updated for Food: $foodDocId");
           } else {
@@ -109,8 +104,9 @@ class CalculatorService {
               'Food_Point': ratingAverageString,
             };
 
-            await docRefFood.update(dataMapFood);
             await docRef.set(dataMap);
+            await docRefFood.update(dataMapFood);
+
             print("Data added for Food: $foodDocId");
           }
         } catch (e) {
@@ -123,9 +119,6 @@ class CalculatorService {
       }
       print('Food: $foodDocId, Rating Average: $formattedRatingAverage');
     }
-
-    // print('ID_Food = ');
-    // print(ID_Food);
     return documentIds;
   }
 }
