@@ -26,6 +26,9 @@ import '../../Models/foodmodels.dart';
 import '../../calculator.dart';
 import '../../follow.dart';
 import '../../global.dart';
+import 'detailReplyComment.dart';
+import 'detailReplyMod.dart';
+import 'detailReplyReview.dart';
 import 'detail_service.dart';
 
 class DetailFood extends StatefulWidget {
@@ -63,11 +66,16 @@ class _DetailFoodState extends State<DetailFood> {
   File? imageXFile;
   final TextEditingController SenWork = TextEditingController();
   final TextEditingController Review = TextEditingController();
+  final TextEditingController Comment = TextEditingController();
+  final TextEditingController ReplyMod = TextEditingController();
+  final TextEditingController ReplyComment = TextEditingController();
+  final TextEditingController ReplyReview = TextEditingController();
   int _rating = 0;
   String? id;
   List<String> urls = [];
   List<dynamic> modifyList = [];
   List<dynamic> reviewList = [];
+  List<dynamic> commentList = [];
   List<List<String>> AllImageAllImageModify = [];
   List<List<String>> AllImageAllImageReview = [];
   // List<List<String>> AllImage = [];
@@ -82,7 +90,18 @@ class _DetailFoodState extends State<DetailFood> {
 
   List<File> files = []; // List เก็บรูปภาพที่ถูกเลือก
   UploadTask? task;
-  String? urlDownload, food_video, commentModifyfood = '', commentReview = '';
+  String? urlDownload,
+      food_video,
+      commentModifyfood = '',
+      commentReview = '',
+      commentComment = '',
+      replyMod = '',
+      replyComment = '',
+      replyReview = '';
+
+  String? idComment;
+  String? idReview;
+  String? idMod;
   List<List<String>> imageUrlsList = [];
   List<List<String>> imageUrlsListMofify = [];
   List<dynamic>? dataUser;
@@ -116,19 +135,6 @@ class _DetailFoodState extends State<DetailFood> {
   }
 
   Future<void> uploadFileModify() async {
-    // final DocumentSnapshot snapshot = await FirebaseFirestore.instance
-    //     .collection("ModFood")
-    //     .doc(id_food!)
-    //     .collection("FoodID")
-    //     .get();
-    // DocumentReference docRefFood = FirebaseFirestore.instance
-    //     .collection("ModFood")
-    //     .doc(id_food!)
-    //     .collection("FoodID")
-    //     .doc();
-    // DocumentSnapshot docSnapshot = await docRefFood.get();
-    // String IdModify = docSnapshot.id;
-
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference foodDocRef = firestore
         .collection("ModifyFood")
@@ -191,6 +197,28 @@ class _DetailFoodState extends State<DetailFood> {
       //setState(() {
       files.clear();
       //});
+      print("Upload complete");
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> uploadFileComment() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference foodDocRef = firestore
+        .collection("CommentFood")
+        .doc(id_food!)
+        .collection("CommentID")
+        .doc();
+    try {
+      Map<String, dynamic> dataMap = {
+        'ID_Food': id_food,
+        'ID_Comment': foodDocRef.id,
+        'Comment': commentComment,
+        'Time': Timestamp.now(),
+        'Uid': userid,
+      };
+      await foodDocRef.set(dataMap);
       print("Upload complete");
     } catch (e) {
       print("Error: $e");
@@ -267,6 +295,72 @@ class _DetailFoodState extends State<DetailFood> {
     //setState(() {
     _rating = value;
     //});
+  }
+
+  Future<void> uploadFileReplyComment() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference foodDocRef = firestore
+        .collection("ReplyComment")
+        .doc(idComment)
+        .collection("ReplyCommentID")
+        .doc();
+    try {
+      Map<String, dynamic> dataMap = {
+        'ID_Comment': idComment,
+        'ID_ReplyComment': foodDocRef.id,
+        'Comment': replyComment,
+        'Time': Timestamp.now(),
+        'Uid': userid,
+      };
+      await foodDocRef.set(dataMap);
+      print("Upload complete");
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> uploadFileReplyMod() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference foodDocRef = firestore
+        .collection("ReplyMod")
+        .doc(idMod)
+        .collection("ReplyModID")
+        .doc();
+    try {
+      Map<String, dynamic> dataMap = {
+        'ID_Mod': idMod,
+        'ID_ReplyMod': foodDocRef.id,
+        'Comment': replyMod,
+        'Time': Timestamp.now(),
+        'Uid': userid,
+      };
+      await foodDocRef.set(dataMap);
+      print("Upload complete");
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> uploadFileReplyReview() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final DocumentReference foodDocRef = firestore
+        .collection("ReplyReview")
+        .doc(idReview)
+        .collection("ReplyReviewID")
+        .doc();
+    try {
+      Map<String, dynamic> dataMap = {
+        'ID_Review': idReview,
+        'ID_ReplyReview': foodDocRef.id,
+        'Comment': replyReview,
+        'Time': Timestamp.now(),
+        'Uid': userid,
+      };
+      await foodDocRef.set(dataMap);
+      print("Upload complete");
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   Future<void> _getDataFromDatabase() async {
@@ -389,7 +483,7 @@ class _DetailFoodState extends State<DetailFood> {
 
     try {
       List<dynamic> MofifyList = await DetailService()
-          .fetchReviewData('ModifyFood', id_food!, 'ModID');
+          .fetchModifyData('ModifyFood', id_food!, 'ModID');
       modifyList = MofifyList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData ที่นี่
@@ -403,6 +497,14 @@ class _DetailFoodState extends State<DetailFood> {
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
       print('Error in fetchReviewData (Review): $e');
+    }
+    try {
+      List<dynamic> CommentList = await DetailService()
+          .fetchCommentData('CommentFood', id_food!, 'CommentID');
+      commentList = CommentList;
+    } catch (e) {
+      // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
+      print('Error in fetchCommentData (Comment): $e');
     }
   }
 
@@ -636,7 +738,7 @@ class _DetailFoodState extends State<DetailFood> {
                                 height: 10.0,
                               ),
                               TextField(
-                                controller: Review,
+                                controller: Comment,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(20)),
@@ -650,7 +752,8 @@ class _DetailFoodState extends State<DetailFood> {
                               TextButton(
                                   onPressed: () async {
                                     print('Success');
-                                    //_fetch();
+                                    commentComment = Comment.text;
+                                    uploadFileComment();
                                     Navigator.of(context).pop();
                                   },
                                   child: const Text('ส่ง')),
@@ -1148,6 +1251,7 @@ class _DetailFoodState extends State<DetailFood> {
                               itemBuilder: (BuildContext context, int index) {
                                 Map<String, dynamic> modifyData =
                                     modifyList[index];
+
                                 Timestamp timestamp =
                                     modifyData['Time'] as Timestamp;
                                 DateTime dateTime = timestamp.toDate();
@@ -1181,8 +1285,9 @@ class _DetailFoodState extends State<DetailFood> {
                                           }).toList(),
                                         ),
                                       ),
-                                      // Text('ID_Food : ${modifyData['ID_Food']}'),
-                                      // Text('ID_Mod : ${modifyData['ID_Mod']}'),
+                                      Text(
+                                          'ID_Food : ${modifyData['ID_Food']}'),
+                                      Text('ID_Mod : ${modifyData['ID_Mod']}'),
                                       Text('${modifyData['Uid']}',
                                           style: TextStyle(fontSize: 20),
                                           maxLines: 5),
@@ -1199,12 +1304,94 @@ class _DetailFoodState extends State<DetailFood> {
                                       SizedBox(
                                         height: 10,
                                       ),
+                                      InkWell(
+                                        onTap: () {
+                                          Get.snackbar(
+                                              '${modifyData['ID_Mod']}',
+                                              'message');
+                                          idMod = modifyData['ID_Mod'];
+                                          showModalBottomSheet(
+                                            isScrollControlled: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return SizedBox(
+                                                height: 400,
+                                                child: Center(
+                                                  child: ListView(
+                                                    children: <Widget>[
+                                                      Text('ตอบกลับคอมเม้น'),
+                                                      SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      TextField(
+                                                        controller: ReplyMod,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          border: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)),
+                                                          labelText:
+                                                              'ตอบกลับคอมเม้น',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      TextButton(
+                                                          onPressed: () async {
+                                                            print('Success');
+                                                            replyMod =
+                                                                ReplyMod.text;
+                                                            uploadFileReplyMod();
+                                                            Get.to(
+                                                                ReplyModFood(),
+                                                                arguments:
+                                                                    modifyData[
+                                                                        'ID_Mod']);
+                                                            // Navigator.of(
+                                                            //         context)
+                                                            //     .pop();
+                                                          },
+                                                          child: const Text(
+                                                              'ส่ง')),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 400,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 150, top: 10),
+                                            child: Text(
+                                              'ตอบกกลับ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      //Report Button
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       //Report Button
                                       InkWell(
                                         onTap: () {
                                           Get.snackbar(
                                               '${modifyData['ID_Mod']}',
                                               'message');
+                                          Get.to(ReplyModFood(),
+                                              arguments: modifyData['ID_Mod']);
                                         },
                                         child: Container(
                                           width: 400,
@@ -1236,8 +1423,173 @@ class _DetailFoodState extends State<DetailFood> {
                 ),
 
 //Comment Tab
-                Container(
-                  color: Colors.red,
+                FutureBuilder<void>(
+                  future: _fetch(), // คำสั่งดึงข้อมูลที่แสดง
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    return Container(
+                      color: Colors.red,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: commentList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                Map<String, dynamic> commentData =
+                                    commentList[index];
+
+                                Timestamp timestamp =
+                                    commentData['Time'] as Timestamp;
+                                DateTime dateTime = timestamp.toDate();
+                                String thaiDateTime = DateFormat.yMMMMd('th_TH')
+                                    .add_Hms()
+                                    .format(dateTime);
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(width: 5)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Text('ID_Food : ${modifyData['ID_Food']}'),
+                                      // Text('ID_Mod : ${modifyData['ID_Mod']}'),
+                                      Text('${commentData['Uid']}',
+                                          style: TextStyle(fontSize: 20),
+                                          maxLines: 5),
+                                      Text(
+                                          'คอมเม้นต์ : ${commentData['Comment']}',
+                                          style: TextStyle(fontSize: 20),
+                                          maxLines: 5),
+                                      Text(
+                                        'โพสต์เมื่อ : $thaiDateTime',
+                                        style: TextStyle(
+                                            color:
+                                                Colors.black.withOpacity(0.5)),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+
+                                      InkWell(
+                                        onTap: () {
+                                          Get.snackbar(
+                                              '${commentData['ID_Comment']}',
+                                              'message');
+                                          idComment = commentData['ID_Comment'];
+                                          showModalBottomSheet(
+                                            isScrollControlled: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return SizedBox(
+                                                height: 400,
+                                                child: Center(
+                                                  child: ListView(
+                                                    children: <Widget>[
+                                                      Text('ตอบกลับคอมเม้น'),
+                                                      SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      TextField(
+                                                        controller:
+                                                            ReplyComment,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          border: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)),
+                                                          labelText:
+                                                              'ตอบกลับคอมเม้น',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      TextButton(
+                                                          onPressed: () async {
+                                                            print('Success');
+                                                            replyComment =
+                                                                ReplyComment
+                                                                    .text;
+                                                            uploadFileReplyComment();
+                                                            // Navigator.of(
+                                                            //         context)
+                                                            //     .pop();
+                                                            Get.to(
+                                                                ReplyCommentFood(),
+                                                                arguments:
+                                                                    commentData[
+                                                                        'ID_Comment']);
+                                                          },
+                                                          child: const Text(
+                                                              'ส่ง')),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 400,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 150, top: 10),
+                                            child: Text(
+                                              'ตอบกกลับ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      //Report Button
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+
+                                      InkWell(
+                                        onTap: () {
+                                          Get.snackbar(
+                                              '${commentData['ID_Comment']}',
+                                              'message');
+                                          Get.to(ReplyCommentFood(),
+                                              arguments:
+                                                  commentData['ID_Comment']);
+                                        },
+                                        child: Container(
+                                          width: 400,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 150, top: 10),
+                                            child: Text(
+                                              'ดูการตอบกกลับ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
 
 //Review Tab
@@ -1320,10 +1672,97 @@ class _DetailFoodState extends State<DetailFood> {
                                       SizedBox(
                                         height: 10,
                                       ),
+                                      InkWell(
+                                        onTap: () {
+                                          Get.snackbar(
+                                              '${reviewData['ID_Review']}',
+                                              'message');
+
+                                          idReview = reviewData['ID_Review'];
+                                          showModalBottomSheet(
+                                            isScrollControlled: false,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return SizedBox(
+                                                height: 400,
+                                                child: Center(
+                                                  child: ListView(
+                                                    children: <Widget>[
+                                                      Text('ตอบกลับคอมเม้น'),
+                                                      SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      TextField(
+                                                        controller: ReplyReview,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          border: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)),
+                                                          labelText:
+                                                              'ตอบกลับคอมเม้น',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10.0,
+                                                      ),
+                                                      TextButton(
+                                                          onPressed: () async {
+                                                            print('Success');
+                                                            replyReview =
+                                                                ReplyReview
+                                                                    .text;
+                                                            uploadFileReplyReview();
+                                                            // Navigator.of(
+                                                            //         context)
+                                                            //     .pop();
+                                                            Get.to(
+                                                                ReplyReviewFood(),
+                                                                arguments:
+                                                                    reviewData[
+                                                                        'ID_Review']);
+                                                          },
+                                                          child: const Text(
+                                                              'ส่ง')),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 400,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 150, top: 10),
+                                            child: Text(
+                                              'ตอบกกลับ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      //Report Button
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       //Report Button
                                       InkWell(
                                         onTap: () {
-                                          Get.snackbar('tap', 'message');
+                                          Get.snackbar(
+                                              '${reviewData['ID_Review']}',
+                                              'message');
+                                          Get.to(ReplyReviewFood(),
+                                              arguments:
+                                                  reviewData['ID_Review']);
                                         },
                                         child: Container(
                                           width: 400,

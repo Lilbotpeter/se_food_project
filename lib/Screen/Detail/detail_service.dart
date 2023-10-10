@@ -44,16 +44,60 @@ class DetailService {
 
           reviewDataList.add({
             'ID_Food': reviewData['ID_Food'],
-            'ID_Mod': reviewData['ID_Mod'],
+            'ID_Review': reviewData['ID_Review'],
             'Comment': reviewData['Comment'],
             'Rating': reviewData['Rating'],
             'Time': reviewData['Time'],
             'Video': reviewData['Video'],
-            'Uid' : reviewData['Uid'],
+            'Uid': reviewData['Uid'],
           });
         }
       }
       return reviewDataList;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
+  Future<List<dynamic>> fetchCommentData(
+      String mainCollection, String docID, String subCollection) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<dynamic> commentDataList = [];
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection(mainCollection)
+          .doc(docID)
+          .collection(subCollection)
+          .get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        String snapID = docSnapshot.id;
+
+        String Snapidx = snapID;
+        //pull id review
+        DocumentSnapshot docFirestoreDoc = await firestore
+            .collection(mainCollection)
+            .doc(docID)
+            .collection(subCollection)
+            .doc(Snapidx)
+            .get();
+
+        if (docFirestoreDoc.exists) {
+          Map<String, dynamic> commentData =
+              docFirestoreDoc.data() as Map<String, dynamic>;
+
+          commentDataList.add({
+            'ID_Food': commentData['ID_Food'],
+            'ID_Comment': commentData['ID_Comment'],
+            'Comment': commentData['Comment'],
+            'Time': commentData['Time'],
+            'Uid': commentData['Uid'],
+          });
+        }
+      }
+      return commentDataList;
     } catch (e) {
       print("Error fetching images: $e");
       throw e;
@@ -94,7 +138,7 @@ class DetailService {
             'Comment': modData['Comment'],
             'Time': modData['Time'],
             'Video': modData['Video'],
-            'Uid' : modData['Uid'],
+            'Uid': modData['Uid'],
           });
         }
       }
@@ -187,6 +231,50 @@ class DetailService {
         imageUrlsList.add(urls);
       }
       return imageUrlsList;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
+  Future<List<dynamic>> fetchReplyModifyData(
+      String mainCollection, String docID, String subCollection) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<dynamic> modDataList = [];
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection(mainCollection)
+          .doc(docID)
+          .collection(subCollection)
+          .get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        String snapID = docSnapshot.id;
+
+        String Snapidx = snapID;
+        //pull id review
+        DocumentSnapshot docFirestoreDoc = await firestore
+            .collection(mainCollection)
+            .doc(docID)
+            .collection(subCollection)
+            .doc(Snapidx)
+            .get();
+
+        if (docFirestoreDoc.exists) {
+          Map<String, dynamic> modData =
+              docFirestoreDoc.data() as Map<String, dynamic>;
+
+          modDataList.add({
+            'ID_ReplyMod': modData['ID_ReplyMod'],
+            'ID_Mod': modData['ID_Mod'],
+            'Comment': modData['Comment'],
+            'Time': modData['Time'],
+            'Uid': modData['Uid'],
+          });
+        }
+      }
+      return modDataList;
     } catch (e) {
       print("Error fetching images: $e");
       throw e;
