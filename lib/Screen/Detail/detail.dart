@@ -144,6 +144,7 @@ class _DetailFoodState extends State<DetailFood> {
 
     if (files.isEmpty) {
       print("No files selected");
+      Get.snackbar('หัวข้อ', 'อัปโหลดไม่สำเร็จ');
       return;
     }
     try {
@@ -197,6 +198,7 @@ class _DetailFoodState extends State<DetailFood> {
       //setState(() {
       files.clear();
       //});
+      Get.snackbar('หัวข้อ', 'อัปโหลดสำเร็จ');
       print("Upload complete");
     } catch (e) {
       print("Error: $e");
@@ -234,6 +236,7 @@ class _DetailFoodState extends State<DetailFood> {
         .doc();
     if (files.isEmpty) {
       print("No files selected");
+      Get.snackbar('หัวข้อ', 'อัปโหลดไม่สำเร็จ');
       return;
     }
     try {
@@ -285,6 +288,7 @@ class _DetailFoodState extends State<DetailFood> {
       //setState(() {
       files.clear();
       //});
+      Get.snackbar('หัวข้อ', 'อัปโหลดสำเร็จ');
       print("Upload complete");
     } catch (e) {
       print("Error: $e");
@@ -632,8 +636,12 @@ class _DetailFoodState extends State<DetailFood> {
                                         };
 
                                         await foodReport.set(dataMap);
+                                        Fooddetail.clear();
+                                        Get.snackbar('หัวข้อ', 'รายงานสำเร็จ');
                                         print('Successfull');
                                       } catch (e) {
+                                        Get.snackbar(
+                                            'หัวข้อ', 'รายงานไม่สำเร็จ');
                                         print("Error: $e");
                                       }
                                       ;
@@ -706,6 +714,7 @@ class _DetailFoodState extends State<DetailFood> {
                                       print('Success');
                                       commentModifyfood = SenWork.text;
                                       uploadFileModify();
+                                      SenWork.clear();
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text('ส่ง')),
@@ -754,6 +763,7 @@ class _DetailFoodState extends State<DetailFood> {
                                     print('Success');
                                     commentComment = Comment.text;
                                     uploadFileComment();
+                                    Comment.clear();
                                     Navigator.of(context).pop();
                                   },
                                   child: const Text('ส่ง')),
@@ -864,6 +874,7 @@ class _DetailFoodState extends State<DetailFood> {
                                           // จัดการข้อผิดพลาดที่เกิดขึ้นหากมี
                                           print('เกิดข้อผิดพลาด: $e');
                                         }
+                                        Review.clear();
                                         Navigator.of(context).pop();
                                       },
                                       child: const Text('ส่ง')),
@@ -1345,6 +1356,7 @@ class _DetailFoodState extends State<DetailFood> {
                                                             replyMod =
                                                                 ReplyMod.text;
                                                             uploadFileReplyMod();
+                                                            ReplyMod.clear();
                                                             Get.to(
                                                                 ReplyModFood(),
                                                                 arguments:
@@ -1514,6 +1526,8 @@ class _DetailFoodState extends State<DetailFood> {
                                                                 ReplyComment
                                                                     .text;
                                                             uploadFileReplyComment();
+                                                            ReplyComment
+                                                                .clear();
                                                             // Navigator.of(
                                                             //         context)
                                                             //     .pop();
@@ -1718,6 +1732,7 @@ class _DetailFoodState extends State<DetailFood> {
                                                             // Navigator.of(
                                                             //         context)
                                                             //     .pop();
+                                                            ReplyReview.clear();
                                                             Get.to(
                                                                 ReplyReviewFood(),
                                                                 arguments:
