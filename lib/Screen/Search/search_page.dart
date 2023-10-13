@@ -18,9 +18,9 @@ class _SearchPageState extends State<SearchPageStream> {
   List _resultList = [];
   final TextEditingController _searchController = TextEditingController();
 
-  Future<QuerySnapshot> getDataFoods() async {
-    return await FirebaseFirestore.instance.collection('Foods').get();
-  }
+  // Future<QuerySnapshot> getDataFoods() async {
+  //   return await FirebaseFirestore.instance.collection('Foods').get();
+  // }
 
   @override
   void initState() {
@@ -30,7 +30,6 @@ class _SearchPageState extends State<SearchPageStream> {
 
   _onSearchChanged() {
     searchResultList();
- 
   }
 
   searchResultList() {
@@ -115,8 +114,7 @@ class _SearchPageState extends State<SearchPageStream> {
             ),
           ),
           Visibility(
-            visible:
-                !_showListView, 
+            visible: !_showListView,
             child: Center(
               child: Text('ไม่พบข้อมูล'),
             ),
