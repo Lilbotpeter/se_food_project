@@ -5,12 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
-import 'package:se_project_food/Screen/Detail/detail.dart';
 //import 'package:se_project_food/Authen/authen_part.dart';
 
 import '../../Edit/editUser_page.dart';
 import '../../Models/foodmodels.dart';
-import '../../Widgets/appbar_custom.dart';
+
 import '../../Widgets/profile_picture.dart';
 import '../../constants.dart';
 
@@ -187,7 +186,7 @@ class _UserProfileState extends State<UserProfile> {
                       onPressed: () {
                         Get.to(const EditUser(), arguments: userid);
                       },
-                      child: Text('แก้ไขข้อมูลส่วนตัว'),
+                      child: const Text('แก้ไขข้อมูลส่วนตัว',style: TextStyle(color: Colors.white),),
                     ),
                   ),
                   Padding(

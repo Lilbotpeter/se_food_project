@@ -12,6 +12,7 @@ class ButtonWidget extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onClick,
+    
   }) : super(key: key);
 
   @override
@@ -20,18 +21,18 @@ class ButtonWidget extends StatelessWidget {
         child: buildContent(),
         style: ElevatedButton.styleFrom(
           primary: Colors.amber,
-          minimumSize: Size.fromHeight(50),
+          minimumSize: const Size.fromHeight(50),
         ),
       );
 
   Widget buildContent() => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 28),
-          SizedBox(width: 16),
+          Icon(icon, size: 28,color: Colors.white,),
+          const SizedBox(width: 5),
           Text(
             text,
-            style: TextStyle(fontSize: 22, color: Colors.white),
+            style: const TextStyle(fontSize: 22, color: Colors.white),
           )
         ],
       );

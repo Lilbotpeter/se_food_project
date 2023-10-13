@@ -162,7 +162,7 @@ class _UploadFoodState extends State<UploadFood> {
       decoration: InputDecoration(
         labelText: 'ชื่ออาหาร',
         hintText: 'กรุณากรอกชื่ออาหาร',
-        icon: Icon(Icons.format_align_center),
+        //icon: Icon(Icons.format_align_center),
         border:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         focusedBorder:
@@ -170,7 +170,8 @@ class _UploadFoodState extends State<UploadFood> {
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         filled: true,
-        contentPadding: const EdgeInsets.all(8),
+        isDense: true,                      // Added this
+        contentPadding: EdgeInsets.all(8),
       ),
       keyboardType: TextInputType.text,
     );
@@ -190,7 +191,7 @@ class _UploadFoodState extends State<UploadFood> {
       decoration: InputDecoration(
         labelText: 'ความยากในการทำ',
         hintText: 'กรุณาเลือกความยากในการทำ',
-        icon: Icon(Icons.point_of_sale),
+        //icon: Icon(Icons.point_of_sale),
         border:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         focusedBorder:
@@ -198,7 +199,8 @@ class _UploadFoodState extends State<UploadFood> {
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         filled: true,
-        contentPadding: const EdgeInsets.all(8),
+        isDense: true,                      // Added this
+        contentPadding: EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
         DropdownMenuItem<String>(
@@ -222,229 +224,83 @@ class _UploadFoodState extends State<UploadFood> {
   }
 
   Widget ingredients(context) {
-    return TextField(
-      onChanged: (value) {
-        food_ingredients = value.trim();
-      },
-      decoration: InputDecoration(
-        labelText: 'วัตถุดิบ',
-        hintText: 'กรุณากรอกวัตถุดิบ',
-        icon: Icon(Icons.dinner_dining),
-        border:
-            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        focusedBorder:
-            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        enabledBorder:
-            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
-        contentPadding: const EdgeInsets.all(8),
+    final maxLines = 5;
+
+    return Container(
+      height: maxLines * 24.0,
+
+      child: TextField(
+        onChanged: (value) {
+          food_ingredients = value.trim();
+        },
+        decoration: InputDecoration(
+          labelText: 'วัตถุดิบ',
+          hintText: 'กรุณากรอกวัตถุดิบ',
+          //icon: Icon(Icons.dinner_dining),
+          border:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          enabledBorder:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          filled: true,
+          isDense: true,                      // Added this
+          contentPadding: EdgeInsets.all(8),
+        ),
+        
+        maxLines: maxLines,
+        keyboardType: TextInputType.multiline,
       ),
-      keyboardType: TextInputType.text,
     );
   }
 
 //
   Widget solution(context) {
-    return TextField(
-        onChanged: (value) {
-          food_solution = value.trim();
-        },
-        decoration: InputDecoration(
-          labelText: 'วิธีการทำ',
-          hintText: 'กรุณากรอกวิธีการทำ',
-          icon: Icon(Icons.solar_power_outlined),
-          border:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          enabledBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
-          contentPadding: const EdgeInsets.all(8),
-        ),
-        keyboardType: TextInputType.text);
+    final maxLines = 5;
+    return Container(
+
+      height: maxLines * 24.0,
+      
+      child: TextField(
+          onChanged: (value) {
+            food_solution = value.trim();
+          },
+          decoration: InputDecoration(
+            labelText: 'วิธีการทำ',
+            hintText: 'กรุณากรอกวิธีการทำ',
+            //icon: Icon(Icons.solar_power_outlined),
+            border:
+                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+            focusedBorder:
+                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+            enabledBorder:
+                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+            filled: true,
+            isDense: true,                      // Added this
+          contentPadding: EdgeInsets.all(8),
+          ),
+          maxLines: maxLines,
+          keyboardType: TextInputType.multiline,),
+    );
   }
 
   Widget type(context) {
     String foodtype = 'ไม่มี'; // กำหนดค่าเริ่มต้น
 
-    return DropdownButtonFormField<String>(
-      value: foodtype,
-      onChanged: (value) {
-        //setState(() {
-        foodtype = value.toString();
-        food_type = foodtype;
-        //});
-      },
-      decoration: InputDecoration(
-        labelText: 'ความยากในการทำ',
-        hintText: 'กรุณาเลือกความยากในการทำ',
-        icon: Icon(Icons.point_of_sale),
-        border:
-            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        focusedBorder:
-            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        enabledBorder:
-            OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
-        contentPadding: const EdgeInsets.all(8),
-      ),
-      items: const <DropdownMenuItem<String>>[
-        DropdownMenuItem<String>(
-          value: 'ไม่มี',
-          child: Text('ไม่มี'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารอีสาน',
-          child: Text('อาหารอีสาน'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารใต้',
-          child: Text('อาหารใต้'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารเหนือ',
-          child: Text('อาหารเหนือ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารเส้น',
-          child: Text('อาหารเส้น'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารสุขภาพ',
-          child: Text('อาหารสุขภาพ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารตามสั่ง',
-          child: Text('อาหารตามสั่ง'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารทะเล',
-          child: Text('อาหารทะเล'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'แฮมเบอเกอร์',
-          child: Text('แฮมเบอเกอร์'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ของทอด',
-          child: Text('ของทอด'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ชา/กาแฟ',
-          child: Text('ชา/กาแฟ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ชาบู/สุกี้',
-          child: Text('ชาบู/สุกี้'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ชานมไข่มุก',
-          child: Text('ชานมไข่มุก'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ซูชิ',
-          child: Text('ซูชิ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ของหวาน',
-          child: Text('ของหวาน'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เบเกอรี่',
-          child: Text('เบเกอรี่'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เบรคฟาสต์',
-          child: Text('เบรคฟาสต์'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เค้ก',
-          child: Text('เค้ก'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เครื่องดื่ม',
-          child: Text('เครื่องดื่ม'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ฟาสต์ฟู้ด',
-          child: Text('ฟาสต์ฟู้ด'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'หม่าล่า',
-          child: Text('หม่าล่า'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ของหวาน',
-          child: Text('ของหวาน'),
-        ),
-        //--------------------------------
-        DropdownMenuItem<String>(
-          value: 'น้ำผลไม้',
-          child: Text('น้ำผลไม้'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารจานด่วน',
-          child: Text('อาหารจานด่วน'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'โจ๊ก',
-          child: Text('โจ๊ก'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'โยเกิร์ต/ไอศกรีม',
-          child: Text('โยเกิร์ต/ไอศกรีม'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ปิ้งย่าง/บาร์บีคิว',
-          child: Text('ปิ้งย่าง/บาร์บีคิว'),
-          //--------------------------------
-        ),
-        DropdownMenuItem<String>(
-          value: 'เครื่องดื่ม/น้ำผลไม้',
-          child: Text('เครื่องดื่ม/น้ำผลไม้'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'อาหารเจ',
-          child: Text('อาหารเจ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'โรตี',
-          child: Text('โรตี'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'สเต็ก',
-          child: Text('สเต็ก'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ส้มตำ',
-          child: Text('ส้มตำ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ของทานเล่น/ขนมขบเขี้ยว',
-          child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ติ่มซำ',
-          child: Text('ติ่มซำ'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ยำ',
-          child: Text('ยำ'),
-        ),
-      ],
-    );
-  }
-
-  Widget description(context) {
-    return TextField(
+    return Container(
+      width: 400,
+      child: DropdownButtonFormField<String>(
+        value: foodtype,
         onChanged: (value) {
-          food_description = value.trim();
+          //setState(() {
+          foodtype = value.toString();
+          food_type = foodtype;
+          //});
         },
         decoration: InputDecoration(
-          labelText: 'รายละเอียดอาหาร',
-          hintText: 'กรุณากรอกรายละเอียดอาหาร',
-          icon: Icon(Icons.description),
+          labelText: 'ประเภทอาหาร',
+          hintText: 'กรุณาเลือกประเภทอาหาร',
+          //icon: Icon(Icons.point_of_sale),
           border:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           focusedBorder:
@@ -452,9 +308,184 @@ class _UploadFoodState extends State<UploadFood> {
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           filled: true,
-          contentPadding: const EdgeInsets.all(8),
+          isDense: true,                      // Added this
+          contentPadding: EdgeInsets.all(8),
         ),
-        keyboardType: TextInputType.text);
+        items: const <DropdownMenuItem<String>>[
+          DropdownMenuItem<String>(
+            value: 'ไม่มี',
+            child: Text('ไม่มี'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารอีสาน',
+            child: Text('อาหารอีสาน'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารใต้',
+            child: Text('อาหารใต้'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารเหนือ',
+            child: Text('อาหารเหนือ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารเส้น',
+            child: Text('อาหารเส้น'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารสุขภาพ',
+            child: Text('อาหารสุขภาพ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารตามสั่ง',
+            child: Text('อาหารตามสั่ง'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารทะเล',
+            child: Text('อาหารทะเล'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'แฮมเบอเกอร์',
+            child: Text('แฮมเบอเกอร์'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ของทอด',
+            child: Text('ของทอด'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ชา/กาแฟ',
+            child: Text('ชา/กาแฟ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ชาบู/สุกี้',
+            child: Text('ชาบู/สุกี้'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ชานมไข่มุก',
+            child: Text('ชานมไข่มุก'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ซูชิ',
+            child: Text('ซูชิ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ของหวาน',
+            child: Text('ของหวาน'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'เบเกอรี่',
+            child: Text('เบเกอรี่'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'เบรคฟาสต์',
+            child: Text('เบรคฟาสต์'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'เค้ก',
+            child: Text('เค้ก'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'เครื่องดื่ม',
+            child: Text('เครื่องดื่ม'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ฟาสต์ฟู้ด',
+            child: Text('ฟาสต์ฟู้ด'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'หม่าล่า',
+            child: Text('หม่าล่า'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ของหวาน',
+            child: Text('ของหวาน'),
+          ),
+          //--------------------------------
+          DropdownMenuItem<String>(
+            value: 'น้ำผลไม้',
+            child: Text('น้ำผลไม้'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารจานด่วน',
+            child: Text('อาหารจานด่วน'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'โจ๊ก',
+            child: Text('โจ๊ก'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'โยเกิร์ต/ไอศกรีม',
+            child: Text('โยเกิร์ต/ไอศกรีม'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ปิ้งย่าง/บาร์บีคิว',
+            child: Text('ปิ้งย่าง/บาร์บีคิว'),
+            //--------------------------------
+          ),
+          DropdownMenuItem<String>(
+            value: 'เครื่องดื่ม/น้ำผลไม้',
+            child: Text('เครื่องดื่ม/น้ำผลไม้'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อาหารเจ',
+            child: Text('อาหารเจ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'โรตี',
+            child: Text('โรตี'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'สเต็ก',
+            child: Text('สเต็ก'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ส้มตำ',
+            child: Text('ส้มตำ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ของทานเล่น/ขนมขบเขี้ยว',
+            child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ติ่มซำ',
+            child: Text('ติ่มซำ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'ยำ',
+            child: Text('ยำ'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget description(context) {
+    final maxLines = 5;
+
+    return Container(
+      // margin: EdgeInsets.all(),
+      height: maxLines * 24.0,
+      child: TextField(
+          onChanged: (value) {
+            food_description = value.trim();
+          },
+          decoration: InputDecoration(
+            labelText: 'รายละเอียดอาหาร',
+            hintText: 'กรุณากรอกรายละเอียดอาหาร',
+            // icon: Icon(Icons.description),
+            border:
+                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+            focusedBorder:
+                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+            enabledBorder:
+                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+            filled: true,
+            isDense: true,                      // Added this
+          contentPadding: EdgeInsets.all(8),
+          ),
+          maxLines: maxLines,
+      keyboardType: TextInputType.multiline,),
+    );
   }
 
   Widget time(context) {
@@ -465,7 +496,7 @@ class _UploadFoodState extends State<UploadFood> {
         decoration: InputDecoration(
           labelText: 'เวลาในการทำ',
           hintText: 'กรุณากรอกเวลาในการทำ',
-          icon: Icon(Icons.description),
+          // icon: Icon(Icons.description),
           border:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           focusedBorder:
@@ -473,6 +504,7 @@ class _UploadFoodState extends State<UploadFood> {
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           filled: true,
+          isDense: true, 
           contentPadding: const EdgeInsets.all(8),
         ),
         keyboardType: TextInputType.text);
@@ -490,9 +522,9 @@ class _UploadFoodState extends State<UploadFood> {
         //});
       },
       decoration: InputDecoration(
-        labelText: 'ความยากในการทำ',
-        hintText: 'กรุณาเลือกความยากในการทำ',
-        icon: Icon(Icons.point_of_sale),
+        labelText: 'สัญชาติ',
+        hintText: 'กรุณาเลือกสัญชาติ',
+        // icon: Icon(Icons.point_of_sale),
         border:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         focusedBorder:
@@ -500,6 +532,7 @@ class _UploadFoodState extends State<UploadFood> {
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         filled: true,
+        isDense: true, 
         contentPadding: const EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
@@ -526,7 +559,7 @@ class _UploadFoodState extends State<UploadFood> {
       ],
     );
   }
-
+////////////////////////////////////////////////
   Widget point(context) {
     return TextField(
         onChanged: (value) {
@@ -614,6 +647,7 @@ class _UploadFoodState extends State<UploadFood> {
       body: Container(
         padding: EdgeInsets.all(32),
         child: Container(
+
             child: ListView(
           //mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -628,27 +662,35 @@ class _UploadFoodState extends State<UploadFood> {
                   ),
                 ),
               ),
-            SizedBox(
+            const SizedBox(
               height: 15.0,
+            ),
+            const Padding(
+              padding:  EdgeInsets.only(left: 50,bottom:5),
+              child:  Text('อัพโหลดสูตรของคุณ',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,),),
+            ),
+            const Padding(
+              padding:  EdgeInsets.only(left: 30,bottom: 25),
+              child:  Text('กรอกรายละเอียดได้เลย !',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.amber),),
             ),
             ButtonWidget(
                 //Button Select file
                 icon: Icons.attach_file,
-                text: 'เลือกไฟล์',
+                text: 'เลือกรูปภาพหรือวิดีโอ',
                 onClick: selectFile),
 
             //Under filename for "Spacebar naja"
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
             showForm(context),
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
             ButtonWidget(
                 //Button Upload file
                 icon: Icons.upload_file_sharp,
-                text: 'อัพโหลด',
+                text: 'อัพโหลดสูตร',
                 onClick: uploadFile),
 
             //task != null ? buildUploadStatus(task!) : Container() //Percent
@@ -657,4 +699,19 @@ class _UploadFoodState extends State<UploadFood> {
       ),
     );
   }
+}
+
+Widget _buildTextField() {
+  final maxLines = 5;
+
+  return Container(
+    margin: EdgeInsets.all(12),
+    height: maxLines * 24.0,
+    child: TextField(
+      
+      maxLines: maxLines,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(filled: true, hintText: 'Enter a message'),
+    ),
+  );
 }
