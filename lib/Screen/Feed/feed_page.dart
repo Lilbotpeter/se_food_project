@@ -59,16 +59,45 @@ class _FeedPageState extends State<FeedPage> {
     'ยาก',
     'ยากมาก',
   ];
+  List<String> imagelevelfood = [
+    'images/0star.png',
+    'images/1star.png',
+    'images/2star.png',
+    'images/3star.png',
+    'images/4star.png',
+    'images/5star.png',
+  ];
+  List<String> imagenationfood = [
+    'images/nation/thai.png',
+    'images/nation/usa.png',
+    'images/nation/english.png',
+    'images/nation/france.png',
+    'images/nation/germany.png',
+    'images/nation/japan.jpg',
+    'images/nation/italy.png',
+    'images/nation/india.png',
+    'images/nation/spain.png',
+    'images/nation/korea.png',
+    'images/nation/china.jpg',
+    'images/nation/nations.jpeg',
+  ];
 
   List<String> nationfood = [
-    'ไม่มี',
     'ไทย',
-    'จีน',
+    'อเมริกา',
+    'อังกฤษ',
+    'ฝรั่งเศษ',
+    'เยอรมัน',
     'ญี่ปุ่น',
-    'เกาหลี',
     'อิตาลี',
+    'อินเดีย',
+    'สเปน',
+    'เกาหลี',
+    'จีน',
     'อื่นๆ',
   ];
+
+  //
   List<String> typefood = [
     'ไม่มี',
     'อาหารอีสาน',
@@ -446,6 +475,107 @@ class _FeedPageState extends State<FeedPage> {
               ),
             ),
             SizedBox(
+              height: 15,
+            ),
+            TitleCustomWithMore(text: "สัญชาติ"),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: nationfood.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext buildContext, int index) {
+                  return Container(
+                    width: 100,
+                    margin: EdgeInsets.only(left: 15),
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white70,
+                      //   gradient: LinearGradient(
+                      // begin: Alignment.topCenter,
+                      // end: Alignment.bottomCenter,
+                      // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
+                      // stops: [0.1, 0.5, 0.9],
+                      //   ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset(
+                          imagenationfood[index],
+                          height: 80,
+                          width: 80,
+                        ),
+
+                        TextButton(
+                          onPressed: () {
+                            print('Yes I does');
+                            print(nationfood[index]);
+                            Get.to(detailNationfood(),
+                                arguments: nationfood[index]);
+                          },
+                          child: Text(nationfood[index]),
+                        ),
+                        //Text(typefood[index]),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            TitleCustomWithMore(text: "ความยากในการทำ"),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: levelfood.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext buildContext, int index) {
+                  return Container(
+                    width: 100,
+                    margin: EdgeInsets.only(left: 15),
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset(
+                          //'assets/0star.jpg',
+                          imagelevelfood[index],
+                          height: 80,
+                          width: 80,
+                        ),
+
+                        TextButton(
+                          onPressed: () {
+                            print('Yes I does');
+                            print(levelfood[index]);
+                            Get.to(detailLevelfood(),
+                                arguments: levelfood[index]);
+                          },
+                          child: Text(levelfood[index]),
+                        ),
+                        //Text(typefood[index]),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
               height: 20,
             ),
             TitleCustomWithMore(text: "เมนูแนะนำ!"),
@@ -484,112 +614,6 @@ class _FeedPageState extends State<FeedPage> {
                                 transition: Transition.rightToLeft);
                           }),
                     ]),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            TitleCustomWithMore(text: "สัญชาติ"),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: nationfood.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext buildContext, int index) {
-                  return Container(
-                    width: 100,
-                    margin: EdgeInsets.only(left: 15),
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      //   gradient: LinearGradient(
-                      // begin: Alignment.topCenter,
-                      // end: Alignment.bottomCenter,
-                      // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
-                      // stops: [0.1, 0.5, 0.9],
-                      //   ),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // Image.asset(
-                        //   imageTypefood[index],
-                        //   height: 80,
-                        //   width: 80,
-                        // ),
-                        Icon(Icons.food_bank),
-                        TextButton(
-                          onPressed: () {
-                            print('Yes I does');
-                            print(nationfood[index]);
-                            Get.to(detailNationfood(),
-                                arguments: nationfood[index]);
-                          },
-                          child: Text(nationfood[index]),
-                        ),
-                        //Text(typefood[index]),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            TitleCustomWithMore(text: "ความยากในการทำ"),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: levelfood.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext buildContext, int index) {
-                  return Container(
-                    width: 100,
-                    margin: EdgeInsets.only(left: 15),
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      //   gradient: LinearGradient(
-                      // begin: Alignment.topCenter,
-                      // end: Alignment.bottomCenter,
-                      // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
-                      // stops: [0.1, 0.5, 0.9],
-                      //   ),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // Image.asset(
-                        //   imageTypefood[index],
-                        //   height: 80,
-                        //   width: 80,
-                        // ),
-                        Icon(Icons.food_bank),
-                        TextButton(
-                          onPressed: () {
-                            print('Yes I does');
-                            print(levelfood[index]);
-                            Get.to(detailLevelfood(),
-                                arguments: levelfood[index]);
-                          },
-                          child: Text(levelfood[index]),
-                        ),
-                        //Text(typefood[index]),
-                      ],
-                    ),
                   );
                 },
               ),

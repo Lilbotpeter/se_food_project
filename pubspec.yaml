@@ -69,7 +69,26 @@ flutter:
     - images/search-svgrepo-com.svg
     - images/food.jpg
     - images/james-person-1.jpg
+    - images/0star.png
+    - images/1star.png
+    - images/2star.png
+    - images/3star.png
+    - images/4star.png
+    - images/5star.png
+    - images/noimage.png
   #   - images/a_dot_ham.jpeg
+    - images/nation/thai.png
+    - images/nation/usa.png
+    - images/nation/english.png
+    - images/nation/france.png
+    - images/nation/germany.png
+    - images/nation/japan.jpg
+    - images/nation/italy.png
+    - images/nation/india.png
+    - images/nation/spain.png
+    - images/nation/korea.png
+    - images/nation/china.jpg
+    - images/nation/nations.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -186,7 +186,20 @@ class _UserProfileState extends State<UserProfile> {
                       onPressed: () {
                         Get.to(const EditUser(), arguments: userid);
                       },
-                      child: const Text('แก้ไขข้อมูลส่วนตัว',style: TextStyle(color: Colors.white),),
+                      child: const Text(
+                        'แก้ไขข้อมูลส่วนตัว',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      print('Hellp');
+                    },
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                      size: 24,
                     ),
                   ),
                   Padding(

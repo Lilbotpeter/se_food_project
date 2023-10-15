@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
+import '../Screen/Detail/detail.dart';
 import 'AdminService.dart';
 
 class FoodReport extends StatefulWidget {
@@ -103,6 +104,9 @@ class _FoodReportReportState extends State<FoodReport> {
                                 SnackBar(
                                     content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
                               );
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => FoodReport()));
                               setState(() {
                                 reportData.removeAt(index);
                               });
@@ -130,7 +134,9 @@ class _FoodReportReportState extends State<FoodReport> {
                             ),
                           ),
                           onPressed: () async {
-                            // Implement view user data functionality
+                            Get.to(DetailFood(),
+                                arguments: reportData['ID_Food'],
+                                transition: Transition.rightToLeft);
                           },
                           child: Text('ดูข้อมูลอาหาร'),
                         ),

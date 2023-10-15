@@ -436,33 +436,58 @@ class _DetailFoodState extends State<DetailFood> {
     }
   }
 
-  //get images storage
+  // //get images storage
+  // Future<void> _getImagesFromStorage(String? id) async {
+  //   try {
+  //     final firebase_storage.FirebaseStorage storage =
+  //         firebase_storage.FirebaseStorage.instance;
+
+  //     // ดึงรายการรูปภาพจากโฟลเดอร์ "Image" ในโฟลเดอร์ที่มีชื่อเป็น id
+  //     final firebase_storage.ListResult result = await storage
+  //         .ref()
+  //         .child('files')
+  //         .child('$id')
+  //         .child('Image')
+  //         .listAll();
+
+  //     // ตรวจสอบว่ามีรูปภาพในโฟลเดอร์ "Image" หรือไม่
+  //     if (result.items.isNotEmpty) {
+  //       for (var imageRef in result.items) {
+  //         // ดึง URL ของรูปภาพและเพิ่มในรายการ imageUrls
+  //         final imageUrl = await imageRef.getDownloadURL();
+  //         setState(() {
+  //           imageUrls.add(imageUrl);
+  //           print('$imageUrl');
+  //         });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("เกิดข้อผิดพลาดในการดึงรูปภาพ: $e");
+  //   }
+  // }
+  // ฟังก์ชันเพื่อดึงรูปภาพและวิดีโอ
   Future<void> _getImagesFromStorage(String? id) async {
     try {
       final firebase_storage.FirebaseStorage storage =
           firebase_storage.FirebaseStorage.instance;
 
-      // ดึงรายการรูปภาพจากโฟลเดอร์ "Image" ในโฟลเดอร์ที่มีชื่อเป็น id
-      final firebase_storage.ListResult result = await storage
-          .ref()
-          .child('files')
-          .child('$id')
-          .child('Image')
-          .listAll();
+      // ดึงรายการรูปภาพและวิดีโอจากโฟลเดอร์ "files" ในโฟลเดอร์ที่มีชื่อเป็น id
+      final firebase_storage.ListResult result =
+          await storage.ref().child('files').child('$id').listAll();
 
-      // ตรวจสอบว่ามีรูปภาพในโฟลเดอร์ "Image" หรือไม่
+      // ตรวจสอบว่ามีรูปภาพและวิดีโอในโฟลเดอร์หรือไม่
       if (result.items.isNotEmpty) {
-        for (var imageRef in result.items) {
-          // ดึง URL ของรูปภาพและเพิ่มในรายการ imageUrls
-          final imageUrl = await imageRef.getDownloadURL();
+        for (var ref in result.items) {
+          // ดึง URL และเพิ่มในรายการ imageUrls
+          final url = await ref.getDownloadURL();
           setState(() {
-            imageUrls.add(imageUrl);
-            print('$imageUrl');
+            imageUrls.add(url);
+            print('URL: $url');
           });
         }
       }
     } catch (e) {
-      print("เกิดข้อผิดพลาดในการดึงรูปภาพ: $e");
+      print("เกิดข้อผิดพลาดในการดึงรูปภาพและวิดีโอ: $e");
     }
   }
 

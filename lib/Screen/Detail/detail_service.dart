@@ -149,15 +149,56 @@ class DetailService {
     }
   }
 
+  // Future<List<List<String>>> fetchImagesReview(
+  //     String mainCollection, String docID, String subCollection) async {
+  //   List<List<String>> imageUrlsList = [];
+  //   try {
+  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //     FirebaseStorage storage = FirebaseStorage.instance;
+  //     imageUrlsList = [];
+
+  //     //ไอดี รีวิว
+  //     QuerySnapshot querySnapshot = await firestore
+  //         .collection(mainCollection)
+  //         .doc(docID)
+  //         .collection(subCollection)
+  //         .get();
+
+  //     for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+  //       String reviewId = docSnapshot.id;
+  //       List<String> urls = []; // เลื่อนรายการนี้ลงมาที่นี่
+
+  //       //pack image
+  //       ListResult result = await storage
+  //           .ref()
+  //           .child(mainCollection)
+  //           .child(reviewId)
+  //           .child('Image')
+  //           .listAll();
+
+  //       //loop add image to list
+  //       for (Reference ref in result.items) {
+  //         String imageURL = await ref.getDownloadURL();
+  //         urls.add(imageURL);
+  //       }
+
+  //       // ส่วนของการเพิ่ม URLs ลงใน imageUrlsList
+  //       imageUrlsList.add(urls);
+  //     }
+  //     return imageUrlsList;
+  //   } catch (e) {
+  //     print("Error fetching images: $e");
+  //     throw e;
+  //   }
+  // }
   Future<List<List<String>>> fetchImagesReview(
       String mainCollection, String docID, String subCollection) async {
-    List<List<String>> imageUrlsList = [];
+    List<List<String>> imageAndVideoUrlsList = [];
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       FirebaseStorage storage = FirebaseStorage.instance;
-      imageUrlsList = [];
+      imageAndVideoUrlsList = [];
 
-      //ไอดี รีวิว
       QuerySnapshot querySnapshot = await firestore
           .collection(mainCollection)
           .doc(docID)
@@ -166,28 +207,42 @@ class DetailService {
 
       for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
         String reviewId = docSnapshot.id;
-        List<String> urls = []; // เลื่อนรายการนี้ลงมาที่นี่
+        List<String> imageUrls = [];
+        List<String> videoUrls = [];
 
-        //pack image
-        ListResult result = await storage
+        // Image URLs
+        ListResult imageResult = await storage
             .ref()
             .child(mainCollection)
             .child(reviewId)
             .child('Image')
             .listAll();
 
-        //loop add image to list
-        for (Reference ref in result.items) {
+        for (Reference ref in imageResult.items) {
           String imageURL = await ref.getDownloadURL();
-          urls.add(imageURL);
+          imageUrls.add(imageURL);
         }
 
-        // ส่วนของการเพิ่ม URLs ลงใน imageUrlsList
-        imageUrlsList.add(urls);
+        // Video URLs
+        ListResult videoResult = await storage
+            .ref()
+            .child(mainCollection)
+            .child(reviewId)
+            .child('Video')
+            .listAll();
+
+        for (Reference ref in videoResult.items) {
+          String videoURL = await ref.getDownloadURL();
+          videoUrls.add(videoURL);
+        }
+
+        // Combine URLs of images and videos
+        imageAndVideoUrlsList.add([...imageUrls, ...videoUrls]);
       }
-      return imageUrlsList;
+
+      return imageAndVideoUrlsList;
     } catch (e) {
-      print("Error fetching images: $e");
+      print("Error fetching images and videos: $e");
       throw e;
     }
   }
@@ -236,6 +291,62 @@ class DetailService {
       throw e;
     }
   }
+
+//  Future<List<String>> fetchImagesModify(
+//     String mainCollection, String docID, String subCollection) async {
+//   List<String> imageAndVideoUrlsList = [];
+//   try {
+//     FirebaseFirestore firestore = FirebaseFirestore.instance;
+//     FirebaseStorage storage = FirebaseStorage.instance;
+
+//     QuerySnapshot querySnapshot = await firestore
+//         .collection(mainCollection)
+//         .doc(docID)
+//         .collection(subCollection)
+//         .get();
+
+//     for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+//       String reviewId = docSnapshot.id;
+
+//       // URLs of images and videos
+//       List<String> urls = [];
+
+//       // Image URLs
+//       ListResult imageResult = await storage
+//           .ref()
+//           .child(mainCollection)
+//           .child(reviewId)
+//           .child('Image')
+//           .listAll();
+
+//       for (Reference ref in imageResult.items) {
+//         String imageURL = await ref.getDownloadURL();
+//         urls.add(imageURL);
+//       }
+
+//       // Video URLs
+//       ListResult videoResult = await storage
+//           .ref()
+//           .child(mainCollection)
+//           .child(reviewId)
+//           .child('Video')
+//           .listAll();
+
+//       for (Reference ref in videoResult.items) {
+//         String videoURL = await ref.getDownloadURL();
+//         urls.add(videoURL);
+//       }
+
+//       // Add URLs of images and videos to the list
+//       imageAndVideoUrlsList.addAll(urls);
+//     }
+
+//     return imageAndVideoUrlsList;
+//   } catch (e) {
+//     print("Error fetching images and videos: $e");
+//     throw e;
+//   }
+// }
 
   Future<List<dynamic>> fetchReplyModifyData(
       String mainCollection, String docID, String subCollection) async {

@@ -113,6 +113,9 @@ class _UserReportState extends State<UserReport> {
                                 SnackBar(
                                     content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
                               );
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => UserReport()));
                               setState(() {
                                 reportUserData.removeAt(index);
                               });

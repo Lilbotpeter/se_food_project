@@ -43,8 +43,8 @@ class _UploadFoodState extends State<UploadFood> {
       food_type = '',
       food_description = '',
       food_time = '',
-      food_nation = '',
-      food_point = '';
+      food_nation = '';
+  // food_point = '';
 
   //Current UID
   Widget _userUID() {
@@ -89,11 +89,16 @@ class _UploadFoodState extends State<UploadFood> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference foodDocRef = firestore.collection("Foods").doc();
 
-    // Check if files are not selected
     if (files.isEmpty) {
       print("No files selected");
+      Get.snackbar('โปรดอัปทั้งรูปภาพและวิดิโอ',
+          'อัปโหลดไม่สำเร็จ ต้องอัปทั้งรูปภาพและวิดิโอ');
       return;
     }
+
+    bool hasImage = false;
+    bool hasVideo = false;
+
     try {
       Map<String, dynamic> dataMap = {
         'Food_id': foodDocRef.id,
@@ -107,11 +112,10 @@ class _UploadFoodState extends State<UploadFood> {
             food_description!.isNotEmpty ? food_description : 'N/A',
         'Food_Time': food_time!.isNotEmpty ? food_time : 'N/A',
         'Food_Nation': food_nation!.isNotEmpty ? food_nation : 'ไม่มี',
-        'Food_Point': food_point!.isNotEmpty ? food_point : 'N/A',
+        // 'Food_Point': food_point!.isNotEmpty ? food_point : 'N/A',
         'User_id': user?.uid,
       };
-      //String? profileImage;
-      // Loop through the selected files and upload them
+
       for (int i = 0; i < files.length; i++) {
         File file = files[i];
         final filename = basename(file.path);
@@ -119,36 +123,40 @@ class _UploadFoodState extends State<UploadFood> {
         bool isImage = _isImageFile(filename);
         bool isVideo = _isVideoFile(filename);
 
-        if (isImage || isVideo) {
-          final String mediaType = isImage ? 'Image' : 'Video';
-          final destination = 'files/${foodDocRef.id}/$mediaType/$filename';
-          task = FirebaseApi.uploadFile(destination, file);
+        if (isImage) {
+          hasImage = true;
+        } else if (isVideo) {
+          hasVideo = true;
+        }
 
-          if (task == null) continue;
+        final String mediaType = isImage ? 'Image' : 'Video';
+        final destination = 'files/${foodDocRef.id}/$mediaType/$filename';
+        task = FirebaseApi.uploadFile(destination, file);
 
-          final snapshot2 = await task!.whenComplete(() {});
-          final downloadURL = await snapshot2.ref.getDownloadURL();
+        if (task == null) continue;
 
-          // if (i == 0) {
-          //   profileImage = downloadURL;
-          // }
+        final snapshot2 = await task!.whenComplete(() {});
+        final downloadURL = await snapshot2.ref.getDownloadURL();
 
-          if (isImage) {
-            dataMap['Food_Image'] = downloadURL;
-            //profileImage = null;
-          } else {
-            dataMap['Food_Video'] = downloadURL;
-          }
+        if (isImage) {
+          dataMap['Food_Image'] = downloadURL;
         } else {
-          // Handle other types of files (if necessary)
+          dataMap['Food_Video'] = downloadURL;
         }
       }
-      //try {
-      await foodDocRef.set(dataMap);
-      //setState(() {
-      files.clear();
-      //});
-      print("Upload complete");
+
+      if (hasImage && hasVideo) {
+        await foodDocRef.set(dataMap);
+        files.clear();
+        dataMap.clear();
+        print("Upload complete");
+      } else {
+        print('ต้องอัปทั้งรูปภาพและวิดิโอ');
+        Get.snackbar('โปรดอัปทั้งรูปภาพและวิดิโอ',
+            'อัปโหลดไม่สำเร็จ ต้องอัปทั้งรูปภาพและวิดิโอ');
+        files.clear();
+        dataMap.clear();
+      }
     } catch (e) {
       print("Error: $e");
     }
@@ -170,7 +178,7 @@ class _UploadFoodState extends State<UploadFood> {
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         filled: true,
-        isDense: true,                      // Added this
+        isDense: true, // Added this
         contentPadding: EdgeInsets.all(8),
       ),
       keyboardType: TextInputType.text,
@@ -199,13 +207,17 @@ class _UploadFoodState extends State<UploadFood> {
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         filled: true,
-        isDense: true,                      // Added this
+        isDense: true, // Added this
         contentPadding: EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
         DropdownMenuItem<String>(
           value: 'ไม่มี',
           child: Text('ไม่มี'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ง่ายมาก',
+          child: Text('ง่ายมาก'),
         ),
         DropdownMenuItem<String>(
           value: 'ง่าย',
@@ -219,6 +231,10 @@ class _UploadFoodState extends State<UploadFood> {
           value: 'ยาก',
           child: Text('ยาก'),
         ),
+        DropdownMenuItem<String>(
+          value: 'ยากมาก',
+          child: Text('ยากมาก'),
+        ),
       ],
     );
   }
@@ -228,7 +244,6 @@ class _UploadFoodState extends State<UploadFood> {
 
     return Container(
       height: maxLines * 24.0,
-
       child: TextField(
         onChanged: (value) {
           food_ingredients = value.trim();
@@ -244,10 +259,9 @@ class _UploadFoodState extends State<UploadFood> {
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           filled: true,
-          isDense: true,                      // Added this
+          isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
         ),
-        
         maxLines: maxLines,
         keyboardType: TextInputType.multiline,
       ),
@@ -258,29 +272,28 @@ class _UploadFoodState extends State<UploadFood> {
   Widget solution(context) {
     final maxLines = 5;
     return Container(
-
       height: maxLines * 24.0,
-      
       child: TextField(
-          onChanged: (value) {
-            food_solution = value.trim();
-          },
-          decoration: InputDecoration(
-            labelText: 'วิธีการทำ',
-            hintText: 'กรุณากรอกวิธีการทำ',
-            //icon: Icon(Icons.solar_power_outlined),
-            border:
-                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-            focusedBorder:
-                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-            enabledBorder:
-                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-            filled: true,
-            isDense: true,                      // Added this
+        onChanged: (value) {
+          food_solution = value.trim();
+        },
+        decoration: InputDecoration(
+          labelText: 'วิธีการทำ',
+          hintText: 'กรุณากรอกวิธีการทำ',
+          //icon: Icon(Icons.solar_power_outlined),
+          border:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          enabledBorder:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          filled: true,
+          isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
-          ),
-          maxLines: maxLines,
-          keyboardType: TextInputType.multiline,),
+        ),
+        maxLines: maxLines,
+        keyboardType: TextInputType.multiline,
+      ),
     );
   }
 
@@ -308,7 +321,7 @@ class _UploadFoodState extends State<UploadFood> {
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           filled: true,
-          isDense: true,                      // Added this
+          isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
         ),
         items: const <DropdownMenuItem<String>>[
@@ -345,10 +358,6 @@ class _UploadFoodState extends State<UploadFood> {
             child: Text('อาหารทะเล'),
           ),
           DropdownMenuItem<String>(
-            value: 'แฮมเบอเกอร์',
-            child: Text('แฮมเบอเกอร์'),
-          ),
-          DropdownMenuItem<String>(
             value: 'ของทอด',
             child: Text('ของทอด'),
           ),
@@ -373,37 +382,12 @@ class _UploadFoodState extends State<UploadFood> {
             child: Text('ของหวาน'),
           ),
           DropdownMenuItem<String>(
-            value: 'เบเกอรี่',
-            child: Text('เบเกอรี่'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'เบรคฟาสต์',
-            child: Text('เบรคฟาสต์'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'เค้ก',
-            child: Text('เค้ก'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'เครื่องดื่ม',
-            child: Text('เครื่องดื่ม'),
-          ),
-          DropdownMenuItem<String>(
             value: 'ฟาสต์ฟู้ด',
             child: Text('ฟาสต์ฟู้ด'),
           ),
           DropdownMenuItem<String>(
             value: 'หม่าล่า',
             child: Text('หม่าล่า'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ของหวาน',
-            child: Text('ของหวาน'),
-          ),
-          //--------------------------------
-          DropdownMenuItem<String>(
-            value: 'น้ำผลไม้',
-            child: Text('น้ำผลไม้'),
           ),
           DropdownMenuItem<String>(
             value: 'อาหารจานด่วน',
@@ -439,10 +423,6 @@ class _UploadFoodState extends State<UploadFood> {
             child: Text('สเต็ก'),
           ),
           DropdownMenuItem<String>(
-            value: 'ส้มตำ',
-            child: Text('ส้มตำ'),
-          ),
-          DropdownMenuItem<String>(
             value: 'ของทานเล่น/ขนมขบเขี้ยว',
             child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
           ),
@@ -453,6 +433,10 @@ class _UploadFoodState extends State<UploadFood> {
           DropdownMenuItem<String>(
             value: 'ยำ',
             child: Text('ยำ'),
+          ),
+          DropdownMenuItem<String>(
+            value: 'อื่นๆ',
+            child: Text('อื่นๆ'),
           ),
         ],
       ),
@@ -466,25 +450,26 @@ class _UploadFoodState extends State<UploadFood> {
       // margin: EdgeInsets.all(),
       height: maxLines * 24.0,
       child: TextField(
-          onChanged: (value) {
-            food_description = value.trim();
-          },
-          decoration: InputDecoration(
-            labelText: 'รายละเอียดอาหาร',
-            hintText: 'กรุณากรอกรายละเอียดอาหาร',
-            // icon: Icon(Icons.description),
-            border:
-                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-            focusedBorder:
-                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-            enabledBorder:
-                OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-            filled: true,
-            isDense: true,                      // Added this
+        onChanged: (value) {
+          food_description = value.trim();
+        },
+        decoration: InputDecoration(
+          labelText: 'รายละเอียดอาหาร',
+          hintText: 'กรุณากรอกรายละเอียดอาหาร',
+          // icon: Icon(Icons.description),
+          border:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          enabledBorder:
+              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+          filled: true,
+          isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
-          ),
-          maxLines: maxLines,
-      keyboardType: TextInputType.multiline,),
+        ),
+        maxLines: maxLines,
+        keyboardType: TextInputType.multiline,
+      ),
     );
   }
 
@@ -504,14 +489,14 @@ class _UploadFoodState extends State<UploadFood> {
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           filled: true,
-          isDense: true, 
+          isDense: true,
           contentPadding: const EdgeInsets.all(8),
         ),
         keyboardType: TextInputType.text);
   }
 
   Widget nation(context) {
-    String foodnation = 'ไม่มี'; // กำหนดค่าเริ่มต้น
+    String foodnation = 'ไทย'; // กำหนดค่าเริ่มต้น
 
     return DropdownButtonFormField<String>(
       value: foodnation,
@@ -532,54 +517,83 @@ class _UploadFoodState extends State<UploadFood> {
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         filled: true,
-        isDense: true, 
+        isDense: true,
         contentPadding: const EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
         DropdownMenuItem<String>(
-          value: 'ไม่มี',
-          child: Text('ไม่มี'),
-        ),
-        DropdownMenuItem<String>(
           value: 'ไทย',
           child: Text('ไทย'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อเมริกา',
+          child: Text('อเมริกา'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อังกฤษ',
+          child: Text('อังกฤษ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ฝรั่งเศษ',
+          child: Text('ฝรั่งเศษ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เยอรมัน',
+          child: Text('เยอรมัน'),
         ),
         DropdownMenuItem<String>(
           value: 'ญี่ปุ่น',
           child: Text('ญี่ปุ่น'),
         ),
         DropdownMenuItem<String>(
+          value: 'อิตาลี',
+          child: Text('อิตาลี'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อินเดีย',
+          child: Text('อินเดีย'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'สเปน',
+          child: Text('สเปน'),
+        ),
+        DropdownMenuItem<String>(
           value: 'เกาหลี',
           child: Text('เกาหลี'),
         ),
         DropdownMenuItem<String>(
-          value: 'อิตาลี',
-          child: Text('อิตาลี'),
+          value: 'จีน',
+          child: Text('จีน'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อื่นๆ',
+          child: Text('อื่นๆ'),
         ),
       ],
     );
   }
+
 ////////////////////////////////////////////////
-  Widget point(context) {
-    return TextField(
-        onChanged: (value) {
-          food_point = value.trim();
-        },
-        decoration: InputDecoration(
-          labelText: 'คะแนนอาหาร',
-          hintText: 'กรุณากรอกคะแนนอาหาร',
-          icon: Icon(Icons.description),
-          border:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          enabledBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
-          contentPadding: const EdgeInsets.all(8),
-        ),
-        keyboardType: TextInputType.text);
-  }
+  // Widget point(context) {
+  //   return TextField(
+  //       onChanged: (value) {
+  //         food_point = value.trim();
+  //       },
+  //       decoration: InputDecoration(
+  //         labelText: 'คะแนนอาหาร',
+  //         hintText: 'กรุณากรอกคะแนนอาหาร',
+  //         icon: Icon(Icons.description),
+  //         border:
+  //             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+  //         focusedBorder:
+  //             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+  //         enabledBorder:
+  //             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
+  //         filled: true,
+  //         contentPadding: const EdgeInsets.all(8),
+  //       ),
+  //       keyboardType: TextInputType.text);
+  // }
 
   Widget showForm(BuildContext context) {
     return SafeArea(
@@ -623,10 +637,10 @@ class _UploadFoodState extends State<UploadFood> {
             ),
             //Text('สัญชาติอาหาร'),
             nation(context),
-            SizedBox(
-              height: 10.0,
-            ),
-            point(context),
+            // SizedBox(
+            //   height: 10.0,
+            // ),
+            // point(context),
           ],
         ),
       ),
@@ -647,7 +661,6 @@ class _UploadFoodState extends State<UploadFood> {
       body: Container(
         padding: EdgeInsets.all(32),
         child: Container(
-
             child: ListView(
           //mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -666,12 +679,24 @@ class _UploadFoodState extends State<UploadFood> {
               height: 15.0,
             ),
             const Padding(
-              padding:  EdgeInsets.only(left: 50,bottom:5),
-              child:  Text('อัพโหลดสูตรของคุณ',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,),),
+              padding: EdgeInsets.only(left: 50, bottom: 5),
+              child: Text(
+                'อัพโหลดสูตรของคุณ',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const Padding(
-              padding:  EdgeInsets.only(left: 30,bottom: 25),
-              child:  Text('กรอกรายละเอียดได้เลย !',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.amber),),
+              padding: EdgeInsets.only(left: 30, bottom: 25),
+              child: Text(
+                'กรอกรายละเอียดได้เลย !',
+                style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber),
+              ),
             ),
             ButtonWidget(
                 //Button Select file
@@ -708,7 +733,6 @@ Widget _buildTextField() {
     margin: EdgeInsets.all(12),
     height: maxLines * 24.0,
     child: TextField(
-      
       maxLines: maxLines,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(filled: true, hintText: 'Enter a message'),

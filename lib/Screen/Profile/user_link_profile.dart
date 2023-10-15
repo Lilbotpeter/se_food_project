@@ -335,10 +335,15 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                         };
 
                                         await foodReport.set(dataMap);
+                                        Userdetail.clear();
+                                        Get.snackbar('รายงานผู้ใช้',
+                                            'รายงานผู้ใช้สำเร็จ');
                                       } catch (e) {
                                         print("Error: $e");
+                                        Get.snackbar('รายงานผู้ใช้',
+                                            'รายงานผู้ใช้ไม่สำเร็จ');
                                       }
-                                      ;
+
                                       print('getUserID = ');
                                       print(getUserID);
 
