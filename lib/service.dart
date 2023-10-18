@@ -41,27 +41,28 @@ class DataService {
         return foodDataList;
     }
 
-   Future<List<dynamic>> getUser(String? userID) async {
-    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userID)
-        .get();
-    List<dynamic> userDataList = [];
+   Future<Map<String, dynamic>> getUser(String? userID) async {
+  final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+      .collection("users")
+      .doc(userID)
+      .get();
 
-    if (snapshot.exists) {
-      final Map<String, dynamic>? data =
-          snapshot.data() as Map<String, dynamic>?;
+  Map<String, dynamic> userData = {}; // สร้าง Map เปล่าเพื่อเก็บข้อมูลผู้ใช้
 
-          userDataList.add({
-            'Email': data?['Email'],
-            'ImageP': data?['ImageP'],
-            'Name': data?['Name'],
-            'Phone': data?['Phone'],
-            'Uid': data?['Uid'],
-          });
-        }
-        return userDataList;
-    }
+  if (snapshot.exists) {
+    final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+    
+    userData = {
+      'Email': data?['Email'],
+      'ImageP': data?['ImageP'],
+      'Name': data?['Name'],
+      'Phone': data?['Phone'],
+      'Uid': data?['Uid'],
+    };
+  }
+
+  return userData; // คืนข้อมูลผู้ใช้ในรูปแบบ Map
+}
 
      Future<List<dynamic>> getReview(String? IDreview) async {
     final DocumentSnapshot snapshot = await FirebaseFirestore.instance

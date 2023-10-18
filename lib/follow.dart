@@ -85,21 +85,50 @@ Future<void> unBookmark(String userId, String foodid) {
       .delete();
 }
 
-Future<String> getBookmarkID (String userid,String foodid) async{
-  CollectionReference bookmark = FirebaseFirestore.instance
-    .collection('bookmark')
-    .doc(userid)
-    .collection('bookmarkID');
+Future<String> getBookmarkID (String userid, String foodid) async {
+  DocumentReference userDoc = FirebaseFirestore.instance
+      .collection('bookmark')
+      .doc(userid);
 
-   QuerySnapshot querySnapshot = await bookmark.get();
+  DocumentSnapshot userSnapshot = await userDoc.get();
 
-  if (querySnapshot.docs.isNotEmpty) {
-    return querySnapshot.docs.first.id;
-  } else {
-    return '';
+  if (userSnapshot.exists) {
+    CollectionReference bookmarkCollection = userDoc.collection('bookmarkID');
+
+    QuerySnapshot bookmarkSnapshot = await bookmarkCollection.get();
+
+    if (bookmarkSnapshot.docs.isNotEmpty) {
+      return bookmarkSnapshot.docs.first.id;
+    }
   }
+
+  return ''; // หรือคืนค่าเริ่มต้นที่คุณต้องการ
 }
- 
+
+Future<int> getFollowerNum(String userId) async {
+  DocumentReference userDoc = FirebaseFirestore.instance
+      .collection('followers')
+      .doc(userId);
+
+  try {
+    DocumentSnapshot userSnapshot = await userDoc.get();
+
+    if (userSnapshot.exists) {
+      CollectionReference followerCollection = userDoc.collection('followersID');
+
+      QuerySnapshot followerSnapshot = await followerCollection.get();
+
+      return followerSnapshot.docs.length; // คืนจำนวนของเอกสารในคอลเลคชัน "followersID"
+    }
+  } catch (e) {
+    // รับข้อผิดพลาดที่เกิดขึ้น
+    print('เกิดข้อผิดพลาด: $e');
+  }
+
+  return 0; // หรือคืนค่าเริ่มต้นที่คุณต้องการถ้าไม่มีข้อมูล
+}
+
+
 
 
 }

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // DropdownButton<String>(
 //   value: dropdownValue,
 //   onChanged: (String? newValue) {
@@ -21,6 +22,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
+
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
 import 'package:se_project_food/Screen/Detail/detail_service.dart';
@@ -30,7 +32,7 @@ import 'package:se_project_food/Screen/Search/search_food.dart';
 import 'package:se_project_food/Screen/Search/search_page.dart';
 import 'package:se_project_food/Widgets/food_slide.dart';
 import 'package:se_project_food/Widgets/title_cus_more.dart';
-//import 'package:se_project_food/Screen/Profile/my_food.dart';
+import 'package:se_project_food/Screen/Profile/my_food.dart';
 //import 'package:se_project_food/constants.dart';
 
 import '../../Models/foodmodels.dart';
@@ -402,7 +404,7 @@ class _FeedPageState extends State<FeedPage> {
                     width: MediaQuery.of(context).size.width / 1.1,
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(135, 255, 255, 255),
+                      color: Color.fromARGB(255, 255, 255, 255),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Center(
@@ -473,6 +475,20 @@ class _FeedPageState extends State<FeedPage> {
                   },
                 ),
               ),
+            ),
+
+            ///////////////////////////////แนะนำ
+            SizedBox(
+              height: 20,
+            ),
+            TitleCustomWithMore(text: "เมนูแนะนำ!"),
+            SizedBox(
+              height: 20,
+            ),
+            CarouseSlide(
+              foodModels: foodModels,
+              ownername: '$uname',
+              height: 200,
             ),
             SizedBox(
               height: 15,
@@ -576,17 +592,6 @@ class _FeedPageState extends State<FeedPage> {
               ),
             ),
             SizedBox(
-              height: 20,
-            ),
-            TitleCustomWithMore(text: "เมนูแนะนำ!"),
-            SizedBox(
-              height: 20,
-            ),
-            CarouseSlide(
-              foodModels: foodModels,
-              ownername: '$uname',
-            ),
-            SizedBox(
               height: 25,
             ),
             TitleCustomWithMore(text: "เมนูใหม่"),
@@ -625,23 +630,26 @@ class _FeedPageState extends State<FeedPage> {
   }
 }
 
+////////////////////////////////Widget Part////////////////////////
 class CarouseSlide extends StatelessWidget {
   const CarouseSlide({
-    super.key,
+    Key? key,
     required this.foodModels,
     required this.ownername,
-  });
+    required this.height,
+  }) : super(key: key);
 
   final List<FoodModel> foodModels;
   final String ownername;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: height,
       child: CarouselSlider(
         options: CarouselOptions(
-          height: 200,
+          height: height,
           enableInfiniteScroll: true,
           autoPlay: true,
         ),

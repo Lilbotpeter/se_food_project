@@ -12,6 +12,7 @@ import '../../Models/foodmodels.dart';
 
 import '../../Widgets/profile_picture.dart';
 import '../../constants.dart';
+import '../../follow.dart';
 
 //Authen Current User
 final User? user = AuthenticationController().currentUser;
@@ -31,7 +32,10 @@ class _UserProfileState extends State<UserProfile> {
   File? imageXFile;
 
   List<FoodModel> foodModels = []; //List Model Food
+  List<FoodModel> follower = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
+
+  FollowerService followerService = FollowerService();
 
 //Get data fromdatabase
   Future<void> _getDataFromDatabase() async {
@@ -75,6 +79,7 @@ class _UserProfileState extends State<UserProfile> {
       }
     });
   }
+
 
   Future<void> clearData() async {
     setState(() {
