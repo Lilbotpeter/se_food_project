@@ -34,8 +34,8 @@ class _EditEmailState extends State<EditEmail> {
     return Scaffold(
       body: ListView(
         children: [
-          Text('อีเมลใหม่'),
-          SizedBox(
+          const Text('อีเมลใหม่'),
+          const SizedBox(
             height: 10.0,
           ),
           TextField(
@@ -66,14 +66,25 @@ class _EditEmailState extends State<EditEmail> {
           ),
           TextButton(
               onPressed: () async {
-                final docker =
-                    FirebaseFirestore.instance.collection('users').doc(Uid);
-                AuthenticationController()
-                    .updateEmail(newEmail.text, confirmPassword.text);
-                docker.update({
-                  'Email': newEmail.text,
-                });
-                Navigator.of(context).pop();
+                String Password = confirmPassword.text;
+                String email = newEmail.text;
+                if (Password.isEmpty || email.isEmpty) {
+                  // แสดง Snackbar ถ้ารหัสผ่านเดิมหรือรหัสผ่านใหม่เป็นค่าว่าง
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("กรุณากรอกรหัสผ่านเดิมหรืออีเมล"),
+                    ),
+                  );
+                } else {
+                  final docker =
+                      FirebaseFirestore.instance.collection('users').doc(Uid);
+                  AuthenticationController()
+                      .updateEmail(newEmail.text, confirmPassword.text);
+                  docker.update({
+                    'Email': newEmail.text,
+                  });
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text('ยืนยันการแก้ไขอีเมล')),
         ],

@@ -153,7 +153,7 @@ class _EditUserState extends State<EditUser> {
           SizedBox(
             height: 10.0,
           ),
-          TextField(
+          TextFormField(
             controller: name,
             decoration: InputDecoration(
               border:
@@ -184,7 +184,7 @@ class _EditUserState extends State<EditUser> {
           SizedBox(
             height: 10.0,
           ),
-          TextField(
+          TextFormField(
             controller: phone,
             decoration: InputDecoration(
               border:
@@ -210,15 +210,28 @@ class _EditUserState extends State<EditUser> {
                 //AuthenticationController().changePassword('999999');
                 // AuthenticationController()
                 //     .updateEmail('Kuay@gmail.com', '123456');
-                docker.update({
-                  'Uid': usersid,
-                  'Name': _editname,
-                  'Email': _editemail,
-                  'Phone': _editphone,
-                  'ImageP': imageUrl!,
-                });
+                if (_editname.isEmpty || _editphone.isEmpty) {
+                  // แสดง Snackbar ถ้า _editname หรือ _editphone มีค่าว่าง
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("กรุณากรอกข้อมูลให้ครบถ้วน"),
+                    ),
+                  );
+                } else {
+                  // ทำการอัปเดตข้อมูลหาก _editname และ _editphone ไม่ว่าง
+                  final docker = FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(getfoodID);
+                  docker.update({
+                    'Uid': usersid,
+                    'Name': _editname,
+                    'Email': _editemail,
+                    'Phone': _editphone,
+                    'ImageP': imageUrl!,
+                  });
+                  Navigator.of(context).pop();
+                }
 
-                Navigator.of(context).pop();
                 //
               },
               child: const Text('ยืนยันการแก้ไข')),

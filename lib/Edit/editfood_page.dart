@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -22,11 +23,13 @@ class EditFoods extends StatefulWidget {
 class _EditFoodsState extends State<EditFoods> {
   List<FoodModel> foodModels = [];
   PlatformFile? pickedFile;
-  String? edit_nation = 'ไม่มี';
+  String? edit_nation = 'ไทย';
   String? edit_level = 'ไม่มี';
   String? edit_type = 'ไม่มี';
   String? imageUrl;
+  String? videoUrl;
   List<String> imageUrls = [];
+  List<String> videoUrls = [];
   final TextEditingController edit_name = TextEditingController();
   final TextEditingController edit_description = TextEditingController();
   final TextEditingController edit_ingredients = TextEditingController();
@@ -68,24 +71,52 @@ class _EditFoodsState extends State<EditFoods> {
       ),
       items: const <DropdownMenuItem<String>>[
         DropdownMenuItem<String>(
-          value: 'ไม่มี',
-          child: Text('ไม่มี'),
-        ),
-        DropdownMenuItem<String>(
           value: 'ไทย',
           child: Text('ไทย'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อเมริกา',
+          child: Text('อเมริกา'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อังกฤษ',
+          child: Text('อังกฤษ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ฝรั่งเศษ',
+          child: Text('ฝรั่งเศษ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'เยอรมัน',
+          child: Text('เยอรมัน'),
         ),
         DropdownMenuItem<String>(
           value: 'ญี่ปุ่น',
           child: Text('ญี่ปุ่น'),
         ),
         DropdownMenuItem<String>(
+          value: 'อิตาลี',
+          child: Text('อิตาลี'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อินเดีย',
+          child: Text('อินเดีย'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'สเปน',
+          child: Text('สเปน'),
+        ),
+        DropdownMenuItem<String>(
           value: 'เกาหลี',
           child: Text('เกาหลี'),
         ),
         DropdownMenuItem<String>(
-          value: 'อิตาลี',
-          child: Text('อิตาลี'),
+          value: 'จีน',
+          child: Text('จีน'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อื่นๆ',
+          child: Text('อื่นๆ'),
         ),
       ],
     );
@@ -118,6 +149,10 @@ class _EditFoodsState extends State<EditFoods> {
           child: Text('ไม่มี'),
         ),
         DropdownMenuItem<String>(
+          value: 'ง่ายมาก',
+          child: Text('ง่ายมาก'),
+        ),
+        DropdownMenuItem<String>(
           value: 'ง่าย',
           child: Text('ง่าย'),
         ),
@@ -128,6 +163,10 @@ class _EditFoodsState extends State<EditFoods> {
         DropdownMenuItem<String>(
           value: 'ยาก',
           child: Text('ยาก'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'ยากมาก',
+          child: Text('ยากมาก'),
         ),
       ],
     );
@@ -186,10 +225,6 @@ class _EditFoodsState extends State<EditFoods> {
           child: Text('อาหารทะเล'),
         ),
         DropdownMenuItem<String>(
-          value: 'แฮมเบอเกอร์',
-          child: Text('แฮมเบอเกอร์'),
-        ),
-        DropdownMenuItem<String>(
           value: 'ของทอด',
           child: Text('ของทอด'),
         ),
@@ -214,37 +249,12 @@ class _EditFoodsState extends State<EditFoods> {
           child: Text('ของหวาน'),
         ),
         DropdownMenuItem<String>(
-          value: 'เบเกอรี่',
-          child: Text('เบเกอรี่'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เบรคฟาสต์',
-          child: Text('เบรคฟาสต์'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เค้ก',
-          child: Text('เค้ก'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'เครื่องดื่ม',
-          child: Text('เครื่องดื่ม'),
-        ),
-        DropdownMenuItem<String>(
           value: 'ฟาสต์ฟู้ด',
           child: Text('ฟาสต์ฟู้ด'),
         ),
         DropdownMenuItem<String>(
           value: 'หม่าล่า',
           child: Text('หม่าล่า'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'ของหวาน',
-          child: Text('ของหวาน'),
-        ),
-        //--------------------------------
-        DropdownMenuItem<String>(
-          value: 'น้ำผลไม้',
-          child: Text('น้ำผลไม้'),
         ),
         DropdownMenuItem<String>(
           value: 'อาหารจานด่วน',
@@ -280,10 +290,6 @@ class _EditFoodsState extends State<EditFoods> {
           child: Text('สเต็ก'),
         ),
         DropdownMenuItem<String>(
-          value: 'ส้มตำ',
-          child: Text('ส้มตำ'),
-        ),
-        DropdownMenuItem<String>(
           value: 'ของทานเล่น/ขนมขบเขี้ยว',
           child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
         ),
@@ -294,6 +300,10 @@ class _EditFoodsState extends State<EditFoods> {
         DropdownMenuItem<String>(
           value: 'ยำ',
           child: Text('ยำ'),
+        ),
+        DropdownMenuItem<String>(
+          value: 'อื่นๆ',
+          child: Text('อื่นๆ'),
         ),
       ],
     );
@@ -322,15 +332,15 @@ class _EditFoodsState extends State<EditFoods> {
       edit_nation = data!['Food_Nation'];
       edit_type = data!['Food_Type'];
       _fetchImages();
+      _fetchVideos();
       // เช่น ถ้าคุณมีค่าของ key 'name' ในเอกสาร สามารถเข้าถึงได้ดังนี้
       setState(() {
         edit_description.text = data!['Food_Description'];
         imageUrl = data!['Food_Image'];
         edit_ingredients.text = data!['Food_Ingredients'];
-
+        videoUrl = data!['Food_Video'];
         edit_name.text = data!["Food_Name"];
 
-        edit_point.text = data!['Food_Point'];
         edit_solution.text = data!['Food_Solution'];
         edit_time.text = data!['Food_Time'];
       });
@@ -380,6 +390,44 @@ class _EditFoodsState extends State<EditFoods> {
     }
   }
 
+  Future<void> pickVideo() async {
+    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection("Foods")
+        .doc(getfoodID)
+        .get();
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    DocumentSnapshot sd =
+        await firestore.collection('Foods').doc(getfoodID).get();
+
+    Map<String, dynamic>? data = sd.data() as Map<String, dynamic>?;
+    if (sd.exists) {
+      foodid = data!['Food_id'];
+    }
+
+    FilePickerResult? result2 = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+      allowMultiple: true, // Allow selecting multiple images
+    );
+
+    if (result2 != null) {
+      List<PlatformFile> pickedVideos = result2.files;
+
+      for (PlatformFile pickedVideo in pickedVideos) {
+        await uploadVideoToFirebase(pickedVideo);
+      }
+
+      // Fetch images after uploading is done
+
+      await _fetchVideos();
+
+      setState(() {
+        videoUrl = videoUrls.isNotEmpty ? videoUrls[0] : null;
+      });
+    }
+  }
+
 //ดึงข้อมูลรูปภาพจาก Storage
   Future<void> _fetchImages() async {
     try {
@@ -416,6 +464,35 @@ class _EditFoodsState extends State<EditFoods> {
     }
   }
 
+  //ดึงข้อมูลรูปภาพจาก Storage
+  Future<void> _fetchVideos() async {
+    try {
+      print("Fetching videos for food ID: $foodid");
+      FirebaseStorage storage = FirebaseStorage.instance;
+      ListResult result = await storage
+          .ref()
+          .child('files')
+          .child(foodid!)
+          .child('Video')
+          .listAll();
+
+      List<String> urls = [];
+
+      for (Reference ref in result.items) {
+        String videoURL = await ref.getDownloadURL();
+        urls.add(videoURL);
+      }
+
+      setState(() {
+        videoUrls = urls;
+      });
+
+      print("Fetched video URLs: $videoUrls");
+    } catch (e) {
+      print("Error fetching videos: $e");
+    }
+  }
+
   String? foodid;
   //อัปรูปภาพลง Firebase
   Future<void> uploadImageToFirebase(PlatformFile pickedImage) async {
@@ -438,6 +515,35 @@ class _EditFoodsState extends State<EditFoods> {
 
         setState(() {
           imageUrl = downloadURL;
+        });
+      } catch (e) {
+        print('Error uploading image: $e');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+  }
+
+  Future<void> uploadVideoToFirebase(PlatformFile pickedImage) async {
+    if (pickedImage == null) return;
+
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('files')
+          .child(foodid!)
+          .child('Video')
+          .child(fileName);
+
+      try {
+        firebase_storage.UploadTask uploadTask =
+            ref.putFile(File(pickedImage.path!));
+        firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+        String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+        setState(() {
+          videoUrl = downloadURL;
         });
       } catch (e) {
         print('Error uploading image: $e');
@@ -470,10 +576,48 @@ class _EditFoodsState extends State<EditFoods> {
                   ),
                   IconButton(
                     onPressed: () {
-                      // โค้ดสำหรับจัดการการกระทำเพิ่มเติม
+                      Get.snackbar('ลบรูปภาพ', 'ลบรูปภาพสำเร็จ');
                     },
                     icon: Icon(Icons.add),
                     color: Colors.blue,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showVideoPopup(BuildContext context, String videoUrl, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final VideoPlayerController _controller =
+            VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+        _controller.initialize();
+
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AspectRatio(
+                aspectRatio: 16 /
+                    9, // You may need to adjust the aspect ratio based on your video dimensions
+                child: VideoPlayer(_controller),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _controller
+                          .dispose(); // Dispose of the video player when done
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    icon: Icon(Icons.close),
+                    color: Colors.red,
                   ),
                 ],
               ),
@@ -525,6 +669,7 @@ class _EditFoodsState extends State<EditFoods> {
                       child: GestureDetector(
                         onTap: () {
                           _showImagePopup(context, imageUrls[index], index);
+                          // _showVideoPopup(context, videoUrls[index], index);
                         },
                         child: Image.network(imageUrls[index]),
                       ),
@@ -537,6 +682,38 @@ class _EditFoodsState extends State<EditFoods> {
                   pickImage(); // Function to pick a new image
                 },
                 child: Text('เพิ่มรูปภาพ'),
+              ),
+//////////////////////////////
+              SizedBox(
+                height: MediaQuery.of(context).size.width,
+                width: double.infinity,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: videoUrls.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: GestureDetector(
+                        onTap: () {
+                          _showVideoPopup(context, videoUrls[index], index);
+                        },
+                        child: VideoPlayer(
+                          VideoPlayerController.networkUrl(
+                              Uri.parse(videoUrls[index])),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Text(videoUrls.toString()),
+              //Text(imageUrls.toString()),
+              ElevatedButton(
+                onPressed: () {
+                  pickVideo(); // Function to pick a new image
+                },
+                child: Text('เพิ่มวิดิโอ'),
               ),
             ],
           ),
@@ -594,19 +771,19 @@ class _EditFoodsState extends State<EditFoods> {
           height: 10.0,
         ),
         nation(context),
-        SizedBox(
-          height: 10.0,
-        ),
-        Text("คะแนน : "),
-        SizedBox(
-          height: 10.0,
-        ),
-        TextField(
-          controller: edit_point,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-          ),
-        ),
+        // SizedBox(
+        //   height: 10.0,
+        // ),
+        // Text("คะแนน : "),
+        // SizedBox(
+        //   height: 10.0,
+        // ),
+        // TextField(
+        //   controller: edit_point,
+        //   decoration: InputDecoration(
+        //     border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        //   ),
+        // ),
         SizedBox(
           height: 10.0,
         ),
@@ -651,7 +828,7 @@ class _EditFoodsState extends State<EditFoods> {
               String _editingredients = edit_ingredients.text;
               String _editlevel = edit_level!;
               String _editnation = edit_nation!;
-              String _editpoint = edit_point.text;
+              // String _editpoint = edit_point.text;
               String _editsolution = edit_solution.text;
               String _edittime = edit_time.text;
               String _edittype = edit_type!;
@@ -665,7 +842,7 @@ class _EditFoodsState extends State<EditFoods> {
                 'Food_Ingredients': _editingredients,
                 'Food_Level': _editlevel,
                 'Food_Nation': _editnation,
-                'Food_Point': _editpoint,
+                //'Food_Point': _editpoint,
                 'Food_Solution': _editsolution,
                 'Food_Time': _edittime,
                 'Food_Type': _edittype,

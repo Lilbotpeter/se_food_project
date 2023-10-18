@@ -67,10 +67,26 @@ class _EditPasswordState extends State<EditPassword> {
           ),
           TextButton(
               onPressed: () async {
-                AuthenticationController().UpdatepassWORD(
-                    email, confirmPassword.text, newpassword.text);
-                Navigator.of(context).pop();
-                //
+                String oldPassword = confirmPassword.text;
+                String newPassword = newpassword.text;
+                if (oldPassword.isEmpty || newPassword.isEmpty) {
+                  // แสดง Snackbar ถ้ารหัสผ่านเดิมหรือรหัสผ่านใหม่เป็นค่าว่าง
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("กรุณากรอกรหัสผ่านเดิมหรือรหัสผ่านใหม่"),
+                    ),
+                  );
+                } else {
+                  // ทำการเรียกฟังก์ชันเปลี่ยนรหัสผ่านและตรวจสอบผลลัพธ์
+                  AuthenticationController()
+                      .UpdatepassWORD(email, oldPassword, newPassword);
+                  Navigator.of(context).pop();
+                }
+
+                // AuthenticationController().UpdatepassWORD(
+                //     email, confirmPassword.text, newpassword.text);
+                // Navigator.of(context).pop();
+                // //}
               },
               child: const Text('ยืนยันการแก้ไขรหัสผ่าน')),
         ],

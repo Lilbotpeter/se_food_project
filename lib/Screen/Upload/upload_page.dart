@@ -43,8 +43,8 @@ class _UploadFoodState extends State<UploadFood> {
       food_type = '',
       food_description = '',
       food_time = '',
-      food_nation = '';
-  // food_point = '';
+      food_nation = '',
+      food_point = '';
 
   //Current UID
   Widget _userUID() {
@@ -111,8 +111,8 @@ class _UploadFoodState extends State<UploadFood> {
         'Food_Description':
             food_description!.isNotEmpty ? food_description : 'N/A',
         'Food_Time': food_time!.isNotEmpty ? food_time : 'N/A',
-        'Food_Nation': food_nation!.isNotEmpty ? food_nation : 'ไม่มี',
-        // 'Food_Point': food_point!.isNotEmpty ? food_point : 'N/A',
+        'Food_Nation': food_nation!.isNotEmpty ? food_nation : 'อื่นๆ',
+        'Food_Point': food_point!.isNotEmpty ? food_point : '0.0',
         'User_id': user?.uid,
       };
 
@@ -701,7 +701,7 @@ class _UploadFoodState extends State<UploadFood> {
             ButtonWidget(
                 //Button Select file
                 icon: Icons.attach_file,
-                text: 'เลือกรูปภาพหรือวิดีโอ',
+                text: 'เลือกรูปภาพและวิดีโอ',
                 onClick: selectFile),
 
             //Under filename for "Spacebar naja"

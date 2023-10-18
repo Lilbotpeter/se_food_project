@@ -17,11 +17,12 @@ class AuthenticationController extends GetxController {
       Get.put(AuthenticationController());
   late Rx<User?> _currentUser;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  //final User? user = AuthenticationController().currentUser;
-
-  late Rx<File?> _pickedFile;
+  late Rx<File?> _pickedFile =
+      Rx<File?>(null); // Initialize _pickedFile with null
 
   File? get profileImage => _pickedFile.value;
+
+  // File? get profileImage => _pickedFile.value;
 
   //Choose image from gallery เด้อ
   void chooseImageFromGallery() async {
@@ -57,41 +58,60 @@ class AuthenticationController extends GetxController {
     }
   }
 
-  //createAccountForNewUser
-  void createAccountForNewUser(File imageFile, String username,
-      String userEmail, String userPassword, String userPhone) async {
+  void createAccountForNewUser(
+    File? imageFile,
+    String username,
+    String userEmail,
+    String userPassword,
+    String userPhone,
+  ) async {
     try {
-      //1. create user in the firebase authentication
+      // 1. Create user in Firebase Authentication
       UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: userEmail,
         password: userPassword,
       );
 
-      //2.save the user profile image to firebase storage
-      String imageDowloadUrl = await uploadImageToStorage(imageFile);
+      String? imageDownloadUrl;
 
-      //3.save user data to the firestore database
+      if (imageFile != null) {
+        // 2. Save the user profile image to Firebase Storage
+        imageDownloadUrl = await uploadImageToStorage(imageFile);
+      }
+
+      // 3. Save user data to the Firestore database
       usermodel.User user = usermodel.User(
-          // email: userEmail,
-          // pathImage: imageDowloadUrl,
-          // name = username,
-          // phone = userPhone,
-          // uid = credential.user!.uid,
-          email: userEmail,
-          name: username,
-          pathImage: imageDowloadUrl,
-          phone: userPhone,
-          uid: credential.user!.uid);
+        email: userEmail,
+        name: username,
+        pathImage: imageDownloadUrl,
+        phone: userPhone,
+        uid: credential.user!.uid,
+      );
 
       await FirebaseFirestore.instance
           .collection("users")
           .doc(credential.user!.uid)
           .set(user.toJson());
+
       Get.snackbar("สมัครสมาชิกสำเร็จ", "บัญชีของคุณถูกสร้างสำเร็จแล้ว");
+      // If registration is successful, reset the data and navigate to a different screen
+      _pickedFile = Rx<File?>(null); // Reset _pickedFile
+      username = ''; // Reset username
+      userEmail = ''; // Reset userEmail
+      userPassword = ''; // Reset userPassword
+      userPhone = ''; // Reset userPhone
     } catch (error) {
-      Get.snackbar("สมัครสมาชิกไม่สำเร็จ", "โปรดลองใหม่อีกครั้ง");
-      showProgressBar = false;
+      if (imageFile == null) {
+        Get.snackbar("สมัครสมาชิกไม่สำเร็จ", "โปรดเลือกรูปภาพโปรไฟล์");
+        showProgressBar = false;
+        return; // Stop further execution
+      } else {
+        Get.snackbar("สมัครสมาชิกไม่สำเร็จ", "โปรดลองใหม่อีกครั้ง");
+        showProgressBar = false;
+        return; // Stop further execution
+      }
+      // showProgressBar = false;
     }
   }
 

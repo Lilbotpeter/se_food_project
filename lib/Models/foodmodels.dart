@@ -45,7 +45,6 @@ class FoodModel {
     // food_point = dataMap['Food_Point'];
     // user_id = dataMap['User_id'];
 
-    
     // food_id = dataMap['Food_id'];
     // food_name = dataMap['Food_Name'] ?? '';
     // food_image = dataMap['Food_Image'];
@@ -62,7 +61,7 @@ class FoodModel {
 
     food_id = dataMap['Food_id'];
     food_name = dataMap['Food_Name'] ?? '';
-    food_image = dataMap['Food_Image'];// Exception
+    food_image = dataMap['Food_Image']; // Exception
     //food_video = dataMap['Food_Video'];
     food_level = dataMap['Food_Level'] ?? '';
     food_ingredients = dataMap['Food_Ingredients'] ?? '';
