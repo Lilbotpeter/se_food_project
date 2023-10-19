@@ -558,77 +558,107 @@ class _DetailFoodState extends State<DetailFood> {
                 foregroundColor: Colors.white,
                 onTap: () {
                   showModalBottomSheet(
+                    backgroundColor: Colors.red,
                     isScrollControlled: false,
                     context: context,
                     builder: (BuildContext context) {
                       return SizedBox(
-                        height: 400,
+                        height: 900,
                         child: Center(
                           child: Container(
                             child: ListView(
                               children: <Widget>[
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text('รายงานปัญหาอาหาร'),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text(
-                                    'กรุณาอธิบายปัญหาที่คุณพบเกี่ยวกับผู้ใช้:'),
-                                DropdownButtonFormField<String>(
-                                  value: FoodtypeReport,
-                                  onChanged: (value) {
-                                    //setState(() {
-                                    FoodtypeReport = value.toString();
-                                    // _FoodtypeReport = FoodtypeReport;
-                                    //});
-                                  },
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.point_of_sale),
-                                    border: OutlineInputBorder(
-                                        borderSide:
-                                            Divider.createBorderSide(context)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide:
-                                            Divider.createBorderSide(context)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide:
-                                            Divider.createBorderSide(context)),
-                                    filled: true,
-                                    contentPadding: const EdgeInsets.all(8),
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: Column(
+                                      children: [
+                                        Icon(Icons.warning_amber_outlined,color:Colors.white,size: 75),
+                                        Text('รายงานปัญหาอาหาร',style: TextStyle(
+                                          fontSize: 20,fontWeight: FontWeight.bold,color:Colors.white
+                                        ),),
+                                      ],
+                                    ),
                                   ),
-                                  items: const <DropdownMenuItem<String>>[
-                                    DropdownMenuItem<String>(
-                                      value: 'ใช้คำพูดที่ไม่เหมาะสม',
-                                      child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
-                                    ),
-                                    DropdownMenuItem<String>(
-                                      value: 'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร',
-                                      child:
-                                          Text('โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร'),
-                                    ),
-                                    DropdownMenuItem<String>(
-                                      value: 'ใช้รูปที่ไม่เหมาะสม',
-                                      child: Text('ใช้รูปที่ไม่เหมาะสม'),
-                                    ),
-                                    DropdownMenuItem<String>(
-                                      value: 'ให้ข้อมูลเท็จ',
-                                      child: Text('ให้ข้อมูลเท็จ'),
-                                    ),
-                                    DropdownMenuItem<String>(
-                                      value: 'อื่นๆ',
-                                      child: Text('อื่นๆ'),
-                                    ),
-                                  ],
                                 ),
-                                TextField(
-                                  maxLines: 4,
-                                  decoration:
-                                      InputDecoration(labelText: 'หมายเหตุ'),
-                                  controller: Fooddetail,
+                                Padding(
+                                  padding: const EdgeInsets.only(top:3.0,left:5.0),
+                                  child: Text(
+                                      'หัวข้อการรายงาน',style: TextStyle(color: Colors.white,fontSize: 18),),
                                 ),
-                                TextButton(
+                                Padding(
+                                  padding: const EdgeInsets.only(top:3.0,left:5.0),
+                                  child: DropdownButtonFormField<String>(
+                                    value: FoodtypeReport,
+                                    onChanged: (value) {
+                                      //setState(() {
+                                      FoodtypeReport = value.toString();
+                                      // _FoodtypeReport = FoodtypeReport;
+                                      //});
+                                    },
+                                    decoration: InputDecoration(
+                                      
+                                      border: OutlineInputBorder(
+                                          borderSide:
+                                              Divider.createBorderSide(context)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide:
+                                              Divider.createBorderSide(context)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              Divider.createBorderSide(context)),
+                                      filled: true,
+                                      contentPadding: const EdgeInsets.all(8),
+                                    ),
+                                    items: const <DropdownMenuItem<String>>[
+                                      DropdownMenuItem<String>(
+                                        value: 'ใช้คำพูดที่ไม่เหมาะสม',
+                                        child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: 'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร',
+                                        child:
+                                            Text('โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร'),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: 'ใช้รูปที่ไม่เหมาะสม',
+                                        child: Text('ใช้รูปที่ไม่เหมาะสม'),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: 'ให้ข้อมูลเท็จ',
+                                        child: Text('ให้ข้อมูลเท็จ'),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: 'อื่นๆ',
+                                        child: Text('อื่นๆ'),
+                                      ),
+                                    ],
+                                    dropdownColor: Colors.white,
+                                    
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('หมายเหตุ',style: TextStyle(color: Colors.white),),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                      ),
+                                    cursorColor: Colors.white,
+                                    style: TextStyle(color: Colors.white),
+                                    maxLines: 4,
+                                    controller: Fooddetail,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black, // background (button) color
+                                    foregroundColor: Colors.white, // foreground (text) color
+                                  ),
                                     onPressed: () async {
                                       FirebaseFirestore firestore =
                                           FirebaseFirestore.instance;
@@ -662,12 +692,6 @@ class _DetailFoodState extends State<DetailFood> {
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text('ส่ง')),
-                                TextButton(
-                                    onPressed: () async {
-                                      print('Error404');
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('ยกเลิก')),
                               ],
                             ),
                           ),
@@ -1953,9 +1977,9 @@ class _DetailFoodState extends State<DetailFood> {
                                       ),
                                       InkWell(
                                         onTap: () {
-                                          Get.snackbar(
-                                              '${reviewData['ID_Review']}',
-                                              'message');
+                                          // Get.snackbar(
+                                          //     '${reviewData['ID_Review']}',
+                                          //     'message');
 
                                           idReview = reviewData['ID_Review'];
                                           ////////////////////////
@@ -2043,9 +2067,9 @@ class _DetailFoodState extends State<DetailFood> {
                                       //Report Button
                                       InkWell(
                                         onTap: () {
-                                          Get.snackbar(
-                                              '${reviewData['ID_Review']}',
-                                              'message');
+                                          // Get.snackbar(
+                                          //     '${reviewData['ID_Review']}',
+                                          //     'message');
                                           Get.to(ReplyReviewFood(),
                                               arguments:
                                                   reviewData['ID_Review']);

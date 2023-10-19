@@ -27,6 +27,7 @@ dependencies:
   image_picker: ^1.0.0
   file_picker: ^5.3.2
   cached_network_image: ^3.2.3
+  url_launcher: ^6.1.14
 
   #Decoration Dependencies
   simple_circular_progress_bar: ^1.0.2

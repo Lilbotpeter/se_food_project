@@ -152,7 +152,7 @@ class _UserProfileState extends State<UserProfile> {
               //profile picture
               ProfilePicture(imageXFile: imageXFile, image: image),
               const SizedBox(
-                height: 20,
+                height: 9,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -260,7 +260,7 @@ class _UserProfileState extends State<UserProfile> {
           ),
         ),
         const Divider(
-          height: 660,
+          height: 665,
           thickness: 2,
           color: Colors.black12,
         ),

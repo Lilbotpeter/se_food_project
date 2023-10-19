@@ -492,7 +492,9 @@ class _UploadFoodState extends State<UploadFood> {
           isDense: true,
           contentPadding: const EdgeInsets.all(8),
         ),
-        keyboardType: TextInputType.text);
+        keyboardType: TextInputType.numberWithOptions(
+          decimal: true,
+        ));
   }
 
   Widget nation(context) {
@@ -712,11 +714,20 @@ class _UploadFoodState extends State<UploadFood> {
             const SizedBox(
               height: 15.0,
             ),
-            ButtonWidget(
-                //Button Upload file
-                icon: Icons.upload_file_sharp,
-                text: 'อัพโหลดสูตร',
-                onClick: uploadFile),
+            // ButtonWidget(
+            //     //Button Upload file
+            //     icon: Icons.upload_file_sharp,
+            //     text: 'อัพโหลดสูตร',
+            //     onClick: uploadFile),
+
+            FloatingActionButton(
+              onPressed: uploadFile,
+              child: Icon(Icons.upload_sharp,color: Colors.white,),
+              backgroundColor: Color.fromARGB(255, 255, 181, 22),
+
+            ),
+
+            SizedBox(height: 40,)
 
             //task != null ? buildUploadStatus(task!) : Container() //Percent
           ],

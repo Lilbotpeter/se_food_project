@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import 'package:se_project_food/Authen/authen_part.dart';
 
 import '../../Models/foodmodels.dart';
@@ -168,6 +169,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    
                     Text(
                       '',
                       style: TextStyle(
@@ -176,6 +178,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                         color: Colors.white,
                       ),
                     ),
+                    
                   ],
                 ),
               ),
@@ -250,12 +253,23 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('รายงานปัญหาผู้ใช้'),
+                                backgroundColor: Colors.red,
+                                title: Center(child: Column(
+                                  children: [
+                                    Icon(Icons.warning_amber_outlined,color:Color.fromARGB(255, 255, 255, 255),size: 75),
+                                    Text('รายงานผู้ใช้',style: TextStyle(
+                                          fontSize: 20,fontWeight: FontWeight.bold,color:Colors.white
+                                        ),),
+                                  ],
+                                )),
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                        'กรุณาอธิบายปัญหาที่คุณพบเกี่ยวกับผู้ใช้:'),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'หัวข้อการรายงาน',style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 14),),
+                                    ),
                                     DropdownButtonFormField<String>(
                                       value: UsertypeReport,
                                       onChanged: (value) {
@@ -264,7 +278,6 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                         //});
                                       },
                                       decoration: InputDecoration(
-                                        icon: Icon(Icons.point_of_sale),
                                         border: OutlineInputBorder(
                                             borderSide:
                                                 Divider.createBorderSide(
@@ -305,58 +318,84 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                         ),
                                       ],
                                     ),
-                                    TextField(
-                                      maxLines: 4,
-                                      decoration: InputDecoration(
-                                          labelText: 'หมายเหตุ'),
-                                      controller: Userdetail,
-                                    ),
+                                    Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('หมายเหตุ',style: TextStyle(color: Colors.white),),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                      ),
+                                    cursorColor: Colors.white,
+                                    style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                                    maxLines: 4,
+                                    controller: Userdetail,
+                                  ),
+                                ),
                                   ],
                                 ),
                                 actions: <Widget>[
-                                  TextButton(
-                                    child: Text('ส่งรายงาน'),
-                                    onPressed: () async {
-                                      // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
-                                      FirebaseFirestore firestore =
-                                          FirebaseFirestore.instance;
-                                      final DocumentReference foodReport =
-                                          firestore
-                                              .collection("UserReport")
-                                              .doc();
-
-                                      try {
-                                        Map<String, dynamic> dataMap = {
-                                          'Report': UsertypeReport,
-                                          'Detail': Userdetail.text,
-                                          'Time': Timestamp.now(),
-                                          'ID_User': getUserID,
-                                          'ID_Report': foodReport.id
-                                        };
-
-                                        await foodReport.set(dataMap);
-                                        Userdetail.clear();
-                                        Get.snackbar('รายงานผู้ใช้',
-                                            'รายงานผู้ใช้สำเร็จ');
-                                      } catch (e) {
-                                        print("Error: $e");
-                                        Get.snackbar('รายงานผู้ใช้',
-                                            'รายงานผู้ใช้ไม่สำเร็จ');
-                                      }
-
-                                      print('getUserID = ');
-                                      print(getUserID);
-
-                                      Navigator.of(context).pop();
-                                    },
+                                  Center(
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.black, // background (button) color
+                                          foregroundColor: Colors.white, // foreground (text) color
+                                        ),
+                                          child: Text('ส่งรายงาน'),
+                                          onPressed: () async {
+                                            // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
+                                            FirebaseFirestore firestore =
+                                                FirebaseFirestore.instance;
+                                            final DocumentReference foodReport =
+                                                firestore
+                                                    .collection("UserReport")
+                                                    .doc();
+                                  
+                                            try {
+                                              Map<String, dynamic> dataMap = {
+                                                'Report': UsertypeReport,
+                                                'Detail': Userdetail.text,
+                                                'Time': Timestamp.now(),
+                                                'ID_User': getUserID,
+                                                'ID_Report': foodReport.id
+                                              };
+                                  
+                                              await foodReport.set(dataMap);
+                                              Userdetail.clear();
+                                              Get.snackbar('รายงานผู้ใช้',
+                                                  'รายงานผู้ใช้สำเร็จ');
+                                            } catch (e) {
+                                              print("Error: $e");
+                                              Get.snackbar('รายงานผู้ใช้',
+                                                  'รายงานผู้ใช้ไม่สำเร็จ');
+                                            }
+                                  
+                                            print('getUserID = ');
+                                            print(getUserID);
+                                  
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black, // background (button) color
+                                      foregroundColor: Colors.white, // foreground (text) color
+                                    ),
+                                      child: Text('ยกเลิก'),
+                                      onPressed: () {
+                                        // ปิด Dialog
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                      ],
+                                    ),
                                   ),
-                                  TextButton(
-                                    child: Text('ยกเลิก'),
-                                    onPressed: () {
-                                      // ปิด Dialog
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
+                                  
                                 ],
                               );
                             },
@@ -367,6 +406,34 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                           color: Colors.red,
                         ),
                       ),
+                      IconButton(onPressed: ()async{
+                        
+                        String? encodeQueryParameters(Map<String, String> params) {
+                        return params.entries
+                            .map((MapEntry<String, String> e) =>
+                                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                            .join('&');
+                      }
+
+                        final Uri emailUri = Uri(
+                            scheme: 'mailto',
+                            path: email,
+                            query: encodeQueryParameters(<String,String>{
+                              'subject' : 'ผู้ใช้ต้องการติดต่อ',
+                              'body' : 'มีการติดต่อจากผู้ใช้มาหาคุณ โปรดติดต่อกลับ',
+
+                            }),
+                        );
+
+                        if(await canLaunchUrl(emailUri)){
+                          launchUrl(emailUri);
+                        }else{
+                          throw Exception('ไม่สามารถติดต่อ $emailUri');
+                        }
+                        
+
+
+                      }, icon: Icon(Icons.mail))
                     ],
                   ),
                   const SizedBox(height: 5),
