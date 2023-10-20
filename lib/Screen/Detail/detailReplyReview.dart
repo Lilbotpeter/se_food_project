@@ -87,7 +87,7 @@ class _ReplyReviewFoodState extends State<ReplyReviewFood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 0, 81, 255),
+      backgroundColor: Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
         title: Text('ตอบกลับ',style: TextStyle(color: Colors.white),),
         flexibleSpace: ClipPath(
@@ -118,7 +118,7 @@ class _ReplyReviewFoodState extends State<ReplyReviewFood> {
         child: Center(
 
           child: Card(
-            color: Color.fromARGB(255, 0, 81, 255),
+            color: Color.fromARGB(255, 0, 0, 0),
             child: ListView.builder(
               itemCount: FoodReplyReviewList.length,
               itemBuilder: (context, index) {

@@ -654,44 +654,47 @@ class _DetailFoodState extends State<DetailFood> {
                                     controller: Fooddetail,
                                   ),
                                 ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black, // background (button) color
-                                    foregroundColor: Colors.white, // foreground (text) color
-                                  ),
-                                    onPressed: () async {
-                                      FirebaseFirestore firestore =
-                                          FirebaseFirestore.instance;
-                                      final DocumentReference foodReport =
-                                          firestore
-                                              .collection("FoodReport")
-                                              .doc();
-
-                                      try {
-                                        Map<String, dynamic> dataMap = {
-                                          'Report': FoodtypeReport,
-                                          'Detail': Fooddetail.text,
-                                          'Time': Timestamp.now(),
-                                          'ID_Food': id_food!,
-                                          'ID_Report': foodReport.id //เก็บไว้
-                                        };
-
-                                        await foodReport.set(dataMap);
-                                        Fooddetail.clear();
-                                        Get.snackbar('หัวข้อ', 'รายงานสำเร็จ');
-                                        print('Successfull');
-                                      } catch (e) {
-                                        Get.snackbar(
-                                            'หัวข้อ', 'รายงานไม่สำเร็จ');
-                                        print("Error: $e");
-                                      }
-                                      ;
-                                      // print('FoodID = ');
-                                      // print(id_food!);
-
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('ส่ง')),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black, // background (button) color
+                                      foregroundColor: Colors.white, // foreground (text) color
+                                    ),
+                                      onPressed: () async {
+                                        FirebaseFirestore firestore =
+                                            FirebaseFirestore.instance;
+                                        final DocumentReference foodReport =
+                                            firestore
+                                                .collection("FoodReport")
+                                                .doc();
+                                
+                                        try {
+                                          Map<String, dynamic> dataMap = {
+                                            'Report': FoodtypeReport,
+                                            'Detail': Fooddetail.text,
+                                            'Time': Timestamp.now(),
+                                            'ID_Food': id_food!,
+                                            'ID_Report': foodReport.id //เก็บไว้
+                                          };
+                                
+                                          await foodReport.set(dataMap);
+                                          Fooddetail.clear();
+                                          Get.snackbar('หัวข้อ', 'รายงานสำเร็จ');
+                                          print('Successfull');
+                                        } catch (e) {
+                                          Get.snackbar(
+                                              'หัวข้อ', 'รายงานไม่สำเร็จ');
+                                          print("Error: $e");
+                                        }
+                                        ;
+                                        // print('FoodID = ');
+                                        // print(id_food!);
+                                
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('ส่ง')),
+                                ),
                               ],
                             ),
                           ),
@@ -710,13 +713,17 @@ class _DetailFoodState extends State<DetailFood> {
                 foregroundColor: Colors.white,
                 onTap: () {
                   showModalBottomSheet(
-                    isScrollControlled: false,
+                    isScrollControlled: true,
                     context: context,
                     builder: (BuildContext context) {
                       return SizedBox(
-                        height: 400,
+                        height: 500,
                         child: Center(
                           child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15)
+                            ),
                             child: ListView(
                               children: <Widget>[
                                 const SizedBox(
@@ -725,7 +732,7 @@ class _DetailFoodState extends State<DetailFood> {
                                 const Center(
                                     child: Text(
                                       'ส่งการบ้านกันเถอะ !',
-                                      style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   const SizedBox(
@@ -734,19 +741,22 @@ class _DetailFoodState extends State<DetailFood> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('การบ้านของสูตร  ',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                                      Text('การบ้านของ  ',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                                       Text(name_food??'',style: TextStyle(color: Color.fromARGB(255, 255, 127, 7),fontSize: 25,fontWeight: FontWeight.w600),)
 
                                     ],
                                   ),
                                   SizedBox(height: 10,),
-                                ButtonWidget(
-                                    //Button Select file
-                                    icon: Icons.attach_file,
-                                    text: 'เลือกไฟล์',
-                                    onClick: () {
-                                      selectFile();
-                                    }),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ButtonWidget(
+                                      //Button Select file
+                                      icon: Icons.attach_file,
+                                      text: 'เลือกไฟล์',
+                                      onClick: () {
+                                        selectFile();
+                                      }),
+                                ),
                                 Padding(
                                     padding: const EdgeInsets.only(left: 180),
                                     child: Text('***อัพโหลดรูปอย่างน้อย 1 รูป',style: TextStyle(color: Colors.red),),
@@ -754,19 +764,24 @@ class _DetailFoodState extends State<DetailFood> {
                                 SizedBox(
                                   height: 10.0,
                                 ),
-                                TextField(
-                                  controller: SenWork,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    labelText:
-                                        'กรอกความคิดเห็นเกี่ยวกับการปรับสูตร',
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    controller: SenWork,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      hintText:
+                                          'กรอกความคิดเห็นเกี่ยวกับการปรับสูตร',
+                                          
+                                    ),
+                                    maxLines: 5, 
                                   ),
                                 ),
 
                                 Padding(
-                                  padding: const EdgeInsets.only(top:100),
+                                  padding: const EdgeInsets.all(5),
                                   child: ElevatedButton(
                                       style: ButtonStyle(
                                         backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 196, 0)),
@@ -838,39 +853,48 @@ class _DetailFoodState extends State<DetailFood> {
                               SizedBox(
                                 height: 10.0,
                               ),
-                              TextField(
-                                controller: Comment,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  labelText:
-                                      'กรอกความคิดเห็นเกี่ยวกับการคอมเม้น',
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: Comment,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20)),
+                                    hintText:
+                                        'กรอกความคิดเห็นเกี่ยวกับการคอมเม้น',
+                                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                                  ),
+                                  maxLines: 7, 
                                 ),
                               ),
                               SizedBox(
-                                height: 10.0,
+                                height: 25,
                               ),
-                              ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 196, 0)),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 196, 0)),
+                                      ),
+                                      onPressed: () async {
+                                      print('Success');
+                                      commentComment = Comment.text;
+                                      uploadFileComment();
+                                      Comment.clear();
+                                      Navigator.of(context).pop();
+                                    },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.comment,color: Colors.white,),
+                                          Text(
+                                            'คอมเมนต์',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                          ),
+                                          
+                                        ],
+                                      ),
                                     ),
-                                    onPressed: () async {
-                                    print('Success');
-                                    commentComment = Comment.text;
-                                    uploadFileComment();
-                                    Comment.clear();
-                                    Navigator.of(context).pop();
-                                  },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'คอมเมนต์',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
-                                        ),
-                                        Icon(Icons.comment,color: Colors.white,)
-                                      ],
-                                    ),
-                                  ),
+                              ),
                             
                             ],
                           ),
@@ -944,13 +968,16 @@ class _DetailFoodState extends State<DetailFood> {
                                     ),
                                   ),
                                   SizedBox(height: 10),
-                                  ButtonWidget(
-                                      //Button Select file
-                                      icon: Icons.attach_file,
-                                      text: 'เลือกไฟล์',
-                                      onClick: () {
-                                        selectFile();
-                                      }),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ButtonWidget(
+                                        //Button Select file
+                                        icon: Icons.attach_file,
+                                        text: 'เลือกไฟล์',
+                                        onClick: () {
+                                          selectFile();
+                                        }),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 170),
                                     child: Text('***อัพโหลดรูปอย่างน้อย 1 รูป',style: TextStyle(color: Colors.red),),
@@ -996,8 +1023,11 @@ class _DetailFoodState extends State<DetailFood> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'ส่งรีวิว',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                        Padding(
+                                          padding: const EdgeInsets.all(1),
+                                          child: Text(
+                                            'ส่งรีวิว',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                         Icon(Icons.done_all_outlined,color: Colors.white,)
                                       ],
@@ -1841,7 +1871,7 @@ class _DetailFoodState extends State<DetailFood> {
                                             padding: const EdgeInsets.only(
                                                 left: 150, top: 10),
                                             child: Text(
-                                              'ตอบกกลับ',
+                                              'ตอบกลับ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1987,56 +2017,73 @@ class _DetailFoodState extends State<DetailFood> {
                                             isScrollControlled: false,
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return SizedBox(
-                                                height: 400,
-                                                child: Center(
-                                                  child: ListView(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding: const EdgeInsets.all(8.0),
-                                                        child: Text('ตอบกลับ',style: TextStyle(
-                                                          fontSize: 20
-                                                        ),),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),
-                                                      TextField(
-                                                        controller: ReplyReview,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          border: OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                          labelText:
-                                                              'ตอบกลับคอมเม้น',
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                  color: Color.fromARGB(255, 0, 0, 0),
+                                                ),
+                                                
+                                                child: SizedBox(
+                                                  height: 400,
+                                                  child: Center(
+                                                    child: ListView(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Center(
+                                                            child: Text('ตอบกลับ',style: TextStyle(
+                                                              fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white
+                                                            ),),
+                                                          ),
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),
-                                                      TextButton(
-                                                          onPressed: () async {
-                                                            print('Success');
-                                                            replyReview =
-                                                                ReplyReview
-                                                                    .text;
-                                                            uploadFileReplyReview();
-                                                            // Navigator.of(
-                                                            //         context)
-                                                            //     .pop();
-                                                            ReplyReview.clear();
-                                                            Get.to(
-                                                                ReplyReviewFood(),
-                                                                arguments:
-                                                                    reviewData[
-                                                                        'ID_Review']);
-                                                          },
-                                                          child: const Text(
-                                                              'ส่ง')),
-                                                    ],
+                                                        SizedBox(
+                                                          height: 10.0,
+                                                        ),
+                                                        TextField(
+                                                          controller: ReplyReview,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            filled: true,
+                                                            fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                                            border: OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20)),
+                                                                hintText: 'ตอบกลับคอมเม้น', // ใช้ hintText เป็นคำแนะนำ
+    floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                                
+                                                          ),
+                                                          maxLines: 5, // กำหนดจำนวนบรรทัดสูงสุด
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10.0,
+                                                        ),
+                                                        ElevatedButton(
+                                                            style: ElevatedButton.styleFrom(
+                                                              backgroundColor: Colors.amber, 
+                                                              foregroundColor: Colors.white, 
+                                                            ),
+                                                            onPressed: () async {
+                                                              print('Success');
+                                                              replyReview =
+                                                                  ReplyReview
+                                                                      .text;
+                                                              uploadFileReplyReview();
+                                                              // Navigator.of(
+                                                              //         context)
+                                                              //     .pop();
+                                                              ReplyReview.clear();
+                                                              Get.to(
+                                                                  ReplyReviewFood(),
+                                                                  arguments:
+                                                                      reviewData[
+                                                                          'ID_Review']);
+                                                            },
+                                                            child: const Text(
+                                                                'ส่ง',style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),)),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               );

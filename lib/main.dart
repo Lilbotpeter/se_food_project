@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Test',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 255, 255)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 0, 0)),
         useMaterial3: true,
       ),
       home: LoginScreen(),
