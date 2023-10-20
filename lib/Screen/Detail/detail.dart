@@ -20,6 +20,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:se_project_food/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:se_project_food/service.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../Authen/authen_part.dart';
 import '../../Models/foodmodels.dart';
@@ -44,7 +45,6 @@ class _DetailFoodState extends State<DetailFood> {
   List<FoodModel> foodModels = [];
   final followerService = FollowerService();
   List<String> imageUrls = [];
-  List<String> videoUrls = [];
 
   late String getIDbook;
   int rating = 0;
@@ -88,6 +88,7 @@ class _DetailFoodState extends State<DetailFood> {
   final String getfoodID = Get.arguments as String; //รับ Food ID
 
   final userid = FirebaseAuth.instance.currentUser!.uid;
+  late VideoPlayerController _controller;
 
   DataService dataService = DataService();
 
@@ -522,10 +523,19 @@ class _DetailFoodState extends State<DetailFood> {
     }
   }
 
+// void _playVideo({int index = 0, bool init = false}){
+//   _controller = VideoPlayerController.networkUrl('')
+//     ..addListener(() => setState(() {}))
+//     ..setLooping(true)
+//     ..initialize().then((value) => _controller.play());
+// }
+
+
 ///////////////////////////////////////////////initState
   @override
   void initState() {
     super.initState();
+    //_playVideo(init: true);
     _getDataFromDatabase();
     _getUserDataFromDatabase(user_id);
     _getImagesFromStorage(id_food);
@@ -535,6 +545,13 @@ class _DetailFoodState extends State<DetailFood> {
         _fetch();
       });
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -1324,12 +1341,18 @@ class _DetailFoodState extends State<DetailFood> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "$time_food",
-                                      style: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.timer,color: Colors.white,),
+                                        Text(
+                                          "$time_food",
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white),
+                                        ),
+                                      ],
                                     ),
                                     Text(
                                       "นาที",
@@ -1343,38 +1366,47 @@ class _DetailFoodState extends State<DetailFood> {
                               ),
                             ),
 ////////////////////////////////////////////////Video
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(20.0, 215, 20, 5),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[]),
-                          ]),)
-                                  ),
-                                ),
-                              ),
-                            ),
+                          //   Flexible(
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(8.0),
+                          //       child: Expanded(
+                          //         child: Container(
+                          //           margin:
+                          //               EdgeInsets.fromLTRB(20.0, 215, 20, 5),
+                          //           width: double.infinity,
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(20),
+                          //           ),
+                          //           child:  Padding(
+                          //             padding: EdgeInsets.all(10.0),
+                          //             child: Column(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.start,
+                          //                 crossAxisAlignment:
+                          //                     CrossAxisAlignment.start,
+                          //                 children: <Widget>[
+                          //                   Container(
+                          //                     color: Colors.white,
+                          //                     height: 200,
+                          //                     child: _controller.value.isInitialized
+                          //                     ?Column(
+                          //                       children: <Widget>[
+                          //                         SizedBox(
+                          //                           height: 150,
+                          //                           child: VideoPlayer(_controller),
+                          //                         )
+                          //                       ],
+                          //                     )
+                          //                     : const Center(
+                          //                       child: CircularProgressIndicator(color: Colors.amber,),
+                          //                     ),
+                          //                   ),
+                          // ]),)
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
 
 /////////////////////////////////////////////////Detail
                             Flexible(

@@ -132,7 +132,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
     Widget buildFoodItem(int index) {
       return GestureDetector(
         onTap: () {
-          Get.snackbar(foodModels[index].food_name, foodModels[index].user_id);
+          //Get.snackbar(foodModels[index].food_name, foodModels[index].user_id);
           Get.to(DetailFood(),
               arguments: foodModels[index].food_id); // ตัวส่ง Parameter
         },

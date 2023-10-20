@@ -204,6 +204,7 @@ class _ReplyReviewFoodState extends State<ReplyReviewFood> {
                                       ' ${replyReviewData['Comment']}',
                                       style: TextStyle(fontSize: 20),
                                       maxLines: 5,
+                                      softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.justify, // จัดวางข้อความให้อยู่ในครอบขอบและใช้เว้นระยะแบบ spacebar
                                     ),

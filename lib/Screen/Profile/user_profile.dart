@@ -13,6 +13,7 @@ import '../../Models/foodmodels.dart';
 import '../../Widgets/profile_picture.dart';
 import '../../constants.dart';
 import '../../follow.dart';
+import '../Detail/detail.dart';
 
 //Authen Current User
 final User? user = AuthenticationController().currentUser;
@@ -125,8 +126,10 @@ class _UserProfileState extends State<UserProfile> {
     Widget buildFoodItem(int index) {
       return GestureDetector(
         onTap: () {
+          Get.to(DetailFood(),
+              arguments: foodModels[index].food_id); 
           //Get.snackbar(foodModels[index].food_name, foodModels[index].user_id);
-          Get.to(const EditUser(), arguments: userid); // ตัวส่ง Parameter
+          //Get.to(const EditUser(), arguments: userid); // ตัวส่ง Parameter
         },
         child: Container(
           child: Image.network(

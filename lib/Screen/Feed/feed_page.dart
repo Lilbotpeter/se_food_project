@@ -431,48 +431,58 @@ class _FeedPageState extends State<FeedPage> {
             SizedBox(
               height: 150,
               child: Container(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: typefood.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 100,
-                      margin: EdgeInsets.only(left: 15),
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white70,
-                        //   gradient: LinearGradient(
-                        // begin: Alignment.topCenter,
-                        // end: Alignment.bottomCenter,
-                        // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
-                        // stops: [0.1, 0.5, 0.9],
-                        //   ),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // Image.asset(
-                          //   imageTypefood[index],
-                          //   height: 80,
-                          //   width: 80,
-                          // ),
-                          Icon(Icons.food_bank),
-                          TextButton(
-                            onPressed: () {
-                              print('Yes I does');
-                              print(typefood[index]);
-                              Get.to(detailTypefood(),
-                                  arguments: typefood[index]);
-                            },
-                            child: Text(typefood[index]),
-                          ),
-                          //Text(typefood[index]),
-                        ],
-                      ),
-                    );
-                  },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: typefood.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: 100,
+                        margin: EdgeInsets.only(left: 15),
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          //   gradient: LinearGradient(
+                          // begin: Alignment.topCenter,
+                          // end: Alignment.bottomCenter,
+                          // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
+                          // stops: [0.1, 0.5, 0.9],
+                          //   ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Image.asset(
+                              imageTypefood[index],
+                              height: 50,
+                              width: 50,
+                            ),
+                            //Icon(Icons.food_bank),
+                            TextButton(
+                              onPressed: () {
+                                //print(typefood[index]);
+                                Get.to(detailTypefood(),
+                                    arguments: typefood[index]);
+                              },
+                              child: Text(typefood[index],style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                
+                              ),
+                              softWrap: false,
+                              maxLines: 1,
+                              ),
+                              
+                            ),
+                            //Text(typefood[index]),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
