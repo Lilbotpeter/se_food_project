@@ -111,6 +111,9 @@ class _MyFoodsState extends State<MyFoods> {
   Widget showName(int index) {
     return Text(
       foodModels[index].food_name,
+      style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+      maxLines: 5,
+      overflow: TextOverflow.fade,
     );
   }
 
@@ -136,162 +139,93 @@ class _MyFoodsState extends State<MyFoods> {
             child: ListView.builder(
               itemCount: foodModels.length,
               itemBuilder: (BuildContext buildContext, int index) {
-                return Card(
-                  child: Column(children: <Widget>[
-                    Text(''),
-                    Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        height: MediaQuery.of(context).size.width * 0.5,
-                        child: Image.network(
-                          foodModels[index].food_image,
-                        )),
-                    showName(
-                      index,
-                    ),
-                    showDescription(index),
-                    showIngredients(index),
-
-                    Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.amber,
-                            textStyle: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            )),
-                        onPressed: () {
-                          print('Start NaJa');
-
-                          print(foodModels[index].food_id);
-                          Get.to(EditFoods(),
-                              arguments: foodModels[index].food_id);
-                          // showDialog<void>(
-                          //   context: context,
-                          //   barrierDismissible: false, // user must tap button!
-                          //   builder: (BuildContext context) {
-                          //     return AlertDialog(
-                          //       title: const Text(''),
-                          //       content: SingleChildScrollView(
-                          //         child: ListBody(
-                          //           children: <Widget>[
-                          //             Text("ชื่อสูตรอาหาร : "),
-                          //             SizedBox(
-                          //               height: 10.0,
-                          //             ),
-                          //             TextFormField(
-                          //               controller: edit_name,
-                          //               decoration: InputDecoration(
-                          //                 border: OutlineInputBorder(
-                          //                     borderRadius:
-                          //                         BorderRadius.circular(20)),
-                          //               ),
-                          //             ),
-                          //             SizedBox(
-                          //               height: 10.0,
-                          //             ),
-                          //             Text("วัตถุดิบ : "),
-                          //             SizedBox(
-                          //               height: 10.0,
-                          //             ),
-                          //             TextFormField(
-                          //               controller: edit_ingredients,
-                          //               decoration: InputDecoration(
-                          //                 border: OutlineInputBorder(
-                          //                     borderRadius:
-                          //                         BorderRadius.circular(20)),
-                          //               ),
-                          //             ),
-                          //             SizedBox(
-                          //               height: 10.0,
-                          //             ),
-                          //             Text("วิธีการทำ : "),
-                          //             SizedBox(
-                          //               height: 10.0,
-                          //             ),
-                          //             TextFormField(
-                          //               controller: edit_description,
-                          //               decoration: InputDecoration(
-                          //                 border: OutlineInputBorder(
-                          //                     borderRadius:
-                          //                         BorderRadius.circular(20)),
-                          //               ),
-                          //             ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //       actions: <Widget>[
-                          //         TextButton(
-                          //           child: const Text('ยืนยันการแก้ไข'),
-                          //           onPressed: () {
-                          //             late String _editname = edit_name.text;
-                          //             late String _editingredients =
-                          //                 edit_ingredients.text;
-                          //             late String _editdescription =
-                          //                 edit_description.text;
-                          //             final docker = FirebaseFirestore.instance
-                          //                 .collection('Foods')
-                          //                 .doc(foodModels[index].food_id);
-                          //             docker.update({
-                          //               'Food_Description': _editdescription,
-                          //               'Food_Ingredients': _editingredients,
-                          //               'Food_Name': _editname,
-                          //             });
-                          //             Navigator.of(context).pop();
-                          //           },
-                          //         ),
-                          //       ],
-                          //     );
-                          // },
-                          //);
-                        },
-                        child: Text('แก้ไขข้อมูล'),
+                return Padding(
+                  padding: const EdgeInsets.only(left:5.0),
+                  child: Card(
+                    color: Colors.black,
+                    child: Row(children: <Widget>[
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          height: MediaQuery.of(context).size.width * 0.5,
+                          child: Image.network(
+                            foodModels[index].food_image,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.only(left:20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            showName(
+                              index,
+                            ),
+                          SizedBox(height: 10,),
+                          Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.amber,
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            onPressed: () {
+                              print(foodModels[index].food_id);
+                              Get.to(EditFoods(),
+                                  arguments: foodModels[index].food_id);
+                            },
+                            child: Text('แก้ไขข้อมูล',style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),),
+                          ),
+                        ),
+                        Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.redAccent,
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            onPressed: () async {
+                              print(foodModels[index].food_id);
+                              final docker = FirebaseFirestore.instance
+                                  .collection('Foods')
+                                  .doc(foodModels[index].food_id);
+                                      
+                              try {
+                                await docker.delete();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
+                                );
+                                setState(() {
+                                  foodModels.removeAt(index);
+                                });
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
+                                );
+                              }
+                            },
+                            child: Text('ลบข้อมูล',style: TextStyle(color: Colors.black),),
+                          ),
+                        ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.redAccent,
-                            textStyle: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            )),
-                        onPressed: () async {
-                          print('Start NaJa');
-
-                          print(foodModels[index].food_id);
-                          final docker = FirebaseFirestore.instance
-                              .collection('Foods')
-                              .doc(foodModels[index].food_id);
-
-                          try {
-                            await docker.delete();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
-                            );
-                            setState(() {
-                              foodModels.removeAt(index);
-                            });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
-                            );
-                          }
-                        },
-                        child: Text('ลบข้อมูล'),
-                      ),
-                    ),
-                    // IconButton(
-                    //   icon: new Icon(Icons.edit),
-                    //   highlightColor: Colors.pink,
-                    //   onPressed: () {
-                    //     print("kuay");
-                    //     MaterialPageRoute route = MaterialPageRoute(
-                    //       builder: (Index) => UploadFoodPage(),
-                    //     );
-                    //   },
-                    // ),
-                  ]),
+                      // showDescription(index),
+                      // showIngredients(index),
+                
+                
+                      // IconButton(
+                      //   icon: new Icon(Icons.edit),
+                      //   highlightColor: Colors.pink,
+                      //   onPressed: () {
+                      //     print("kuay");
+                      //     MaterialPageRoute route = MaterialPageRoute(
+                      //       builder: (Index) => UploadFoodPage(),
+                      //     );
+                      //   },
+                      // ),
+                    ]),
+                  ),
                 );
               },
             ),

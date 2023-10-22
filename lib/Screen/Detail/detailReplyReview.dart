@@ -114,129 +114,98 @@ class _ReplyReviewFoodState extends State<ReplyReviewFood> {
               ),
         
       ),
-      body: SafeArea(
-        child: Center(
+body: SafeArea(
+  child: Center(
+    child: Card(
+      color: Color.fromARGB(255, 255, 255, 255),
+      child: ListView.builder(
+        itemCount: FoodReplyReviewList.length,
+        itemBuilder: (context, index) {
+          final replyReviewData = FoodReplyReviewList[index];
 
-          child: Card(
-            color: Color.fromARGB(255, 255, 255, 255),
-            child: ListView.builder(
-              itemCount: FoodReplyReviewList.length,
-              itemBuilder: (context, index) {
-                final replyReviewData = FoodReplyReviewList[index];
-
-                return Expanded(
-                  child: Container(
-                    
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                                        color: const Color.fromARGB(255, 255, 255, 255),
-                                        border: Border.all(width: 5)),
-                    child: Column(
-                      
-                      children: <Widget>[
-                        Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FutureBuilder<String>(
-                                          future: getprofile(replyReviewData['Uid']), // เรียกใช้ getname โดยส่ง modifyData['Uid']
-                                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.done) {
-                                              // การดำเนินการเมื่อ Future สมบูรณ์
-                                              String userName = snapshot.data ?? 'ไม่พบชื่อ'; // ดึงค่าจาก snapshot.data
-                                              return Padding(
-                                                padding: const EdgeInsets.only(left:2.0),
-                                                child: InkWell(
-                                                  onTap: (){
-                                                    Get.to(UserLinkProfile(),
-                                                      arguments: replyReviewData['Uid']);
-                                                  },
-                                                  child: SizedBox(
-                                                height: 50,
-                                                width: 80,
-                                                child: ProfilePicture(
-                                                    imageXFile: imageXFile,
-                                                    image: userName))
-                                                ),
-                                              ); // แสดงชื่อผู้ใช้
-                                            } else if (snapshot.hasError) {
-                                              return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
-                                            } else {
-                                              // การดำเนินการในระหว่างรอ Future
-                                              return CircularProgressIndicator(); // หรือ Widget แสดงการโหลด
-                                            }
-                                          },
-                                        ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Text(
-                                //     'ไอดีคอมเม้นอาหาร : ${replyReviewData['ID_Review']}',
-                                //     style: TextStyle(fontSize: 10),
-                                //     maxLines: 5),
-                                FutureBuilder<String>(
-                                          future: getname(replyReviewData['Uid']), // เรียกใช้ getname โดยส่ง modifyData['Uid']
-                                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                                            if (snapshot.connectionState == ConnectionState.done) {
-                                              // การดำเนินการเมื่อ Future สมบูรณ์
-                                              String userName = snapshot.data ?? 'ไม่พบชื่อ'; // ดึงค่าจาก snapshot.data
-                                              return Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: InkWell(
-                                                  onTap: (){
-                                                    Get.to(UserLinkProfile(),
-                                                      arguments: replyReviewData['Uid']);
-                                                  },
-                                                  child: Text(userName,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
-                                                                                          maxLines: 5),
-                                                ),
-                                              ); // แสดงชื่อผู้ใช้
-                                            } else if (snapshot.hasError) {
-                                              return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
-                                            } else {
-                                              // การดำเนินการในระหว่างรอ Future
-                                              return CircularProgressIndicator(); // หรือ Widget แสดงการโหลด
-                                            }
-                                          },
-                                        ),
-                                Padding(
-                                    padding: const EdgeInsets.only(left: 5, bottom: 5),
-                                    child: Text(
-                                      ' ${replyReviewData['Comment']}',
-                                      style: TextStyle(fontSize: 20),
-                                      maxLines: 5,
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.justify, // จัดวางข้อความให้อยู่ในครอบขอบและใช้เว้นระยะแบบ spacebar
-                                    ),
-                                  )
-
-
-                                // Text(
-                                //     'ไอดีรีไพ : ${replyReviewData['ID_ReplyReview']}',
-                                //     style: TextStyle(fontSize: 10),
-                                //     maxLines: 5),
-                                // Text('ไอดีผู้ใช้ : ${replyReviewData['Uid']}',
-                                //     style: TextStyle(fontSize: 10), maxLines: 5),
-                                
-                              ],
-                              
-                            ),
-                            
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        
-                      ],
-                    ),
-                  ),
-                );
-              },
+          return Container(
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 255, 255, 255),
+              border: Border.all(width: 5),
             ),
-          ),
-        ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FutureBuilder<String>(
+                  future: getprofile(replyReviewData['Uid']),
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      String userName = snapshot.data ?? 'ไม่พบชื่อ';
+                      return InkWell(
+                        onTap: () {
+                          Get.to(UserLinkProfile(), arguments: replyReviewData['Uid']);
+                        },
+                        // child: SizedBox(
+                        //   height: 50,
+                        //   width: 50,
+                        //   child: ProfilePicture(
+                        //     imageXFile: imageXFile,
+                        //     image: userName,
+                        //   ),
+                        // ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FutureBuilder<String>(
+                      future: getname(replyReviewData['Uid']),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          String userName = snapshot.data ?? 'ไม่พบชื่อ';
+                          return InkWell(
+                            onTap: () {
+                              Get.to(UserLinkProfile(), arguments: replyReviewData['Uid']);
+                            },
+                            child: Text(
+                              userName,
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              maxLines: 5,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, bottom: 5),
+                      child: Text(
+                        ' ${replyReviewData['Comment']}',
+                        style: TextStyle(fontSize: 20),
+                        maxLines: 5,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.justify,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
+    ),
+  ),
+),
+
+
     );
   }
 }

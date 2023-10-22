@@ -67,51 +67,79 @@ class _ReplyCommentFoodState extends State<ReplyCommentFood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
-        title: Text('ตอบกลับ2'),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: Card(
-            child: ListView.builder(
-              itemCount: FoodReplyCommentList.length,
-              itemBuilder: (context, index) {
-                final replyCommentData = FoodReplyCommentList[index];
-
-                return Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'ไอดีคอมเม้นอาหาร : ${replyCommentData['ID_Comment']}',
-                                style: TextStyle(fontSize: 10),
-                                maxLines: 5),
-                            Text('รายละเอียด : ${replyCommentData['Comment']}',
-                                style: TextStyle(fontSize: 10), maxLines: 5),
-                            Text(
-                                'ไอดีรีไพ : ${replyCommentData['ID_ReplyComment']}',
-                                style: TextStyle(fontSize: 10),
-                                maxLines: 5),
-                            Text('ไอดีผู้ใช้ : ${replyCommentData['Uid']}',
-                                style: TextStyle(fontSize: 10), maxLines: 5),
-                          ],
-                        ),
+        title: Text('ตอบกลับ',style: TextStyle(color: Colors.white),),
+        flexibleSpace: ClipPath(
+                child: Container(
+                  height: 500,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 255, 127, 8),
+                        Color.fromARGB(255, 255, 198, 55),
                       ],
                     ),
-                    SizedBox(
-                      height: 80,
+                  ),
+                  child: const Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                      ],
                     ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
+                  ),
+                ),
+              ),
+        
       ),
+      body: SafeArea(
+  child: Center(
+    child: Card(
+      child: ListView.builder(
+        itemCount: FoodReplyCommentList.length,
+        itemBuilder: (context, index) {
+          final replyCommentData = FoodReplyCommentList[index];
+
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              border: Border.all(width: 5),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, bottom: 5),
+                  child: Text(
+                    'คอมเม้นต์ : ${replyCommentData['Comment']}',
+                    style: TextStyle(fontSize: 20),
+                    maxLines: 5,
+                  ),
+                ),
+                Text(
+                  'ไอดีรีไพ : ${replyCommentData['ID_ReplyComment']}',
+                  style: TextStyle(fontSize: 10),
+                  maxLines: 5,
+                ),
+                Text(
+                  'ไอดีผู้ใช้ : ${replyCommentData['Uid']}',
+                  style: TextStyle(fontSize: 10),
+                  maxLines: 5,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    ),
+  ),
+),
+
     );
   }
 }

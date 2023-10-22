@@ -40,6 +40,7 @@ class _UserProfileState extends State<UserProfile> {
 
 //Get data fromdatabase
   Future<void> _getDataFromDatabase() async {
+    try{
     await FirebaseFirestore.instance
         .collection("users")
         .doc(userid)
@@ -54,6 +55,9 @@ class _UserProfileState extends State<UserProfile> {
         });
       }
     });
+    }catch(error){
+      print('เกิดข้อผิดพลาด : $error');
+    }
   }
 
   Future<void> readData() async {

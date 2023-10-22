@@ -591,42 +591,41 @@ class _EditFoodsState extends State<EditFoods> {
   }
 
   void _showVideoPopup(BuildContext context, String videoUrl, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final VideoPlayerController _controller =
-            VideoPlayerController.networkUrl(Uri.parse(videoUrl));
-        _controller.initialize();
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      final VideoPlayerController _controller =
+          VideoPlayerController.network(videoUrl);
+      _controller.initialize();
 
-        return Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AspectRatio(
-                aspectRatio: 16 /
-                    9, // You may need to adjust the aspect ratio based on your video dimensions
-                child: VideoPlayer(_controller),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      _controller
-                          .dispose(); // Dispose of the video player when done
-                      Navigator.of(context).pop(); // Close the dialog
-                    },
-                    icon: Icon(Icons.close),
-                    color: Colors.red,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+      return Dialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9, // ปรับค่าตามสัดส่วนของวิดีโอของคุณ
+              child: VideoPlayer(_controller),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _controller.dispose(); // ปิดควบคุมเวลาเมื่อเสร็จ
+                    Navigator.of(context).pop(); // ปิดไดอล็อก
+                  },
+                  icon: Icon(Icons.close),
+                  color: Colors.red,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
 //ลบรูปภาพ
   Future<void> deleteImage(String imageUrl, int index) async {
@@ -663,15 +662,18 @@ class _EditFoodsState extends State<EditFoods> {
                   scrollDirection: Axis.horizontal,
                   itemCount: imageUrls.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: GestureDetector(
-                        onTap: () {
-                          _showImagePopup(context, imageUrls[index], index);
-                          // _showVideoPopup(context, videoUrls[index], index);
-                        },
-                        child: Image.network(imageUrls[index]),
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Slidable(
+                        actionPane: SlidableDrawerActionPane(),
+                        actionExtentRatio: 0.25,
+                        child: GestureDetector(
+                          onTap: () {
+                            _showImagePopup(context, imageUrls[index], index);
+                            // _showVideoPopup(context, videoUrls[index], index);
+                          },
+                          child: Image.network(imageUrls[index]),
+                        ),
                       ),
                     );
                   },
