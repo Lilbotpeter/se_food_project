@@ -335,7 +335,7 @@ class _FeedPageState extends State<FeedPage> {
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 255, 255, 255),
+                                color: Color.fromARGB(255, 0, 0, 0),
                               ),
                             ),
                           ],

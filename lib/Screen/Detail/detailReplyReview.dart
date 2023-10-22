@@ -118,7 +118,7 @@ class _ReplyReviewFoodState extends State<ReplyReviewFood> {
         child: Center(
 
           child: Card(
-            color: Color.fromARGB(255, 0, 0, 0),
+            color: Color.fromARGB(255, 255, 255, 255),
             child: ListView.builder(
               itemCount: FoodReplyReviewList.length,
               itemBuilder: (context, index) {

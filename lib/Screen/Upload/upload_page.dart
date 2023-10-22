@@ -249,8 +249,7 @@ class _UploadFoodState extends State<UploadFood> {
           food_ingredients = value.trim();
         },
         decoration: InputDecoration(
-          labelText: 'วัตถุดิบ',
-          hintText: 'กรุณากรอกวัตถุดิบ',
+          hintText: 'วัตถุดิบ',
           //icon: Icon(Icons.dinner_dining),
           border:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
@@ -278,8 +277,7 @@ class _UploadFoodState extends State<UploadFood> {
           food_solution = value.trim();
         },
         decoration: InputDecoration(
-          labelText: 'วิธีการทำ',
-          hintText: 'กรุณากรอกวิธีการทำ',
+          hintText: 'วิธีการทำ',
           //icon: Icon(Icons.solar_power_outlined),
           border:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
@@ -454,8 +452,7 @@ class _UploadFoodState extends State<UploadFood> {
           food_description = value.trim();
         },
         decoration: InputDecoration(
-          labelText: 'รายละเอียดอาหาร',
-          hintText: 'กรุณากรอกรายละเอียดอาหาร',
+          hintText: 'รายละเอียดอาหาร',
           // icon: Icon(Icons.description),
           border:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),

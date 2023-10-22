@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:se_project_food/Api/firebase_api.dart';
@@ -88,7 +89,7 @@ class _DetailFoodState extends State<DetailFood> {
   final String getfoodID = Get.arguments as String; //รับ Food ID
 
   final userid = FirebaseAuth.instance.currentUser!.uid;
-  late VideoPlayerController _controller;
+  //late VideoPlayerController _controller;
 
   DataService dataService = DataService();
 
@@ -523,12 +524,51 @@ class _DetailFoodState extends State<DetailFood> {
     }
   }
 
-// void _playVideo({int index = 0, bool init = false}){
-//   _controller = VideoPlayerController.networkUrl('')
-//     ..addListener(() => setState(() {}))
-//     ..setLooping(true)
-//     ..initialize().then((value) => _controller.play());
+// void _playVideo({int index = 0, bool init = false}) {
+//   if (_controller == null) {
+//     _controller = VideoPlayerController.networkUrl(Uri.parse(urlString))
+//       ..addListener(() => setState(() {}))
+//       ..setLooping(true)
+//       ..initialize().then((value) => _controller.play());
+//   }
 // }
+
+  //ดึงข้อมูลรูปภาพจาก Storage
+  Future<void> _fetchImages() async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      ListResult result = await storage
+          .ref()
+          .child('files')
+          .child(getfoodID)
+          .child('Image')
+          .listAll();
+
+      try {
+        ListResult result = await storage
+            .ref()
+            .child('files')
+            .child(getfoodID)
+            .child('Image')
+            .listAll();
+
+        List<String> urls = [];
+        for (Reference ref in result.items) {
+          String imageURL = await ref.getDownloadURL();
+          urls.add(imageURL);
+        }
+
+        setState(() {
+          imageUrls = urls;
+        });
+      } catch (e) {
+        print("Error fetching images: $e");
+      }
+    } catch (e) {
+      print("Error fetching images: $e");
+    }
+  }
+
 
 
 ///////////////////////////////////////////////initState
@@ -547,12 +587,12 @@ class _DetailFoodState extends State<DetailFood> {
     });
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _controller.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -666,7 +706,7 @@ class _DetailFoodState extends State<DetailFood> {
                                         fillColor: const Color.fromARGB(255, 253, 253, 253),
                                       ),
                                     cursorColor: Colors.white,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
                                     maxLines: 4,
                                     controller: Fooddetail,
                                   ),
@@ -1150,7 +1190,7 @@ class _DetailFoodState extends State<DetailFood> {
                               borderRadius: BorderRadius.circular(30.0),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black26,
+                                  color: Color.fromARGB(66, 199, 199, 199),
                                   offset: Offset(0.0, 2.0),
                                   blurRadius: 6.0,
                                 ),
@@ -1167,13 +1207,27 @@ class _DetailFoodState extends State<DetailFood> {
                                 SizedBox(
                                   height: 300,
                                   width: double.infinity,
-                                  child: AnotherCarousel(
-                                    images: [
-                                      //VideoCarouselItem(videoUrl: 'https://firebasestorage.googleapis.com/v0/b/project-food-c14c5.appspot.com/o/files%2FH5sET0TQaRIx9qXgkq4e%2FVideo%2FVID_20231013_234214.mp4?alt=media&token=a44332cb-2cb7-4418-b7f9-71f72a96baa7'),
-                                      NetworkImage(image_food ?? ''),
-                                    ],
-                                    dotSize: 4,
-                                    indicatorBgPadding: 5.0,
+                                  child: FutureBuilder(
+                                    future: _fetchImages(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.done) {
+                                      return AnotherCarousel(
+                                        images: [
+                                          //VideoCarouselItem(videoUrl: 'https://firebasestorage.googleapis.com/v0/b/project-food-c14c5.appspot.com/o/files%2FH5sET0TQaRIx9qXgkq4e%2FVideo%2FVID_20231013_234214.mp4?alt=media&token=a44332cb-2cb7-4418-b7f9-71f72a96baa7'),
+                                          imageUrls.length
+                                        ],
+                                        dotSize: 4,
+                                        indicatorBgPadding: 5.0,
+                                      );
+                                      } else{
+                                        return Center(
+                                          child: SpinKitCircle( // หรือใช้ SpinKitDualRing, SpinKitChasingDots, SpinKitFadingCircle, หรือสไตล์ที่คุณต้องการ
+                                              color: Colors.amber, // สีของวงกลม
+                                              size: 50.0, // ขนาดของวงกลม
+                                            ),
+                                        );
+                                      }
+                                    }
                                   ),
                                 ),
                                 
@@ -1632,80 +1686,109 @@ class _DetailFoodState extends State<DetailFood> {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      InkWell(
-                                        onTap: () {
-                                          Get.snackbar(
-                                              '${modifyData['ID_Mod']}',
-                                              'message');
-                                          idMod = modifyData['ID_Mod'];
-                                          showModalBottomSheet(
-                                            isScrollControlled: false,
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return SizedBox(
-                                                height: 400,
-                                                child: Center(
-                                                  child: ListView(
-                                                    children: <Widget>[
-                                                      Text('ตอบกลับคอมเม้น'),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),
-                                                      TextField(
-                                                        controller: ReplyMod,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          border: OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                          labelText:
-                                                              'ตอบกลับคอมเม้น',
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),
-                                                      TextButton(
-                                                          onPressed: () async {
-                                                            print('Success');
-                                                            replyMod =
-                                                                ReplyMod.text;
-                                                            uploadFileReplyMod();
-                                                            ReplyMod.clear();
-                                                            Get.to(
-                                                                ReplyModFood(),
-                                                                arguments:
-                                                                    modifyData[
-                                                                        'ID_Mod']);
-                                                            // Navigator.of(
-                                                            //         context)
-                                                            //     .pop();
-                                                          },
-                                                          child: const Text(
-                                                              'ส่ง')),
-                                                    ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            idMod = modifyData['ID_Mod'];
+                                            showModalBottomSheet(
+                                              isScrollControlled: false,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Color.fromARGB(255, 0, 0, 0),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 400,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.amber,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 150, top: 10),
-                                            child: Text(
-                                              'ตอบกลับ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                  child: SizedBox(
+                                                    height: 400,
+                                                    child: Center(
+                                                      child: ListView(
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Center(
+                                                              child: Text('ตอบกลับ',style: TextStyle(
+                                                                            fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white
+                                                                          ),),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.0,
+                                                          ),
+                                                          TextField(
+                                                            controller: ReplyMod,
+                                                            decoration:
+                                                                  InputDecoration(
+                                                                filled: true,
+                                                                fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                                                border: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                20)),
+                                                                    hintText: 'ตอบกลับคอมเม้น', // ใช้ hintText เป็นคำแนะนำ
+                                                                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                                    
+                                                              ),
+                                                              maxLines: 5, 
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.0,
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                  backgroundColor: Colors.amber, 
+                                                                  foregroundColor: Colors.white, 
+                                                                ),
+                                                                onPressed: () async {
+                                                                  print('Success');
+                                                                  replyMod =
+                                                                      ReplyMod.text;
+                                                                  uploadFileReplyMod();
+                                                                  ReplyMod.clear();
+                                                                  Get.to(
+                                                                      ReplyModFood(),
+                                                                      arguments:
+                                                                          modifyData[
+                                                                              'ID_Mod']);
+                                                                  // Navigator.of(
+                                                                  //         context)
+                                                                  //     .pop();
+                                                                },
+                                                                child: const Text(
+                                                                    'ส่ง')),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 400,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(255, 0, 0, 0),
                                             ),
+                                             child: Center(
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(Icons.reply,color: Colors.white),
+                                                    Text(
+                                                      ' ตอบกลับ',
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          color:Colors.white),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                           ),
                                         ),
                                       ),
@@ -1716,9 +1799,6 @@ class _DetailFoodState extends State<DetailFood> {
                                       //Report Button
                                       InkWell(
                                         onTap: () {
-                                          Get.snackbar(
-                                              '${modifyData['ID_Mod']}',
-                                              'message');
                                           Get.to(ReplyModFood(),
                                               arguments: modifyData['ID_Mod']);
                                         },
@@ -1728,13 +1808,17 @@ class _DetailFoodState extends State<DetailFood> {
                                           decoration: BoxDecoration(
                                             color: Colors.amber,
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 135, top: 10),
-                                            child: Text(
-                                              'ดูการตอบกลับ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                          child: Center(
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(Icons.remove_red_eye_rounded),
+                                                Text(
+                                                  ' ดูการตอบกลับ',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -1830,82 +1914,111 @@ class _DetailFoodState extends State<DetailFood> {
                                         height: 10,
                                       ),
 
-                                      InkWell(
-                                        onTap: () {
-                                          Get.snackbar(
-                                              '${commentData['ID_Comment']}',
-                                              'message');
-                                          idComment = commentData['ID_Comment'];
-                                          showModalBottomSheet(
-                                            isScrollControlled: false,
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return SizedBox(
-                                                height: 400,
-                                                child: Center(
-                                                  child: ListView(
-                                                    children: <Widget>[
-                                                      Text('ตอบกลับคอมเม้น'),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),
-                                                      TextField(
-                                                        controller:
-                                                            ReplyComment,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          border: OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                          labelText:
-                                                              'ตอบกลับคอมเม้น',
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10.0,
-                                                      ),
-                                                      TextButton(
-                                                          onPressed: () async {
-                                                            print('Success');
-                                                            replyComment =
-                                                                ReplyComment
-                                                                    .text;
-                                                            uploadFileReplyComment();
-                                                            ReplyComment
-                                                                .clear();
-                                                            // Navigator.of(
-                                                            //         context)
-                                                            //     .pop();
-                                                            Get.to(
-                                                                ReplyCommentFood(),
-                                                                arguments:
-                                                                    commentData[
-                                                                        'ID_Comment']);
-                                                          },
-                                                          child: const Text(
-                                                              'ส่ง')),
-                                                    ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Get.snackbar(
+                                            //     '${commentData['ID_Comment']}',
+                                            //     'message');
+                                            idComment = commentData['ID_Comment'];
+                                            showModalBottomSheet(
+                                              isScrollControlled: false,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Color.fromARGB(255, 0, 0, 0),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 400,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.amber,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 150, top: 10),
-                                            child: Text(
-                                              'ตอบกลับ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                  child: SizedBox(
+                                                    height: 400,
+                                                    child: Center(
+                                                      child: ListView(
+                                                        children: <Widget>[
+                                                         Padding(
+                                                           padding: const EdgeInsets.all(8.0),
+                                                           child: Center(
+                                                             child: Text('ตอบกลับ',style: TextStyle(
+                                                                      fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white
+                                                                    ),),
+                                                           ),
+                                                         ),
+                                                          SizedBox(
+                                                            height: 10.0,
+                                                          ),
+                                                          TextField(
+                                                            controller:
+                                                                ReplyComment,
+                                                            decoration:
+                                                                  InputDecoration(
+                                                                filled: true,
+                                                                fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                                                border: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                20)),
+                                                                    hintText: 'ตอบกลับคอมเม้น', // ใช้ hintText เป็นคำแนะนำ
+                                                                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                                    
+                                                              ),
+                                                              maxLines: 5, // กำหนดจำนวนบรรทัดสูงสุด
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.0,
+                                                          ),
+                                                              ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                backgroundColor: Colors.amber, 
+                                                                foregroundColor: Colors.white, 
+                                                              ),
+                                                              onPressed: () async {
+                                                                print('Success');
+                                                                replyComment =
+                                                                    ReplyComment
+                                                                        .text;
+                                                                uploadFileReplyComment();
+                                                                ReplyComment
+                                                                    .clear();
+                                                                // Navigator.of(
+                                                                //         context)
+                                                                //     .pop();
+                                                                Get.to(
+                                                                    ReplyCommentFood(),
+                                                                    arguments:
+                                                                        commentData[
+                                                                            'ID_Comment']);
+                                                              },
+                                                              child: const Text(
+                                                                  'ส่ง',style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 400,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                            child: Center(
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(Icons.reply,color: Colors.white),
+                                                  Text(
+                                                    ' ตอบกลับ',
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color:Colors.white),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -1930,13 +2043,17 @@ class _DetailFoodState extends State<DetailFood> {
                                           decoration: BoxDecoration(
                                             color: Colors.amber,
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 135, top: 10),
-                                            child: Text(
-                                              'ดูการตอบกลับ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                          child: Center(
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(Icons.remove_red_eye_rounded),
+                                                Text(
+                                                  ' ดูการตอบกลับ',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -2037,104 +2154,112 @@ class _DetailFoodState extends State<DetailFood> {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      InkWell(
-                                        onTap: () {
-                                          // Get.snackbar(
-                                          //     '${reviewData['ID_Review']}',
-                                          //     'message');
-
-                                          idReview = reviewData['ID_Review'];
-                                          ////////////////////////
-                                          showModalBottomSheet(
-                                            isScrollControlled: false,
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                  color: Color.fromARGB(255, 0, 0, 0),
-                                                ),
-                                                
-                                                child: SizedBox(
-                                                  height: 400,
-                                                  child: Center(
-                                                    child: ListView(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(8.0),
-                                                          child: Center(
-                                                            child: Text('ตอบกลับ',style: TextStyle(
-                                                              fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white
-                                                            ),),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.0,
-                                                        ),
-                                                        TextField(
-                                                          controller: ReplyReview,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            filled: true,
-                                                            fillColor: const Color.fromARGB(255, 253, 253, 253),
-                                                            border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20)),
-                                                                hintText: 'ตอบกลับคอมเม้น', // ใช้ hintText เป็นคำแนะนำ
-    floatingLabelBehavior: FloatingLabelBehavior.never,
-                                                                
-                                                          ),
-                                                          maxLines: 5, // กำหนดจำนวนบรรทัดสูงสุด
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10.0,
-                                                        ),
-                                                        ElevatedButton(
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.amber, 
-                                                              foregroundColor: Colors.white, 
+                                      Padding(
+                                        padding: const EdgeInsets.all(15.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Get.snackbar(
+                                            //     '${reviewData['ID_Review']}',
+                                            //     'message');
+                                      
+                                            idReview = reviewData['ID_Review'];
+                                            ////////////////////////
+                                            showModalBottomSheet(
+                                              isScrollControlled: false,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                    color: Color.fromARGB(255, 0, 0, 0),
+                                                  ),
+                                                  
+                                                  child: SizedBox(
+                                                    height: 400,
+                                                    child: Center(
+                                                      child: ListView(
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Center(
+                                                              child: Text('ตอบกลับ',style: TextStyle(
+                                                                fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white
+                                                              ),),
                                                             ),
-                                                            onPressed: () async {
-                                                              print('Success');
-                                                              replyReview =
-                                                                  ReplyReview
-                                                                      .text;
-                                                              uploadFileReplyReview();
-                                                              // Navigator.of(
-                                                              //         context)
-                                                              //     .pop();
-                                                              ReplyReview.clear();
-                                                              Get.to(
-                                                                  ReplyReviewFood(),
-                                                                  arguments:
-                                                                      reviewData[
-                                                                          'ID_Review']);
-                                                            },
-                                                            child: const Text(
-                                                                'ส่ง',style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),)),
-                                                      ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.0,
+                                                          ),
+                                                          TextField(
+                                                            controller: ReplyReview,
+                                                            decoration:
+                                                                InputDecoration(
+                                                              filled: true,
+                                                              fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                                              border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20)),
+                                                                  hintText: 'ตอบกลับคอมเม้น', // ใช้ hintText เป็นคำแนะนำ
+                                                                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                                  
+                                                            ),
+                                                            maxLines: 5, // กำหนดจำนวนบรรทัดสูงสุด
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10.0,
+                                                          ),
+                                                          ElevatedButton(
+                                                              style: ElevatedButton.styleFrom(
+                                                                backgroundColor: Colors.amber, 
+                                                                foregroundColor: Colors.white, 
+                                                              ),
+                                                              onPressed: () async {
+                                                                print('Success');
+                                                                replyReview =
+                                                                    ReplyReview
+                                                                        .text;
+                                                                uploadFileReplyReview();
+                                                                // Navigator.of(
+                                                                //         context)
+                                                                //     .pop();
+                                                                ReplyReview.clear();
+                                                                Get.to(
+                                                                    ReplyReviewFood(),
+                                                                    arguments:
+                                                                        reviewData[
+                                                                            'ID_Review']);
+                                                              },
+                                                              child: const Text(
+                                                                  'ส่ง',style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),)),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          width: 400,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.amber,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 150, top: 10),
-                                            child: Text(
-                                              'ตอบกลับ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 400,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(255, 0, 0, 0),
+                                            ),
+                                             child: Center(
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(Icons.reply,color: Colors.white),
+                                                  Text(
+                                                    ' ตอบกลับ',
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color:Colors.white),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -2159,13 +2284,17 @@ class _DetailFoodState extends State<DetailFood> {
                                           decoration: BoxDecoration(
                                             color: Colors.amber,
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 135, top: 10),
-                                            child: Text(
-                                              'ดูการตอบกลับ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                          child: Center(
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(Icons.remove_red_eye_rounded),
+                                                Text(
+                                                  ' ดูการตอบกลับ',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
