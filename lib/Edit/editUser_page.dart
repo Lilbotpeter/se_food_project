@@ -300,7 +300,6 @@ class _EditUserState extends State<EditUser> {
                                     TextButton(
                                       child: Text("ยกเลิก"),
                                       onPressed: () {
-                                        print('Hiiiii');
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -311,18 +310,39 @@ class _EditUserState extends State<EditUser> {
                                             passwordController.text;
 
                                         if (password.isNotEmpty) {
-                                          // final deleteUser =
+                                          // final deleteUserdata = EditService();
+                                          // deleteUserdata.DeleteReplyMod(
+                                          //     usersid!);
+                                          // deleteUserdata.DeleteReplyReview(
+                                          //     usersid!);
+                                          // deleteUserdata.DeleteReplyCommentData(
+                                          //     usersid!);
+                                          // deleteUserdata.DeleteCommentData(
+                                          //     usersid!);
+                                          // deleteUserdata.DeleteModData(
+                                          //     usersid!);
+                                          // deleteUserdata.DeleteReviewData(
+                                          //     usersid!);
+                                          // deleteUserdata.DeleteFood(usersid!);
+                                          // deleteUserdata.DeleteUser(usersid!);
+                                          // final deleteUserOnAuthen =
                                           //     AuthenticationController();
-                                          // deleteUser
+                                          // deleteUserOnAuthen
                                           //     .deleteUserFromFirebase(password);
+                                          // Navigator.of(context).pop();
                                           // Get.snackbar('ลบข้อมูลผู้ใช้',
                                           //     'ลบข้อมูลผู้ใช้สำเร็จ');
-                                          // Navigator.of(context).pop();
                                           // signOut();
                                         } else {
-                                          final test = EditService();
+                                          //final test = EditService();
+                                          // test.DeleteReplyMod(usersid!);
 
-                                          test.DeleteCommentData(usersid!);
+                                          // test.DeleteReplyReview(usersid!);
+                                          // test.DeleteReplyCommentData(usersid!);
+                                          // test.DeleteCommentData(usersid!);
+                                          // test.DeleteModData(usersid!);
+                                          // test.DeleteReviewData(usersid!);
+
                                           Get.snackbar('เกิดข้อผิดพลาด',
                                               'ลบข้อมูลผู้ใช้ไม่สำเร็จ');
                                         }
@@ -346,10 +366,16 @@ class _EditUserState extends State<EditUser> {
               child: const Text('ลบบัญชีผู้ใช้')),
           TextButton(
               onPressed: () {
-                final test = EditService();
+                //final test = EditService();
 
-                test.DeleteCommentData(usersid!);
-                // print(usersid!);
+                // test.DeleteReplyMod(usersid!);
+                // test.DeleteReplyReview(usersid!);
+                // test.DeleteReplyCommentData(usersid!);
+                // test.DeleteCommentData(usersid!);
+                // test.DeleteModData(usersid!);
+                // test.DeleteReviewData(usersid!);
+                // test.DeleteFood(usersid!);
+                // test.DeleteUser(usersid!);
               },
               child: const Text('ทดสอบลบข้อมูล')),
         ],

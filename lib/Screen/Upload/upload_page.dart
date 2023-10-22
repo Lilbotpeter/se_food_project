@@ -114,6 +114,7 @@ class _UploadFoodState extends State<UploadFood> {
         'Food_Nation': food_nation!.isNotEmpty ? food_nation : 'อื่นๆ',
         'Food_Point': food_point!.isNotEmpty ? food_point : '0.0',
         'User_id': user?.uid,
+        'Time': Timestamp.now(),
       };
 
       for (int i = 0; i < files.length; i++) {
@@ -719,12 +720,16 @@ class _UploadFoodState extends State<UploadFood> {
 
             FloatingActionButton(
               onPressed: uploadFile,
-              child: Icon(Icons.upload_sharp,color: Colors.white,),
+              child: Icon(
+                Icons.upload_sharp,
+                color: Colors.white,
+              ),
               backgroundColor: Color.fromARGB(255, 255, 181, 22),
-
             ),
 
-            SizedBox(height: 40,)
+            SizedBox(
+              height: 40,
+            )
 
             //task != null ? buildUploadStatus(task!) : Container() //Percent
           ],

@@ -52,7 +52,9 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends State<FeedPage> {
   AuthenticationController auth = AuthenticationController.instanceAuth;
   List<FoodModel> foodModels = [];
-
+  List<FoodModel> SortfoodModels = [];
+  List<dynamic> followUser = [];
+  List<dynamic> countFollows = [];
   List<String> levelfood = [
     'ไม่มี',
     'ง่ายมาก',
@@ -178,7 +180,10 @@ class _FeedPageState extends State<FeedPage> {
   @override
   void initState() {
     super.initState();
+    SortByDate();
     readData();
+    readFollowUser();
+
     _getUserDataFromDatabase();
     //_getUserToDataFromDatabase();
   }
@@ -214,6 +219,117 @@ class _FeedPageState extends State<FeedPage> {
     await FirebaseAuth.instance.signOut();
   }
 
+  Future<void> readFollowUser() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    setState(() {
+      showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
+    });
+
+    CollectionReference collectionReference =
+        firestore.collection('followers').doc(userid).collection('followersID');
+    final snapshots = await collectionReference.get();
+
+    List<String> newuserData = []; // สร้างรายการของ FoodModel ใหม่
+    List<dynamic> dataFollows = [];
+    String id, image, iduser, name;
+    for (QueryDocumentSnapshot idUser in snapshots.docs) {
+      id = idUser.id;
+      newuserData.add(id);
+      QuerySnapshot comment = await firestore.collection('users').get();
+      for (QueryDocumentSnapshot datauser in comment.docs) {
+        if (idUser.id == datauser.id) {
+          print('idUser =' + idUser.id);
+          print('datauser =' + datauser.id);
+          print('BallTrue');
+          iduser = datauser['Uid'];
+          image = datauser['ImageP'];
+          name = datauser['Name'];
+          dataFollows.add({'Uid': iduser, 'ImageP': image, 'Name': name});
+          // dataFollows.add(image);
+        }
+      }
+    }
+
+    try {
+      setState(() {
+        followUser = dataFollows; // อัปเดต foodModels ด้วยรายการใหม่
+        countFollows = dataFollows;
+      });
+    } catch (e) {
+      '';
+    }
+  }
+  // Future<void> SortByDate() async {
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   String food_id;
+  //   String food_name,
+  //       food_image,
+  //       food_video,
+  //       food_level,
+  //       food_ingredients,
+  //       food_solution,
+  //       food_type,
+  //       food_description,
+  //       food_time,
+  //       food_nation,
+  //       food_point,
+  //       user_id;
+  //   QuerySnapshot querySnapshot =
+  //       await firestore.collection('Foods').orderBy('Food_Point').get();
+
+  //   List<FoodModel> sortedFoodModels = [];
+
+  //   for (QueryDocumentSnapshot fooData in querySnapshot.docs) {
+  //     food_id = fooData['Food_id'];
+  //     food_name = fooData['Food_Name'];
+  //     food_image = fooData['Food_Image'];
+  //     // //
+  //     // food_video = fooData[''];
+  //     // food_level = fooData[''];
+  //     // food_ingredients = fooData[''];
+  //     // food_solution = fooData[''];
+  //     // food_description = fooData['Food_Description'];
+  //     // food_time = fooData[''];
+  //     // food_nation = fooData[''];
+  //     // food_point = fooData[''];
+  //     user_id = fooData['User_id'];
+  //   }
+
+  //   setState(() {
+  //     // แทนที่ foodModels ด้วย sortedFoodModels เพื่อสั่งให้รายการเรียงลำดับตามเวลา
+  //     SortfoodModels = sortedFoodModels;
+  //   });
+  // }
+
+  Future<void> SortByDate() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    setState(() {
+      showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
+    });
+
+    CollectionReference collectionReference = firestore.collection('Foods');
+    final snapshots =
+        await collectionReference.orderBy('Time', descending: true).get();
+
+    List<FoodModel> newFoodModels = []; // สร้างรายการของ FoodModel ใหม่
+
+    for (var snapshot in snapshots.docs) {
+      FoodModel foodModel =
+          FoodModel.fromMap(snapshot.data() as Map<String, dynamic>);
+      foodModel.food_id = snapshot.id;
+
+      newFoodModels.add(foodModel); // เพิ่ม FoodModel เข้าในรายการใหม่
+    }
+
+    try {
+      setState(() {
+        SortfoodModels = newFoodModels; // อัปเดต foodModels ด้วยรายการใหม่
+      });
+    } catch (e) {
+      '';
+    }
+  }
+
   // Future<void> _getUserToDataFromDatabase() async {
   //   try {
   //     final snapshot = await FirebaseFirestore.instance
@@ -243,7 +359,8 @@ class _FeedPageState extends State<FeedPage> {
     });
 
     CollectionReference collectionReference = firestore.collection('Foods');
-    final snapshots = await collectionReference.get();
+    final snapshots =
+        await collectionReference.orderBy('Food_Point', descending: true).get();
 
     List<FoodModel> newFoodModels = []; // สร้างรายการของ FoodModel ใหม่
 
@@ -467,15 +584,15 @@ class _FeedPageState extends State<FeedPage> {
                                 Get.to(detailTypefood(),
                                     arguments: typefood[index]);
                               },
-                              child: Text(typefood[index],style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                
+                              child: Text(
+                                typefood[index],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                softWrap: false,
+                                maxLines: 1,
                               ),
-                              softWrap: false,
-                              maxLines: 1,
-                              ),
-                              
                             ),
                             //Text(typefood[index]),
                           ],
@@ -612,20 +729,20 @@ class _FeedPageState extends State<FeedPage> {
               height: 200,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: foodModels.length,
+                itemCount: SortfoodModels.length,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext buildContext, int index) {
                   return Container(
                     padding: EdgeInsets.only(right: 10),
                     child: Column(children: <Widget>[
                       ShowFoodCard(
-                          image: foodModels[index].food_image,
-                          title: foodModels[index].food_name,
-                          owner: foodModels[index].user_id,
+                          image: SortfoodModels[index].food_image,
+                          title: SortfoodModels[index].food_name,
+                          owner: SortfoodModels[index].user_id,
                           rating: 4.4,
                           press: () {
                             Get.to(DetailFood(),
-                                arguments: foodModels[index].food_id,
+                                arguments: SortfoodModels[index].food_id,
                                 transition: Transition.rightToLeft);
                           }),
                     ]),
@@ -633,6 +750,42 @@ class _FeedPageState extends State<FeedPage> {
                 },
               ),
             ),
+            SizedBox(
+              height: 25,
+            ),
+            TitleCustomWithMore(text: "คนที่กดติดตาม"),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection:
+                    Axis.horizontal, // กำหนด scrollDirection เป็นแนวนอน
+                itemCount: followUser.length,
+                itemBuilder: (BuildContext context, int index) {
+                  String iduser = followUser[index]['Uid'];
+                  String image = followUser[index]['ImageP'];
+                  String name = followUser[index]['Name'];
+
+                  return Container(
+                    width: 150, // กำหนดความกว้างของแต่ละรายการในลิสต์
+                    child: Column(
+                      // ใช้ Column เพื่อจัดเรียงรูปภาพด้านบนและชื่อด้านล่าง
+                      children: [
+                        Image.network(
+                          image,
+                          width: 100, // กำหนดความกว้างของรูปภาพ
+                          height: 100, // กำหนดความสูงของรูปภาพ
+                          fit: BoxFit.cover, // ตัวเลือกการจัดการขนาดรูปภาพ
+                        ),
+                        Text(name), // แสดงชื่ออยู่ใต้รูปภาพ
+                      ],
+                    ),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),

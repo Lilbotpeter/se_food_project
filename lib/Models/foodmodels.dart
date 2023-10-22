@@ -14,6 +14,7 @@ class FoodModel {
       food_nation,
       food_point,
       user_id;
+  //food_date;
   //Method
   FoodModel(
       this.food_id,
@@ -29,6 +30,7 @@ class FoodModel {
       this.food_nation,
       this.food_point,
       this.user_id);
+  //this.food_date);
 
   FoodModel.fromMap(Map<String, dynamic> dataMap) {
     // food_id = dataMap['Food_id'];
@@ -72,6 +74,7 @@ class FoodModel {
     food_nation = dataMap['Food_Nation'] ?? '';
     food_point = dataMap['Food_Point'] ?? '';
     user_id = dataMap['User_id'];
+    //food_date = dataMap['Time'];
     // user_id = "Worapong";
   } //setter
 
@@ -88,5 +91,6 @@ class FoodModel {
         'Food_Time': food_time,
         'Food_Nation': food_nation,
         'Food_Point': food_point,
+        //'Time': food_date
       };
 }
