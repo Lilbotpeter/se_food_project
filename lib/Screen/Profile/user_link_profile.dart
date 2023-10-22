@@ -14,6 +14,7 @@ import '../../Widgets/appbar_custom.dart';
 import '../../Widgets/profile_picture.dart';
 import '../../constants.dart';
 import '../../follow.dart';
+import '../../global.dart';
 
 //Authen Current User
 final User? user = AuthenticationController().currentUser;
@@ -31,6 +32,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
   String? email = '';
   String? phone = '';
   File? imageXFile;
+  List<dynamic> followUser = [];
+  List<dynamic> countFollows = [];
 
   List<FoodModel> foodModels = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
@@ -79,6 +82,46 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 //       }
 //     });
 //   }
+
+Future<void> readFollowUser() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    setState(() {
+      showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
+    });
+
+    CollectionReference collectionReference =
+        firestore.collection('followers').doc(userid).collection('followersID');
+    final snapshots = await collectionReference.get();
+
+    List<String> newuserData = []; // สร้างรายการของ FoodModel ใหม่
+    List<dynamic> dataFollows = [];
+    String id, image, iduser, name;
+    for (QueryDocumentSnapshot idUser in snapshots.docs) {
+      id = idUser.id;
+      newuserData.add(id);
+      QuerySnapshot comment = await firestore.collection('users').get();
+      for (QueryDocumentSnapshot datauser in comment.docs) {
+        if (idUser.id == datauser.id) {
+          print('idUser =' + idUser.id);
+          print('datauser =' + datauser.id);
+          iduser = datauser['Uid'];
+          image = datauser['ImageP'];
+          name = datauser['Name'];
+          dataFollows.add({'Uid': iduser, 'ImageP': image, 'Name': name});
+          // dataFollows.add(image);
+        }
+      }
+    }
+
+    try {
+      setState(() {
+        followUser = dataFollows; // อัปเดต foodModels ด้วยรายการใหม่
+        countFollows = dataFollows;
+      });
+    } catch (e) {
+      '';
+    }
+  }
 
   Future<void> readData() async {
     // Clear existing data
@@ -224,6 +267,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                       ElevatedButton(
                         onPressed: () async {
                           await followerService.addFollower(userid, getUserID);
+
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: kPrimaryColor,
@@ -452,7 +496,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                             indent: 10,
                             endIndent: 160,
                           ),
-                          StatusText(54, 'ผู้ติดตาม'),
+                          StatusText(followUser.length, 'ผู้ติดตาม'),
                           const VerticalDivider(
                             thickness: 1,
                             indent: 10,

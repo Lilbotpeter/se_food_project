@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:se_project_food/Screen/Detail/detail.dart';
 import 'package:se_project_food/Screen/Feed/feed_page.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
 
@@ -14,8 +15,8 @@ class SearchFoodStream extends StatefulWidget {
 
 class _SearchFoodStreamState extends State<SearchFoodStream> {
   bool _showListView = false;
-  List _allResult = [];
-  List _resultList = [];
+  List _allResultFood = [];
+  List _resultListFood = [];
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -23,9 +24,9 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
     _searchController.addListener(_onSearchChanged);
     super.initState();
     print('_allResult = ');
-    print(_allResult);
+    print(_allResultFood);
     print('_resultList = ');
-    print(_resultList);
+    print(_resultListFood);
   }
 
   _onSearchChanged() {
@@ -40,18 +41,18 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
     var showResult = [];
 
     if (_searchController.text != "") {
-      for (var dataSnap in _allResult) {
-        var name = dataSnap['Food_name'].toString().toLowerCase();
+      for (var dataSnap in _allResultFood) {
+        var name = dataSnap['Food_Name'].toString().toLowerCase();
         if (name.contains(_searchController.text.toLowerCase())) {
           showResult.add(dataSnap);
         }
       }
     } else {
-      showResult = List.from(_allResult);
+      showResult = List.from(_allResultFood);
     }
     setState(() {
-      _resultList = showResult;
-      _showListView = _resultList
+      _resultListFood = showResult;
+      _showListView = _resultListFood
           .isNotEmpty; // กำหนดค่าตัวแปร _showListView ให้เป็น true เมื่อมีผลลัพธ์
     });
   }
@@ -66,14 +67,12 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
   void getDataStream() async {
     var data = await FirebaseFirestore.instance
         .collection('Foods')
-        // .doc('')
-        // .get()
-        .orderBy('Food_name')
+        .orderBy('Food_Name')
         .get();
 
     setState(() {
-      _allResult = data.docs;
-      _resultList = data.docs;
+      _allResultFood = data.docs;
+      _resultListFood = data.docs;
     });
   }
 
@@ -100,20 +99,20 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
                 _showListView, // กำหนดการแสดงผลของ ListView ตามค่า _showListView
             child: Expanded(
               child: ListView.builder(
-                itemCount: _resultList.length,
+                itemCount: _resultListFood.length,
                 itemBuilder: (context, index) {
-                  var user = _resultList[index];
+                  var user = _resultListFood[index];
                   return GestureDetector(
                     onTap: () {
                       try {
-                        //Get.to(UserLinkProfile(),arguments: user['Uid']);
+                        Get.to(DetailFood(),arguments: user['Food_id']);
                       } catch (e) {
                         Get.back();
                         Get.snackbar('พบข้อผิดพลาด', 'ลองใหม่อีกครั้ง');
                       }
                     },
                     child: ListTile(
-                      title: Text(user['Food_name']),
+                      title: Text(user['Food_Name']),
                       //subtitle: Text(user['']),
                     ),
                   );
