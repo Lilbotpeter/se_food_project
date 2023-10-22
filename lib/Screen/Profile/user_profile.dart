@@ -81,7 +81,6 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
-
   Future<void> clearData() async {
     setState(() {
       foodModels.clear();
@@ -126,8 +125,7 @@ class _UserProfileState extends State<UserProfile> {
     Widget buildFoodItem(int index) {
       return GestureDetector(
         onTap: () {
-          Get.to(DetailFood(),
-              arguments: foodModels[index].food_id); 
+          Get.to(DetailFood(), arguments: foodModels[index].food_id);
           //Get.snackbar(foodModels[index].food_name, foodModels[index].user_id);
           //Get.to(const EditUser(), arguments: userid); // ตัวส่ง Parameter
         },
@@ -198,16 +196,6 @@ class _UserProfileState extends State<UserProfile> {
                         'แก้ไขข้อมูลส่วนตัว',
                         style: TextStyle(color: Colors.white),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      print('Hellp');
-                    },
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                      size: 24,
                     ),
                   ),
                   Padding(

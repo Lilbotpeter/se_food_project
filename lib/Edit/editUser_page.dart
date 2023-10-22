@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
 
 import '../Authen/authen_part.dart';
+import 'edit_Service.dart';
 import 'edit_email.dart';
 import 'edit_password.dart';
 
@@ -30,6 +32,10 @@ class _EditUserState extends State<EditUser> {
   void initState() {
     super.initState();
     readData();
+  }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 
   String? usersid;
@@ -146,6 +152,7 @@ class _EditUserState extends State<EditUser> {
                   imageUrl != null ? Image.network(imageUrl!) : Placeholder(),
             ),
           ),
+          Text(imageUrl.toString()),
           SizedBox(
             height: 10.0,
           ),
@@ -207,9 +214,6 @@ class _EditUserState extends State<EditUser> {
                     .collection('users')
                     .doc(getfoodID);
 
-                //AuthenticationController().changePassword('999999');
-                // AuthenticationController()
-                //     .updateEmail('Kuay@gmail.com', '123456');
                 if (_editname.isEmpty || _editphone.isEmpty) {
                   // แสดง Snackbar ถ้า _editname หรือ _editphone มีค่าว่าง
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -238,6 +242,12 @@ class _EditUserState extends State<EditUser> {
           SizedBox(
             height: 10.0,
           ),
+
+          TextButton(
+              onPressed: () {
+                Get.to(const EditEmail(), arguments: user!.uid);
+              },
+              child: const Text('เปลี่ยนอีเมล')),
           TextButton(
               onPressed: () {
                 Get.to(const EditPassword(), arguments: user!.email);
@@ -245,9 +255,103 @@ class _EditUserState extends State<EditUser> {
               child: const Text('เปลี่ยนรหัสผ่าน')),
           TextButton(
               onPressed: () {
-                Get.to(const EditEmail(), arguments: user!.uid);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('ยืนยันการลบข้อมูลผู้ใช้?'),
+                      content: Text('คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลผู้ใช้?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // ปิด Dialog
+                          },
+                          child: Text('ยกเลิก'),
+                        ),
+                        TextButton(
+                          // onPressed: () async {
+                          //   // final deleteUser = AuthenticationController();
+                          //   // deleteUser.deleteUserFromFirebase();
+                          //   //Navigator.of(context).pop(); // ปิด Dialog
+                          // },
+                          onPressed: () async {
+                            TextEditingController passwordController =
+                                TextEditingController();
+
+                            await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("ยืนยันการลบบัญชีผู้ใช้"),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(
+                                          "โปรดกรอกรหัสผ่านของคุณเพื่อยืนยันการลบบัญชีผู้ใช้"),
+                                      TextFormField(
+                                        controller: passwordController,
+                                        obscureText: true,
+                                        decoration: InputDecoration(
+                                            labelText: "รหัสผ่าน"),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text("ยกเลิก"),
+                                      onPressed: () {
+                                        print('Hiiiii');
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text("ยืนยัน"),
+                                      onPressed: () async {
+                                        final password =
+                                            passwordController.text;
+
+                                        if (password.isNotEmpty) {
+                                          // final deleteUser =
+                                          //     AuthenticationController();
+                                          // deleteUser
+                                          //     .deleteUserFromFirebase(password);
+                                          // Get.snackbar('ลบข้อมูลผู้ใช้',
+                                          //     'ลบข้อมูลผู้ใช้สำเร็จ');
+                                          // Navigator.of(context).pop();
+                                          // signOut();
+                                        } else {
+                                          final test = EditService();
+
+                                          test.DeleteCommentData(usersid!);
+                                          Get.snackbar('เกิดข้อผิดพลาด',
+                                              'ลบข้อมูลผู้ใช้ไม่สำเร็จ');
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Text('ลบ'),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
-              child: const Text('เปลี่ยนอีเมล'))
+              child: const Text('ลบบัญชีผู้ใช้')),
+          TextButton(
+              onPressed: () {
+                final test = EditService();
+
+                test.DeleteCommentData(usersid!);
+                // print(usersid!);
+              },
+              child: const Text('ทดสอบลบข้อมูล')),
         ],
       ),
     );

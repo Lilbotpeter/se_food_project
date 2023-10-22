@@ -283,4 +283,33 @@ class AuthenticationController extends GetxController {
 //   String userUidToDelete = "UID_OF_USER_TO_DELETE";
 //   deleteFirebaseUser(userUidToDelete);
 // }
+  void deleteUserFromFirebase(String password) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      print("User not signed in");
+      return;
+    }
+
+    final AuthCredential credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: password,
+    );
+
+    try {
+      await user.reauthenticateWithCredential(credential);
+      await FirebaseAuth.instance.currentUser!.delete();
+      print("User deleted successfully");
+      Get.snackbar(
+        "ลบบัญชีผู้ใช้สำเร็จ",
+        "บัญชีผู้ใช้ได้ถูกลบเรียบร้อยแล้ว",
+      );
+    } catch (e) {
+      print("Error deleting user: $e");
+      Get.snackbar(
+        "เกิดข้อผิดพลาดในการลบบัญชีผู้ใช้",
+        "โปรดลองใหม่อีกครั้งหรือตรวจสอบรหัสผ่านของคุณ",
+      );
+    }
+  }
 }
