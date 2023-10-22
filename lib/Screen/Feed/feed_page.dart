@@ -54,6 +54,7 @@ class _FeedPageState extends State<FeedPage> {
   List<FoodModel> foodModels = [];
   List<FoodModel> SortfoodModels = [];
   List<dynamic> followUser = [];
+  List<dynamic> followFoods = [];
   List<dynamic> countFollows = [];
   List<String> levelfood = [
     'ไม่มี',
@@ -183,7 +184,7 @@ class _FeedPageState extends State<FeedPage> {
     SortByDate();
     readData();
     readFollowUser();
-
+    readBookMarkFood();
     _getUserDataFromDatabase();
     //_getUserToDataFromDatabase();
   }
@@ -219,6 +220,46 @@ class _FeedPageState extends State<FeedPage> {
     await FirebaseAuth.instance.signOut();
   }
 
+  Future<void> readBookMarkFood() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    setState(() {
+      showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
+    });
+
+    CollectionReference collectionReference =
+        firestore.collection('bookmark').doc(userid).collection('bookmarkID');
+    final snapshots = await collectionReference.get();
+
+    List<dynamic> dataBookMark = [];
+    String image, iduser, name;
+    for (QueryDocumentSnapshot idUser in snapshots.docs) {
+      QuerySnapshot comment = await firestore.collection('Foods').get();
+      for (QueryDocumentSnapshot datauser in comment.docs) {
+        if (idUser.id == datauser.id) {
+          print('idUser =' + idUser.id);
+          print('datauser =' + datauser.id);
+          print('BallTrue');
+          // QuerySnapshot food = await firestore.collection('users').get();
+
+          iduser = datauser['Food_id'];
+          image = datauser['Food_Image'];
+          name = datauser['Food_Name'];
+          dataBookMark.add({'Uid': iduser, 'ImageP': image, 'Name': name});
+          // dataFollows.add(image);
+        }
+      }
+    }
+
+    try {
+      setState(() {
+        followFoods = dataBookMark; // อัปเดต foodModels ด้วยรายการใหม่
+        //countFollows = dataFollows;
+      });
+    } catch (e) {
+      '';
+    }
+  }
+
   Future<void> readFollowUser() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     setState(() {
@@ -238,9 +279,9 @@ class _FeedPageState extends State<FeedPage> {
       QuerySnapshot comment = await firestore.collection('users').get();
       for (QueryDocumentSnapshot datauser in comment.docs) {
         if (idUser.id == datauser.id) {
-          print('idUser =' + idUser.id);
-          print('datauser =' + datauser.id);
-          print('BallTrue');
+          // print('idUser =' + idUser.id);
+          // print('datauser =' + datauser.id);
+          // print('BallTrue');
           iduser = datauser['Uid'];
           image = datauser['ImageP'];
           name = datauser['Name'];
@@ -760,32 +801,73 @@ class _FeedPageState extends State<FeedPage> {
             Container(
               height: 200,
               child: ListView.builder(
-                scrollDirection:
-                    Axis.horizontal, // กำหนด scrollDirection เป็นแนวนอน
+                scrollDirection: Axis.horizontal,
                 itemCount: followUser.length,
                 itemBuilder: (BuildContext context, int index) {
                   String iduser = followUser[index]['Uid'];
                   String image = followUser[index]['ImageP'];
                   String name = followUser[index]['Name'];
 
-                  return Container(
-                    width: 150, // กำหนดความกว้างของแต่ละรายการในลิสต์
-                    child: Column(
-                      // ใช้ Column เพื่อจัดเรียงรูปภาพด้านบนและชื่อด้านล่าง
-                      children: [
-                        Image.network(
-                          image,
-                          width: 100, // กำหนดความกว้างของรูปภาพ
-                          height: 100, // กำหนดความสูงของรูปภาพ
-                          fit: BoxFit.cover, // ตัวเลือกการจัดการขนาดรูปภาพ
-                        ),
-                        Text(name), // แสดงชื่ออยู่ใต้รูปภาพ
-                      ],
+                  return InkWell(
+                    onTap: () {
+                      // เมื่อคลิกที่รูปภาพ
+                      Get.to(UserLinkProfile(), arguments: iduser);
+                    },
+                    child: Container(
+                      width: 150,
+                      child: Column(
+                        children: [
+                          Image.network(
+                            image,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                          Text(name),
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
-            )
+            ),
+            TitleCustomWithMore(text: "อาหารที่กดติดตาม"),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: followFoods.length,
+                itemBuilder: (BuildContext context, int index) {
+                  String idfood = followFoods[index]['Uid'];
+                  String image = followFoods[index]['ImageP'];
+                  String name = followFoods[index]['Name'];
+
+                  return InkWell(
+                    onTap: () {
+                      // เมื่อคลิกที่รูปภาพ
+                      Get.to(DetailFood(), arguments: idfood);
+                    },
+                    child: Container(
+                      width: 150,
+                      child: Column(
+                        children: [
+                          Image.network(
+                            image,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                          Text(name),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
