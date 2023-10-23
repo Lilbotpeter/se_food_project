@@ -37,6 +37,7 @@ import 'package:se_project_food/Screen/Profile/my_food.dart';
 
 import '../../Models/foodmodels.dart';
 import '../../Widgets/food_card.dart';
+import '../../Widgets/profile_picture.dart';
 import '../../global.dart';
 import '../Detail/detailLevelfood.dart';
 import '../Detail/detailNationfood.dart';
@@ -644,12 +645,51 @@ class _FeedPageState extends State<FeedPage> {
                 ),
               ),
             ),
+/////////////////////////////////////////////////////////////Follower
+            SizedBox(
+              height: 30,
+            ),
+            TitleCustomWithMore(icon: Icons.group, text: "คนที่กดติดตาม"),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 150,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: followUser.length,
+                itemBuilder: (BuildContext context, int index) {
+                  String iduser = followUser[index]['Uid'];
+                  String image = followUser[index]['ImageP'];
+                  String name = followUser[index]['Name'];
+
+                  return InkWell(
+                    onTap: () {
+                      // เมื่อคลิกที่รูปภาพ
+                      Get.to(UserLinkProfile(), arguments: iduser);
+                    },
+                    child: Container(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: SizedBox(
+                            height: 100,
+                            width: 100,
+                              child: ProfilePicture(
+                                    imageXFile: imageXFile,
+                                    image: image)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
 
             ///////////////////////////////แนะนำ
-            SizedBox(
-              height: 20,
-            ),
-            TitleCustomWithMore(text: "เมนูแนะนำ!"),
+            TitleCustomWithMore(icon: Icons.star, text: "เมนูแนะนำ!"),
             SizedBox(
               height: 20,
             ),
@@ -659,9 +699,38 @@ class _FeedPageState extends State<FeedPage> {
               height: 200,
             ),
             SizedBox(
+              height: 25,
+            ),
+            TitleCustomWithMore(icon: Icons.star_border_purple500_rounded, text: "เมนูใหม่"),
+            SizedBox(
               height: 15,
             ),
-            TitleCustomWithMore(text: "สัญชาติ"),
+            Container(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: SortfoodModels.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext buildContext, int index) {
+                  return Container(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Column(children: <Widget>[
+                      ShowFoodCard(
+                          image: SortfoodModels[index].food_image,
+                          title: SortfoodModels[index].food_name,
+                          owner: SortfoodModels[index].user_id,
+                          rating: double.parse(SortfoodModels[index].food_point),
+                          press: () {
+                            Get.to(DetailFood(),
+                                arguments: SortfoodModels[index].food_id,
+                                transition: Transition.rightToLeft);
+                          }),
+                    ]),
+                  );
+                },
+              ),
+            ),
+            TitleCustomWithMore(icon: Icons.flag, text: "สัญชาติ"),
             SizedBox(
               height: 15,
             ),
@@ -714,7 +783,7 @@ class _FeedPageState extends State<FeedPage> {
             SizedBox(
               height: 15,
             ),
-            TitleCustomWithMore(text: "ความยากในการทำ"),
+            TitleCustomWithMore(icon:Icons.face_rounded, text: "ระดับความยากง่าย"),
             SizedBox(
               height: 15,
             ),
@@ -759,79 +828,8 @@ class _FeedPageState extends State<FeedPage> {
                 },
               ),
             ),
-            SizedBox(
-              height: 25,
-            ),
-            TitleCustomWithMore(text: "เมนูใหม่"),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: SortfoodModels.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext buildContext, int index) {
-                  return Container(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Column(children: <Widget>[
-                      ShowFoodCard(
-                          image: SortfoodModels[index].food_image,
-                          title: SortfoodModels[index].food_name,
-                          owner: SortfoodModels[index].user_id,
-                          rating: 4.4,
-                          press: () {
-                            Get.to(DetailFood(),
-                                arguments: SortfoodModels[index].food_id,
-                                transition: Transition.rightToLeft);
-                          }),
-                    ]),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            TitleCustomWithMore(text: "คนที่กดติดตาม"),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: followUser.length,
-                itemBuilder: (BuildContext context, int index) {
-                  String iduser = followUser[index]['Uid'];
-                  String image = followUser[index]['ImageP'];
-                  String name = followUser[index]['Name'];
-
-                  return InkWell(
-                    onTap: () {
-                      // เมื่อคลิกที่รูปภาพ
-                      Get.to(UserLinkProfile(), arguments: iduser);
-                    },
-                    child: Container(
-                      width: 150,
-                      child: Column(
-                        children: [
-                          Image.network(
-                            image,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Text(name),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            TitleCustomWithMore(text: "อาหารที่กดติดตาม"),
+            
+            TitleCustomWithMore(icon: Icons.bookmark, text: "อาหารที่กดติดตาม"),
             SizedBox(
               height: 15,
             ),
@@ -844,6 +842,8 @@ class _FeedPageState extends State<FeedPage> {
                   String idfood = followFoods[index]['Uid'];
                   String image = followFoods[index]['ImageP'];
                   String name = followFoods[index]['Name'];
+                  String ratingf = followFoods[index]['Name'];
+
 
                   return InkWell(
                     onTap: () {
@@ -853,14 +853,23 @@ class _FeedPageState extends State<FeedPage> {
                     child: Container(
                       width: 150,
                       child: Column(
-                        children: [
-                          Image.network(
-                            image,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Text(name),
+                        children: <Widget>[
+                          // Image.network(
+                          //   image,
+                          //   width: 100,
+                          //   height: 100,
+                          //   fit: BoxFit.cover,
+                          // ),
+                          ShowFoodCard(
+                          image: image,
+                          title: SortfoodModels[index].food_name,
+                          owner: SortfoodModels[index].user_id,
+                          rating: double.parse('0.0'),
+                          press: () {
+                            Get.to(DetailFood(),
+                                arguments: idfood,
+                                transition: Transition.rightToLeft);
+                          }),
                         ],
                       ),
                     ),
@@ -972,74 +981,3 @@ class CarouseSlide extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-//SafeArea(
-      //       child: Padding(
-      // padding: const EdgeInsets.symmetric(vertical: 30),
-      // child: Column(
-      //   children: [
-      //     TitleCustomWithMore(text: "เมนูวันนี้"),
-      //     SizedBox(height: 20),
-      //     Container(
-      //       height: 200,
-      //       child: CarouselSlider(
-      //         options: CarouselOptions(
-      //           height: 200,
-      //           enableInfiniteScroll: true,
-      //           autoPlay: true,
-      //         ),
-      //         items: foodModels.map((foodModel) {
-      //           return Builder(
-      //             builder: (BuildContext context) {
-      //               return Container(
-      //                 padding: EdgeInsets.only(right: 10),
-      //                 child: SlideFoodCard(
-      //                   image: foodModel.food_image,
-      //                   title: foodModel.food_name,
-      //                   owner: foodModel.user_id,
-      //                   rating: 4.4,
-      //                   press: () {
-      //                     Get.to(DetailFood(), arguments: foodModel.food_id);
-      //                   },
-      //                 ),
-      //               );
-      //             },
-      //           );
-      //         }).toList(),
-      //       ),
-      //     ),
-      //     SizedBox(height: 25,),
-      //     TitleCustomWithMore(text: "เมนูใหม่"),
-      //     SizedBox(height: 15,),
-      //             Expanded(
-      //               child: Container(
-      //                   height: 200,
-      //                   child: ListView.builder(
-      //                     scrollDirection: Axis.horizontal,
-      //                     itemCount: foodModels.length,
-      //                     shrinkWrap: true,
-      //                     itemBuilder: (BuildContext buildContext, int index) {
-      //                       return Container(
-      //                           padding: EdgeInsets.only(right: 10),
-      //                           child: Column(children: <Widget>[
-      //                             ShowFoodCard(image: foodModels[index].food_image, title: foodModels[index].food_name, owner: foodModels[index].user_id, rating: 4.4, press: (){
-      //                               Get.to(DetailFood(), arguments: foodModels[index].food_id);
-      //                             }),
-                                
-      //                           ]
-      //                           ),
-      //                       );
-      //                     },  
-      //                   ),
-      //                 ),
-      //               ),
-                  
-                
-      //           ],
-      //         ),
-      //       ),
-      //     );

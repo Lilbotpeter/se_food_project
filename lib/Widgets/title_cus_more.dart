@@ -6,10 +6,11 @@ import '../constants.dart';
 
 class TitleCustomWithMore extends StatelessWidget {
   const TitleCustomWithMore({
-    super.key, required this.text,
+    super.key, required this.text, required this.icon,
   });
 
   final String text;
+  final IconData icon;
   
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,10 @@ class TitleCustomWithMore extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
       child: Row(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Icon(icon),
+          ),
           TitleCustim(text: text),
           Spacer(),//ตัวคั่นกลาง
           InkWell(

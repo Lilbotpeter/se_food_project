@@ -7,53 +7,71 @@ import '../constants.dart';
 
 class ShowFoodCard extends StatelessWidget {
   const ShowFoodCard({
-    super.key, required this.image, required this.title, required this.owner, required this.rating, required this.press,
-  });
+    Key? key,
+    required this.image,
+    required this.title,
+    required this.owner,
+    required this.rating,
+    required this.press,
+  }) : super(key: key);
 
-  final String image,title,owner;
+  final String image, title, owner;
   final double rating;
   final Function press;
 
-
-
   @override
   Widget build(BuildContext context) {
-    Size size= MediaQuery.of(context).size;
-      return InkWell(
-        onTap: (){press();},
-        child: Container(
-          width: 160,
-          padding: EdgeInsets.all(90),
-          margin: EdgeInsets.only(left: 15),
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-              image: NetworkImage(image),
-              fit: BoxFit.cover,
-              opacity: 0.7,
-            ),
+    Size size = MediaQuery.of(context).size;
+    return InkWell(
+      onTap: () {
+        press();
+      },
+      child: Container(
+        width: 140,
+        height: 160,
+        padding: EdgeInsets.all(10), // ปรับขนาด padding
+        margin: EdgeInsets.only(left: 15),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(15),
+          image: DecorationImage(
+            image: NetworkImage(image),
+            fit: BoxFit.cover,
+            // colorFilter: ColorFilter.mode(
+            //   Colors.black.withOpacity(0.7),
+            //   BlendMode.srcOver,
+            // ),
           ),
-        // child: Column(
-        //   children: [
-        //     Container(
-        //       alignment: Alignment.topLeft,
-        //       child: Text(
-        //         '$title',
-        //         style: TextStyle(
-        //           color: kTextColor,
-        //           fontSize: 16,
-        //           fontWeight: FontWeight.w600
-        //         ),
-        //       ),
-              
-              
-        //       )
-        //   ]),
         ),
-      );
+        child: Column(
+          children: [
+            
+            Container(
+              alignment: Alignment.topRight,
+              child: FittedBox(
+                fit: BoxFit.scaleDown, // ปรับขนาด Rating ให้พอดี
+                child: Row(
+                  children: [
+                    Icon(Icons.star,color: Colors.yellow,size: 16,),
+                    Text(
+                      '$rating',
+                      style: TextStyle(
+                        color: kTextColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
+
 
 
 
