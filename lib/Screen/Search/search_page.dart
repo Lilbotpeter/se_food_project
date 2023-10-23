@@ -81,12 +81,21 @@ class _SearchPageState extends State<SearchPageStream> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: CupertinoSearchTextField(
-          controller: _searchController,
-        ),
+        
       ),
       body: Column(
         children: [
+          Icon(Icons.search,size: 50,),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text('ค้นหาผู้ใช้',style: TextStyle(fontSize: 20),),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CupertinoSearchTextField(
+            controller: _searchController,
+                  ),
+          ),
           Visibility(
             visible:
                 _showListView, // กำหนดการแสดงผลของ ListView ตามค่า _showListView
@@ -113,10 +122,16 @@ class _SearchPageState extends State<SearchPageStream> {
               ),
             ),
           ),
-          Visibility(
-            visible: !_showListView,
-            child: Center(
-              child: Text('ไม่พบข้อมูล'),
+          Padding(
+            padding: const EdgeInsets.only(top:20.0),
+            child: Visibility(
+              visible: !_showListView,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top:150.0),
+                  child: Text('ไม่พบข้อมูลผู้ใช้'),
+                ),
+              ),
             ),
           ),
         ],

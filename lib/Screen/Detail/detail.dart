@@ -29,6 +29,7 @@ import '../../Widgets/video_player.dart';
 import '../../calculator.dart';
 import '../../follow.dart';
 import '../../global.dart';
+import '../video_food.dart';
 import 'detailReplyComment.dart';
 import 'detailReplyMod.dart';
 import 'detailReplyReview.dart';
@@ -46,6 +47,7 @@ class _DetailFoodState extends State<DetailFood> {
   List<FoodModel> foodModels = [];
   final followerService = FollowerService();
   List<String> imageUrls = [];
+  List<String> videoUrls = [];
 
   late String getIDbook;
   int rating = 0;
@@ -93,7 +95,9 @@ class _DetailFoodState extends State<DetailFood> {
 
   DataService dataService = DataService();
 
-  String? videoUrl;
+  late VideoPlayerController _videoPlayerController;
+  late Future<void> _initializeVideoPlayerFuture;
+
 
   List<File> files = []; // List เก็บรูปภาพที่ถูกเลือก
   UploadTask? task;
@@ -567,41 +571,63 @@ class _DetailFoodState extends State<DetailFood> {
     }
   }
 
-  void _showImagePopup(BuildContext context, String imageUrl, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.network(imageUrl),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () async {
-                      // await deleteImage(imageUrl, index);
-                      Navigator.of(context).pop(); // ปิด Dialog
-                    },
-                    icon: Icon(Icons.delete),
-                    color: Colors.red,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Get.snackbar('ลบรูปภาพ', 'ลบรูปภาพสำเร็จ');
-                    },
-                    icon: Icon(Icons.add),
-                    color: Colors.blue,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    Future<void> _fetchVideos() async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      ListResult result = await storage
+          .ref()
+          .child('files')
+          .child(id_food!)
+          .child('Video')
+          .listAll();
+
+      try {
+        ListResult result = await storage
+            .ref()
+            .child('files')
+            .child(id_food!)
+            .child('Video')
+            .listAll();
+
+        List<String> urls = [];
+        for (Reference ref in result.items) {
+          String videoURL = await ref.getDownloadURL();
+          urls.add(videoURL);
+        }
+
+        setState(() {
+          videoUrls = urls;
+        });
+      } catch (e) {
+        print("Error fetching Video: $e");
+      }
+    } catch (e) {
+      print("Error fetching Video: $e");
+    }
   }
+
+  void _showImagePopup(BuildContext context, String imageUrl, int index) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        child: Container(
+          // กำหนดความกว้างและความสูงเพื่อให้เต็มจอ
+          // width: MediaQuery.of(context).size.width,
+          // height: MediaQuery.of(context).size.height,
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover, // ให้รูปภาพเต็มหน้าจอแนวนอน
+             width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width,
+          ),
+        ),
+      );
+    },
+  );
+}
+
+
 
 ///////////////////////////////////////////////initState
   @override
@@ -616,17 +642,25 @@ class _DetailFoodState extends State<DetailFood> {
         getIDbook = bookmarkID;
         _fetch();
         _fetchImages();
+        _fetchVideos();
       });
+    });
+        _videoPlayerController = VideoPlayerController.network(
+      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+    );
+
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize().then((_) {
+      // อย่าลืมรอให้วิดีโอเริ่มต้นเสร็จ
+      setState(() {}); // รีเรนเดอร์ UI หลังจากวิดีโอเริ่มต้นเสร็จ
     });
   }
 
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   _controller.dispose();
-  //   super.dispose();
-  // }
-
+    @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     //Follower
@@ -1302,7 +1336,7 @@ class _DetailFoodState extends State<DetailFood> {
 //Slide
 
                             child: SizedBox(
-                              height: MediaQuery.of(context).size.width, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
+                              height: MediaQuery.of(context).size.width*0.75, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
                               width: MediaQuery.of(context).size.width,
                               child: ListView.builder(
                               scrollDirection: Axis.horizontal,
@@ -1311,11 +1345,15 @@ class _DetailFoodState extends State<DetailFood> {
                                 return Slidable(
                                   actionPane: SlidableStrechActionPane(),
                                   actionExtentRatio: 0.50,
-                                  child: AspectRatio(
-                                    aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
-                                    child: Image.network(
-                                      imageUrls[index],
-                                      fit: BoxFit.cover, // ลดขนาดรูปภาพเพื่อให้เต็มกรอบ
+                                  child: GestureDetector(
+                                    onTap: (){_showImagePopup(context,imageUrls[index],index);
+                                    },
+                                    child: AspectRatio(
+                                      aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
+                                      child: Image.network(
+                                        imageUrls[index],
+                                        fit: BoxFit.cover, // ลดขนาดรูปภาพเพื่อให้เต็มกรอบ
+                                      ),
                                     ),
                                   ),
                                 );
@@ -1363,6 +1401,7 @@ class _DetailFoodState extends State<DetailFood> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 40),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
 //Bookmark Button
                               Container(
@@ -1387,13 +1426,34 @@ class _DetailFoodState extends State<DetailFood> {
                                         : Icons.bookmark_outline,
                                     color: isBookmarked
                                         ? Colors.amber
-                                        : Colors.white,
+                                        : const Color.fromARGB(255, 0, 0, 0),
                                     size: 35,
                                   ),
                                 ),
                               ),
                             ],
+                            
                           ),
+                        ),
+                        Positioned(
+                          top: 230,
+                          left: 320,
+                          child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      borderRadius: BorderRadius.circular(35)),
+                                  child: IconButton(
+                                    onPressed: () async {
+                                     Get.to(VideoPage(),arguments: videoUrls[0]);
+                                     //Get.snackbar('title',videoUrls[0]);
+                                    },
+                                    icon: Icon(
+                                          Icons.play_arrow,
+                                      color : Color.fromARGB(255, 255, 136, 0),
+                                      size: 35,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ],
                     ),
@@ -1490,7 +1550,6 @@ class _DetailFoodState extends State<DetailFood> {
                                                 ), // สไตล์ข้อความ
                                               ),
                                               onPressed: () {
-                                                // ตรวจสอบโค้ดเมื่อปุ่มถูกกด
                                                 Get.to(UserLinkProfile(),
                                                     arguments: user_id);
                                               },
@@ -1596,7 +1655,7 @@ class _DetailFoodState extends State<DetailFood> {
                                 child: Expanded(
                                   child: Container(
                                     margin:
-                                        EdgeInsets.fromLTRB(20.0, 470, 20, 5),
+                                        EdgeInsets.fromLTRB(20.0, 215, 20, 5),
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
