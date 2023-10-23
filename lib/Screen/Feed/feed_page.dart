@@ -237,9 +237,9 @@ class _FeedPageState extends State<FeedPage> {
       QuerySnapshot comment = await firestore.collection('Foods').get();
       for (QueryDocumentSnapshot datauser in comment.docs) {
         if (idUser.id == datauser.id) {
-          print('idUser =' + idUser.id);
-          print('datauser =' + datauser.id);
-          print('BallTrue');
+          // print('idUser =' + idUser.id);
+          // print('datauser =' + datauser.id);
+          // print('BallTrue');
           // QuerySnapshot food = await firestore.collection('users').get();
 
           iduser = datauser['Food_id'];
@@ -674,11 +674,10 @@ class _FeedPageState extends State<FeedPage> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: SizedBox(
-                            height: 100,
-                            width: 100,
-                              child: ProfilePicture(
-                                    imageXFile: imageXFile,
-                                    image: image)),
+                                height: 100,
+                                width: 100,
+                                child: ProfilePicture(
+                                    imageXFile: imageXFile, image: image)),
                           ),
                         ],
                       ),
@@ -701,7 +700,8 @@ class _FeedPageState extends State<FeedPage> {
             SizedBox(
               height: 25,
             ),
-            TitleCustomWithMore(icon: Icons.star_border_purple500_rounded, text: "เมนูใหม่"),
+            TitleCustomWithMore(
+                icon: Icons.star_border_purple500_rounded, text: "เมนูใหม่"),
             SizedBox(
               height: 15,
             ),
@@ -719,7 +719,8 @@ class _FeedPageState extends State<FeedPage> {
                           image: SortfoodModels[index].food_image,
                           title: SortfoodModels[index].food_name,
                           owner: SortfoodModels[index].user_id,
-                          rating: double.parse(SortfoodModels[index].food_point),
+                          rating:
+                              double.parse(SortfoodModels[index].food_point),
                           press: () {
                             Get.to(DetailFood(),
                                 arguments: SortfoodModels[index].food_id,
@@ -783,7 +784,8 @@ class _FeedPageState extends State<FeedPage> {
             SizedBox(
               height: 15,
             ),
-            TitleCustomWithMore(icon:Icons.face_rounded, text: "ระดับความยากง่าย"),
+            TitleCustomWithMore(
+                icon: Icons.face_rounded, text: "ระดับความยากง่าย"),
             SizedBox(
               height: 15,
             ),
@@ -828,7 +830,7 @@ class _FeedPageState extends State<FeedPage> {
                 },
               ),
             ),
-            
+
             TitleCustomWithMore(icon: Icons.bookmark, text: "อาหารที่กดติดตาม"),
             SizedBox(
               height: 15,
@@ -843,7 +845,6 @@ class _FeedPageState extends State<FeedPage> {
                   String image = followFoods[index]['ImageP'];
                   String name = followFoods[index]['Name'];
                   String ratingf = followFoods[index]['Name'];
-
 
                   return InkWell(
                     onTap: () {
@@ -861,15 +862,15 @@ class _FeedPageState extends State<FeedPage> {
                           //   fit: BoxFit.cover,
                           // ),
                           ShowFoodCard(
-                          image: image,
-                          title: SortfoodModels[index].food_name,
-                          owner: SortfoodModels[index].user_id,
-                          rating: double.parse('0.0'),
-                          press: () {
-                            Get.to(DetailFood(),
-                                arguments: idfood,
-                                transition: Transition.rightToLeft);
-                          }),
+                              image: image,
+                              title: SortfoodModels[index].food_name,
+                              owner: SortfoodModels[index].user_id,
+                              rating: double.parse('0.0'),
+                              press: () {
+                                Get.to(DetailFood(),
+                                    arguments: idfood,
+                                    transition: Transition.rightToLeft);
+                              }),
                         ],
                       ),
                     ),

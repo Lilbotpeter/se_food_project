@@ -83,7 +83,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 //     });
 //   }
 
-Future<void> readFollowUser() async {
+  Future<void> readFollowUser() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     setState(() {
       showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
@@ -157,8 +157,9 @@ Future<void> readFollowUser() async {
   Future<void> logout() async {
     Get.snackbar('Logout', 'Logged out');
 
-    await clearData();
-    await readData();
+    // await clearData();
+    // await readData();
+    await FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -212,7 +213,6 @@ Future<void> readFollowUser() async {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    
                     Text(
                       '',
                       style: TextStyle(
@@ -221,7 +221,6 @@ Future<void> readFollowUser() async {
                         color: Colors.white,
                       ),
                     ),
-                    
                   ],
                 ),
               ),
@@ -267,7 +266,6 @@ Future<void> readFollowUser() async {
                       ElevatedButton(
                         onPressed: () async {
                           await followerService.addFollower(userid, getUserID);
-
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: kPrimaryColor,
@@ -298,12 +296,20 @@ Future<void> readFollowUser() async {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 backgroundColor: Colors.red,
-                                title: Center(child: Column(
+                                title: Center(
+                                    child: Column(
                                   children: [
-                                    Icon(Icons.warning_amber_outlined,color:Color.fromARGB(255, 255, 255, 255),size: 75),
-                                    Text('รายงานผู้ใช้',style: TextStyle(
-                                          fontSize: 20,fontWeight: FontWeight.bold,color:Colors.white
-                                        ),),
+                                    Icon(Icons.warning_amber_outlined,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        size: 75),
+                                    Text(
+                                      'รายงานผู้ใช้',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
                                   ],
                                 )),
                                 content: Column(
@@ -312,7 +318,12 @@ Future<void> readFollowUser() async {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        'หัวข้อการรายงาน',style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),fontSize: 14),),
+                                        'หัวข้อการรายงาน',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            fontSize: 14),
+                                      ),
                                     ),
                                     DropdownButtonFormField<String>(
                                       value: UsertypeReport,
@@ -363,22 +374,28 @@ Future<void> readFollowUser() async {
                                       ],
                                     ),
                                     Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text('หมายเหตุ',style: TextStyle(color: Colors.white),),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                        filled: true,
-                                        fillColor: const Color.fromARGB(255, 253, 253, 253),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'หมายเหตุ',
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                    cursorColor: Colors.white,
-                                    style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
-                                    maxLines: 4,
-                                    controller: Userdetail,
-                                  ),
-                                ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: const Color.fromARGB(
+                                              255, 253, 253, 253),
+                                        ),
+                                        cursorColor: Colors.white,
+                                        style: TextStyle(
+                                            color: const Color.fromARGB(
+                                                255, 0, 0, 0)),
+                                        maxLines: 4,
+                                        controller: Userdetail,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 actions: <Widget>[
@@ -387,9 +404,11 @@ Future<void> readFollowUser() async {
                                       children: [
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.black, // background (button) color
-                                          foregroundColor: Colors.white, // foreground (text) color
-                                        ),
+                                            backgroundColor: Colors
+                                                .black, // background (button) color
+                                            foregroundColor: Colors
+                                                .white, // foreground (text) color
+                                          ),
                                           child: Text('ส่งรายงาน'),
                                           onPressed: () async {
                                             // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
@@ -399,7 +418,7 @@ Future<void> readFollowUser() async {
                                                 firestore
                                                     .collection("UserReport")
                                                     .doc();
-                                  
+
                                             try {
                                               Map<String, dynamic> dataMap = {
                                                 'Report': UsertypeReport,
@@ -408,7 +427,7 @@ Future<void> readFollowUser() async {
                                                 'ID_User': getUserID,
                                                 'ID_Report': foodReport.id
                                               };
-                                  
+
                                               await foodReport.set(dataMap);
                                               Userdetail.clear();
                                               Get.snackbar('รายงานผู้ใช้',
@@ -418,28 +437,29 @@ Future<void> readFollowUser() async {
                                               Get.snackbar('รายงานผู้ใช้',
                                                   'รายงานผู้ใช้ไม่สำเร็จ');
                                             }
-                                  
+
                                             print('getUserID = ');
                                             print(getUserID);
-                                  
+
                                             Navigator.of(context).pop();
                                           },
                                         ),
                                         ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black, // background (button) color
-                                      foregroundColor: Colors.white, // foreground (text) color
-                                    ),
-                                      child: Text('ยกเลิก'),
-                                      onPressed: () {
-                                        // ปิด Dialog
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors
+                                                .black, // background (button) color
+                                            foregroundColor: Colors
+                                                .white, // foreground (text) color
+                                          ),
+                                          child: Text('ยกเลิก'),
+                                          onPressed: () {
+                                            // ปิด Dialog
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  
                                 ],
                               );
                             },
@@ -450,34 +470,33 @@ Future<void> readFollowUser() async {
                           color: Colors.red,
                         ),
                       ),
-                      IconButton(onPressed: ()async{
-                        
-                        String? encodeQueryParameters(Map<String, String> params) {
-                        return params.entries
-                            .map((MapEntry<String, String> e) =>
-                                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-                            .join('&');
-                      }
+                      IconButton(
+                          onPressed: () async {
+                            String? encodeQueryParameters(
+                                Map<String, String> params) {
+                              return params.entries
+                                  .map((MapEntry<String, String> e) =>
+                                      '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                  .join('&');
+                            }
 
-                        final Uri emailUri = Uri(
-                            scheme: 'mailto',
-                            path: email,
-                            query: encodeQueryParameters(<String,String>{
-                              'subject' : 'ผู้ใช้ต้องการติดต่อ',
-                              'body' : 'มีการติดต่อจากผู้ใช้มาหาคุณ โปรดติดต่อกลับ',
+                            final Uri emailUri = Uri(
+                              scheme: 'mailto',
+                              path: email,
+                              query: encodeQueryParameters(<String, String>{
+                                'subject': 'ผู้ใช้ต้องการติดต่อ',
+                                'body':
+                                    'มีการติดต่อจากผู้ใช้มาหาคุณ โปรดติดต่อกลับ',
+                              }),
+                            );
 
-                            }),
-                        );
-
-                        if(await canLaunchUrl(emailUri)){
-                          launchUrl(emailUri);
-                        }else{
-                          throw Exception('ไม่สามารถติดต่อ $emailUri');
-                        }
-                        
-
-
-                      }, icon: Icon(Icons.mail))
+                            if (await canLaunchUrl(emailUri)) {
+                              launchUrl(emailUri);
+                            } else {
+                              throw Exception('ไม่สามารถติดต่อ $emailUri');
+                            }
+                          },
+                          icon: Icon(Icons.mail))
                     ],
                   ),
                   const SizedBox(height: 5),

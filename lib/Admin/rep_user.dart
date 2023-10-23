@@ -9,6 +9,7 @@ import 'package:path/path.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
+import '../Edit/edit_Service.dart';
 import '../Screen/Profile/user_link_profile.dart';
 import '../Screen/Profile/user_profile.dart';
 import 'AdminService.dart';
@@ -37,6 +38,25 @@ class _UserReportState extends State<UserReport> {
     super.initState();
 
     fetchUserReportData();
+  }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  Widget _signOutButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: Colors.red,
+          textStyle: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          )),
+      onPressed: () {
+        signOut();
+      },
+      child: const Text('ออกจากระบบ'),
+    );
   }
 
   Future<void> fetchUserReportData() async {
@@ -159,67 +179,28 @@ class _UserReportState extends State<UserReport> {
                             ),
                           ),
                           onPressed: () async {
-                            print(reportUserData['ID_User']);
-                            final user = FirebaseAuth.instance.currentUser;
-                            try {
-                              // print('user = ');
-                              // print(reportUserData['ID_User']);
-                              // await reportUserData['ID_User'].delete();
-                              print("User deleted successfully");
-                            } catch (e) {
-                              print("Error deleting user: $e");
-                            }
+                            final deleteUserdata = EditService();
+                            deleteUserdata.DeleteReplyMod(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteReplyReview(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteReplyCommentData(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteCommentData(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteModData(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteReviewData(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteFood(
+                                reportUserData['ID_User']);
+                            deleteUserdata.DeleteUser(
+                                reportUserData['ID_User']);
 
-                            // //ลบข้อมูลผู้ใช้
-                            // final deleteDataUser = FirebaseFirestore.instance
-                            //     .collection('users')
-                            //     .doc(reportUserData['ID_User']);
-
-                            // //ลบข้อมูลผู้ใช้
-                            // final deleteReportUser = FirebaseFirestore.instance
-                            //     .collection('UserReport')
-                            //     .doc(reportUserData['ID_User']);
-
-                            FirebaseStorage storage = FirebaseStorage.instance;
-                            final deleteStorageUser = await storage
-                                .ref()
-                                .child('Profile Picture')
-                                .child(reportUserData['ID_User']);
-                            String fullPath = deleteStorageUser.fullPath;
-                            List<String> pathSegments = fullPath.split('/');
-                            String fileName = pathSegments.last;
-                            print('Downloaded File Name: $fileName');
-
-                            // for (Reference ref in result.items) {
-                            //   String imageURL = await ref.getDownloadURL();
-                            //   print('Downloaded URL: $imageURL');
-                            // }
-                            try {
-                              //   for (final deleteStorageUser in result.items) {
-                              // print('deleteStorageUser = ');
-                              // print(result);
-                              //     // ลบแต่ละไฟล์
-
-                              //   }
-
-                              //await deleteStorageUser.delete();
-                              // await deleteDataUser.delete();
-                              // await deleteReportUser.delete();
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
-                              );
-                              setState(() {
-                                // reportUserData.removeAt(index);
-                              });
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content:
-                                        Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
-                              );
-                            }
+                            Navigator.of(context).pop();
+                            Get.snackbar(
+                                'ลบข้อมูลผู้ใช้', 'ลบข้อมูลผู้ใช้สำเร็จ');
+                            signOut();
                           },
                           child: Text('ลบข้อมูลผู้ใช้'),
                         ),

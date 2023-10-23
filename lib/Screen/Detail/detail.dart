@@ -946,9 +946,18 @@ class _DetailFoodState extends State<DetailFood> {
                                     onPressed: () async {
                                       print('Success');
                                       commentModifyfood = SenWork.text;
-                                      uploadFileModify();
-                                      SenWork.clear();
-                                      Navigator.of(context).pop();
+                                      if (commentModifyfood!.isNotEmpty) {
+                                        uploadFileModify();
+                                        SenWork.clear();
+                                        Navigator.of(context).pop();
+                                        Get.snackbar(
+                                            'ผลการอัปโหลด', 'อัปโหลดสำเร็จ');
+                                      } else {
+                                        SenWork.clear();
+
+                                        Get.snackbar(
+                                            'ผลการอัปโหลด', 'อัปโหลดไม่สำเร็จ');
+                                      }
                                     },
                                     child: Row(
                                       mainAxisAlignment:
@@ -1047,11 +1056,25 @@ class _DetailFoodState extends State<DetailFood> {
                                             Color.fromARGB(255, 255, 196, 0)),
                                   ),
                                   onPressed: () async {
-                                    print('Success');
+                                    // print('Success');
+                                    // commentComment = Comment.text;
+                                    // uploadFileComment();
+                                    // Comment.clear();
+                                    // Navigator.of(context).pop();
+                                    // //
                                     commentComment = Comment.text;
-                                    uploadFileComment();
-                                    Comment.clear();
-                                    Navigator.of(context).pop();
+                                    if (commentComment!.isNotEmpty) {
+                                      uploadFileComment();
+                                      Comment.clear();
+                                      Navigator.of(context).pop();
+                                      Get.snackbar(
+                                          'ผลการอัปโหลด', 'อัปโหลดสำเร็จ');
+                                    } else {
+                                      Comment.clear();
+
+                                      Get.snackbar(
+                                          'ผลการอัปโหลด', 'อัปโหลดไม่สำเร็จ');
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1968,19 +1991,31 @@ class _DetailFoodState extends State<DetailFood> {
                                                                         () async {
                                                                       print(
                                                                           'Success');
+
                                                                       replyMod =
                                                                           ReplyMod
                                                                               .text;
-                                                                      uploadFileReplyMod();
-                                                                      ReplyMod
-                                                                          .clear();
-                                                                      Get.to(
-                                                                          ReplyModFood(),
-                                                                          arguments:
-                                                                              modifyData['ID_Mod']);
-                                                                      // Navigator.of(
-                                                                      //         context)
-                                                                      //     .pop();
+                                                                      if (replyMod!
+                                                                          .isNotEmpty) {
+                                                                        uploadFileReplyMod();
+                                                                        Get.to(
+                                                                            ReplyCommentFood(),
+                                                                            arguments:
+                                                                                modifyData['ID_Mod']);
+                                                                        ReplyMod
+                                                                            .clear();
+
+                                                                        Get.snackbar(
+                                                                            'ผลการอัปโหลด',
+                                                                            'อัปโหลดสำเร็จ');
+                                                                      } else {
+                                                                        ReplyMod
+                                                                            .clear();
+
+                                                                        Get.snackbar(
+                                                                            'ผลการอัปโหลด',
+                                                                            'อัปโหลดไม่สำเร็จ');
+                                                                      }
                                                                     },
                                                                     child: const Text(
                                                                         'ส่ง')),
@@ -2246,20 +2281,32 @@ class _DetailFoodState extends State<DetailFood> {
                                                                   () async {
                                                                 print(
                                                                     'Success');
+                                                                //
                                                                 replyComment =
                                                                     ReplyComment
                                                                         .text;
-                                                                uploadFileReplyComment();
-                                                                ReplyComment
-                                                                    .clear();
-                                                                // Navigator.of(
-                                                                //         context)
-                                                                //     .pop();
-                                                                Get.to(
-                                                                    ReplyCommentFood(),
-                                                                    arguments:
-                                                                        commentData[
-                                                                            'ID_Comment']);
+                                                                if (replyComment!
+                                                                    .isNotEmpty) {
+                                                                  uploadFileReplyComment();
+                                                                  Get.to(
+                                                                      ReplyCommentFood(),
+                                                                      arguments:
+                                                                          commentData[
+                                                                              'ID_Comment']);
+                                                                  ReplyComment
+                                                                      .clear();
+
+                                                                  Get.snackbar(
+                                                                      'ผลการอัปโหลด',
+                                                                      'อัปโหลดสำเร็จ');
+                                                                } else {
+                                                                  ReplyComment
+                                                                      .clear();
+
+                                                                  Get.snackbar(
+                                                                      'ผลการอัปโหลด',
+                                                                      'อัปโหลดไม่สำเร็จ');
+                                                                }
                                                               },
                                                               child: const Text(
                                                                 'ส่ง',
@@ -2534,20 +2581,32 @@ class _DetailFoodState extends State<DetailFood> {
                                                                   () async {
                                                                 print(
                                                                     'Success');
+
                                                                 replyReview =
                                                                     ReplyReview
                                                                         .text;
-                                                                uploadFileReplyReview();
-                                                                // Navigator.of(
-                                                                //         context)
-                                                                //     .pop();
-                                                                ReplyReview
-                                                                    .clear();
-                                                                Get.to(
-                                                                    ReplyReviewFood(),
-                                                                    arguments:
-                                                                        reviewData[
-                                                                            'ID_Review']);
+                                                                if (replyReview!
+                                                                    .isNotEmpty) {
+                                                                  uploadFileReplyReview();
+                                                                  Get.to(
+                                                                      ReplyCommentFood(),
+                                                                      arguments:
+                                                                          reviewData[
+                                                                              'ID_Review']);
+                                                                  ReplyReview
+                                                                      .clear();
+
+                                                                  Get.snackbar(
+                                                                      'ผลการอัปโหลด',
+                                                                      'อัปโหลดสำเร็จ');
+                                                                } else {
+                                                                  ReplyReview
+                                                                      .clear();
+
+                                                                  Get.snackbar(
+                                                                      'ผลการอัปโหลด',
+                                                                      'อัปโหลดไม่สำเร็จ');
+                                                                }
                                                               },
                                                               child: const Text(
                                                                 'ส่ง',

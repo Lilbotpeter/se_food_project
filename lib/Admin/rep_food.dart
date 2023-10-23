@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
 import '../Screen/Detail/detail.dart';
+import '../Screen/Profile/deleteFoodService.dart';
 import 'AdminService.dart';
 
 class FoodReport extends StatefulWidget {
@@ -149,7 +150,30 @@ class _FoodReportReportState extends State<FoodReport> {
                             ),
                           ),
                           onPressed: () async {
-                            // Implement delete user functionality
+                            final deleteFood = DeleteFoodService();
+                            //
+                            deleteFood.DeleteFoodReplyCommentData(
+                                reportData['ID_Food'].toString());
+                            //
+                            deleteFood.DeleteFoodReplyModData(
+                                reportData['ID_Food'].toString());
+                            //
+                            deleteFood.DeleteFoodReplyReviewData(
+                                reportData['ID_Food'].toString());
+                            //
+                            deleteFood.DeleteFoodCommentData(
+                                reportData['ID_Food'].toString());
+                            //
+                            deleteFood.DeleteFoodModData(
+                                reportData['ID_Food'].toString());
+                            //
+                            deleteFood.DeleteFoodReviewData(
+                                reportData['ID_Food'].toString());
+                            //
+                            deleteFood.DeleteFoodData(
+                                reportData['ID_Food'].toString());
+
+                            Navigator.of(context).pop();
                           },
                           child: Text('ลบข้อมูลอาหาร'),
                         ),

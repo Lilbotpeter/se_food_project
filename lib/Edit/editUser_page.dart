@@ -27,7 +27,7 @@ class _EditUserState extends State<EditUser> {
   final TextEditingController password = TextEditingController();
   final TextEditingController emial = TextEditingController();
   final TextEditingController phone = TextEditingController();
-    File? imageXFile;
+  File? imageXFile;
 
   String? imageUrl;
   @override
@@ -144,49 +144,66 @@ class _EditUserState extends State<EditUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-              flexibleSpace: ClipPath(
-                child: Container(
-                  height: 500,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 255, 127, 8),
-                        Color.fromARGB(255, 255, 198, 55),
-                      ],
-                    ),
-                  ),
-                  child: const Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
-                      ],
-                    ),
-                  ),
-                ),
+        flexibleSpace: ClipPath(
+          child: Container(
+            height: 500,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 127, 8),
+                  Color.fromARGB(255, 255, 198, 55),
+                ],
               ),
+            ),
+            child: const Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       body: ListView(
         children: [
-          SizedBox(height: 30,),
-          Center(child: Text('แก้ไขโปรไฟล์',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
-          SizedBox(height: 35,),
+          SizedBox(
+            height: 30,
+          ),
+          Center(
+              child: Text(
+            'แก้ไขโปรไฟล์',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          )),
+          SizedBox(
+            height: 35,
+          ),
           GestureDetector(
             onTap: () {
               pickImage();
             },
             child: Container(
-              child:
-                  imageUrl != null ? SizedBox(
-                    child: Stack(children: [ 
-                      
-                      ProfilePicture(image: imageUrl!,imageXFile: imageXFile,),
+              child: imageUrl != null
+                  ? SizedBox(
+                      child: Stack(children: [
+                      ProfilePicture(
+                        image: imageUrl!,
+                        imageXFile: imageXFile,
+                      ),
                       Positioned(
-                        left: 220,
-                        top: 75,
-                        child: Icon(Icons.photo,size: 40,)),
-                        ])) : ProfilePicture(image: "images/add-camera-icon-16.jpg",imageXFile: imageXFile,),
+                          left: 220,
+                          top: 75,
+                          child: Icon(
+                            Icons.photo,
+                            size: 40,
+                          )),
+                    ]))
+                  : ProfilePicture(
+                      image: "images/add-camera-icon-16.jpg",
+                      imageXFile: imageXFile,
+                    ),
             ),
           ),
           SizedBox(
@@ -194,7 +211,10 @@ class _EditUserState extends State<EditUser> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('ข้อมูลผู้ใช้',style: TextStyle(fontSize: 16),),
+            child: Text(
+              'ข้อมูลผู้ใช้',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
           SizedBox(
             height: 10.0,
@@ -210,7 +230,6 @@ class _EditUserState extends State<EditUser> {
               ),
             ),
           ),
-
 
           // Padding(
           //   padding: const EdgeInsets.all(8.0),
@@ -228,7 +247,7 @@ class _EditUserState extends State<EditUser> {
               ),
             ),
           ),
-  
+
           // Text('รหัสผ่าน'),
           // SizedBox(
           //   height: 10.0,
@@ -270,22 +289,20 @@ class _EditUserState extends State<EditUser> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors
-                                              .black, // background (button) color
-                                          foregroundColor: Colors
-                                              .white, // foreground (text) color
-                                        ),
+                  backgroundColor: Colors.black, // background (button) color
+                  foregroundColor: Colors.white, // foreground (text) color
+                ),
                 onPressed: () async {
                   String _editname = name.text;
                   //String _editpassword = password.text;
                   String _editemail = emial.text;
                   String _editphone = phone.text;
                   //String _editImage = imageUrl!;
-          
+
                   final docker = FirebaseFirestore.instance
                       .collection('users')
                       .doc(getfoodID);
-          
+
                   if (_editname.isEmpty || _editphone.isEmpty) {
                     // แสดง Snackbar ถ้า _editname หรือ _editphone มีค่าว่าง
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -307,7 +324,7 @@ class _EditUserState extends State<EditUser> {
                     });
                     Navigator.of(context).pop();
                   }
-          
+
                   //
                 },
                 child: Row(
@@ -326,31 +343,33 @@ class _EditUserState extends State<EditUser> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors
-                                              .black, // background (button) color
-                                          foregroundColor: Colors
-                                              .white, // foreground (text) color
-                                        ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // background (button) color
+                    foregroundColor: Colors.white, // foreground (text) color
+                  ),
                   onPressed: () {
                     Get.to(const EditEmail(), arguments: user!.uid);
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.email,color: Colors.white,),
+                      Icon(
+                        Icons.email,
+                        color: Colors.white,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: const Text('เปลี่ยนอีเมล',style: TextStyle(color: Colors.white),),
+                        child: const Text(
+                          'เปลี่ยนอีเมล',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   )),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors
-                                              .black, // background (button) color
-                                          foregroundColor: Colors
-                                              .white, // foreground (text) color
-                                        ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black, // background (button) color
+                    foregroundColor: Colors.white, // foreground (text) color
+                  ),
                   onPressed: () {
                     Get.to(const EditPassword(), arguments: user!.email);
                   },
@@ -365,25 +384,26 @@ class _EditUserState extends State<EditUser> {
                   )),
             ],
           ),
-                   SizedBox(
+          SizedBox(
             height: 10.0,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color.fromARGB(255, 255, 0, 0), // background (button) color
-                                          foregroundColor: Colors
-                                              .white, // foreground (text) color
-                                        ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(
+                        255, 255, 0, 0), // background (button) color
+                    foregroundColor: Colors.white, // foreground (text) color
+                  ),
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
                           title: Text('ยืนยันการลบข้อมูลผู้ใช้?'),
-                          content: Text('คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลผู้ใช้?'),
+                          content:
+                              Text('คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลผู้ใช้?'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -433,29 +453,34 @@ class _EditUserState extends State<EditUser> {
                                                 passwordController.text;
 
                                             if (password.isNotEmpty) {
-                                              // final deleteUserdata = EditService();
-                                              // deleteUserdata.DeleteReplyMod(
-                                              //     usersid!);
-                                              // deleteUserdata.DeleteReplyReview(
-                                              //     usersid!);
-                                              // deleteUserdata.DeleteReplyCommentData(
-                                              //     usersid!);
-                                              // deleteUserdata.DeleteCommentData(
-                                              //     usersid!);
-                                              // deleteUserdata.DeleteModData(
-                                              //     usersid!);
-                                              // deleteUserdata.DeleteReviewData(
-                                              //     usersid!);
-                                              // deleteUserdata.DeleteFood(usersid!);
-                                              // deleteUserdata.DeleteUser(usersid!);
-                                              // final deleteUserOnAuthen =
-                                              //     AuthenticationController();
-                                              // deleteUserOnAuthen
-                                              //     .deleteUserFromFirebase(password);
-                                              // Navigator.of(context).pop();
-                                              // Get.snackbar('ลบข้อมูลผู้ใช้',
-                                              //     'ลบข้อมูลผู้ใช้สำเร็จ');
-                                              // signOut();
+                                              final deleteUserdata =
+                                                  EditService();
+                                              deleteUserdata.DeleteReplyMod(
+                                                  usersid!);
+                                              deleteUserdata.DeleteReplyReview(
+                                                  usersid!);
+                                              deleteUserdata
+                                                  .DeleteReplyCommentData(
+                                                      usersid!);
+                                              deleteUserdata.DeleteCommentData(
+                                                  usersid!);
+                                              deleteUserdata.DeleteModData(
+                                                  usersid!);
+                                              deleteUserdata.DeleteReviewData(
+                                                  usersid!);
+                                              deleteUserdata.DeleteFood(
+                                                  usersid!);
+                                              deleteUserdata.DeleteUser(
+                                                  usersid!);
+                                              final deleteUserOnAuthen =
+                                                  AuthenticationController();
+                                              deleteUserOnAuthen
+                                                  .deleteUserFromFirebase(
+                                                      password);
+                                              Navigator.of(context).pop();
+                                              Get.snackbar('ลบข้อมูลผู้ใช้',
+                                                  'ลบข้อมูลผู้ใช้สำเร็จ');
+                                              signOut();
                                             } else {
                                               //final test = EditService();
                                               // test.DeleteReplyMod(usersid!);
@@ -488,8 +513,11 @@ class _EditUserState extends State<EditUser> {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.delete_forever,color: Colors.white),
-                      const Text('ลบบัญชี',style: TextStyle(color: Colors.white),),
+                      Icon(Icons.delete_forever, color: Colors.white),
+                      const Text(
+                        'ลบบัญชี',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   )),
             ],
