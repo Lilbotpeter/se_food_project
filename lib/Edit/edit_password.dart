@@ -35,60 +35,94 @@ class _EditPasswordState extends State<EditPassword> {
     return Scaffold(
       body: ListView(
         children: [
-          Text('ยืนยันรหัสผ่านปัจจุบัน'),
-          SizedBox(
-            height: 10.0,
+          Row(
+            
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 100,),
+              Padding(
+                padding: const EdgeInsets.only(left:7),
+                child: Icon(Icons.key),
+              ),
+              Text('เปลี่ยนรหัสผ่าน',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+            ],
           ),
-          TextField(
-            controller: confirmPassword,
-            decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              labelText: 'กรอกข้อมูล',
-            ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('รหัสผ่านปัจจุบัน'),
           ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text('รหัสผ่านใหม่'),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextField(
-            controller: newpassword,
-            decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              labelText: 'กรอกข้อมูล',
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextButton(
-              onPressed: () async {
-                String oldPassword = confirmPassword.text;
-                String newPassword = newpassword.text;
-                if (oldPassword.isEmpty || newPassword.isEmpty) {
-                  // แสดง Snackbar ถ้ารหัสผ่านเดิมหรือรหัสผ่านใหม่เป็นค่าว่าง
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("กรุณากรอกรหัสผ่านเดิมหรือรหัสผ่านใหม่"),
-                    ),
-                  );
-                } else {
-                  // ทำการเรียกฟังก์ชันเปลี่ยนรหัสผ่านและตรวจสอบผลลัพธ์
-                  AuthenticationController()
-                      .UpdatepassWORD(email, oldPassword, newPassword);
-                  Navigator.of(context).pop();
-                }
 
-                // AuthenticationController().UpdatepassWORD(
-                //     email, confirmPassword.text, newpassword.text);
-                // Navigator.of(context).pop();
-                // //}
-              },
-              child: const Text('ยืนยันการแก้ไขรหัสผ่าน')),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: confirmPassword,
+              decoration: InputDecoration(
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                hintText: 'กรอกรหัสผ่านปัจจุบัน'
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('รหัสผ่านใหม่'),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: newpassword,
+              decoration: InputDecoration(
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                hintText: 'กรอกรหัสผ่านใหม่'
+              ),
+            ),
+          ),
+          SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors
+                                                  .black, // background (button) color
+                                              foregroundColor: Colors
+                                                  .white, // foreground (text) color
+                                            ),
+                onPressed: () async {
+                  String oldPassword = confirmPassword.text;
+                  String newPassword = newpassword.text;
+                  if (oldPassword.isEmpty || newPassword.isEmpty) {
+                    // แสดง Snackbar ถ้ารหัสผ่านเดิมหรือรหัสผ่านใหม่เป็นค่าว่าง
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("กรุณากรอกรหัสผ่านเดิมหรือรหัสผ่านใหม่"),
+                      ),
+                    );
+                  } else {
+                    // ทำการเรียกฟังก์ชันเปลี่ยนรหัสผ่านและตรวจสอบผลลัพธ์
+                    AuthenticationController()
+                        .UpdatepassWORD(email, oldPassword, newPassword);
+                    Navigator.of(context).pop();
+                  }
+          
+                  // AuthenticationController().UpdatepassWORD(
+                  //     email, confirmPassword.text, newpassword.text);
+                  // Navigator.of(context).pop();
+                  // //}
+                },
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.check),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: const Text('ยืนยันการเปลี่ยนรหัสผ่าน'),
+                      ),
+                    ],
+                  )),
+          ),
         ],
       ),
     );
