@@ -6,6 +6,7 @@ import 'package:se_project_food/Edit/editfood_page.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
 
 import '../../Models/foodmodels.dart';
+import 'deleteFoodService.dart';
 
 class MyFoods extends StatefulWidget {
   const MyFoods({super.key});
@@ -111,7 +112,8 @@ class _MyFoodsState extends State<MyFoods> {
   Widget showName(int index) {
     return Text(
       foodModels[index].food_name,
-      style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),
+      style: TextStyle(
+          color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
       maxLines: 5,
       overflow: TextOverflow.fade,
     );
@@ -140,7 +142,7 @@ class _MyFoodsState extends State<MyFoods> {
               itemCount: foodModels.length,
               itemBuilder: (BuildContext buildContext, int index) {
                 return Padding(
-                  padding: const EdgeInsets.only(left:5.0),
+                  padding: const EdgeInsets.only(left: 5.0),
                   child: Card(
                     color: Colors.black,
                     child: Row(children: <Widget>[
@@ -151,69 +153,151 @@ class _MyFoodsState extends State<MyFoods> {
                             foodModels[index].food_image,
                           )),
                       Padding(
-                        padding: const EdgeInsets.only(left:20),
+                        padding: const EdgeInsets.only(left: 20),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             showName(
                               index,
                             ),
-                          SizedBox(height: 10,),
-                          Center(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.amber,
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            onPressed: () {
-                              print(foodModels[index].food_id);
-                              Get.to(EditFoods(),
-                                  arguments: foodModels[index].food_id);
-                            },
-                            child: Text('แก้ไขข้อมูล',style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),),
-                          ),
-                        ),
-                        Center(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Colors.redAccent,
-                                textStyle: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            onPressed: () async {
-                              print(foodModels[index].food_id);
-                              final docker = FirebaseFirestore.instance
-                                  .collection('Foods')
-                                  .doc(foodModels[index].food_id);
-                                      
-                              try {
-                                await docker.delete();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
-                                );
-                                setState(() {
-                                  foodModels.removeAt(index);
-                                });
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
-                                );
-                              }
-                            },
-                            child: Text('ลบข้อมูล',style: TextStyle(color: Colors.black),),
-                          ),
-                        ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.amber,
+                                    textStyle: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                onPressed: () {
+                                  print(foodModels[index].food_id);
+                                  Get.to(EditFoods(),
+                                      arguments: foodModels[index].food_id);
+                                },
+                                child: Text(
+                                  'แก้ไขข้อมูล',
+                                  style: TextStyle(
+                                      color:
+                                          const Color.fromARGB(255, 0, 0, 0)),
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.redAccent,
+                                    textStyle: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                // onPressed: () async {
+
+                                // final docker = FirebaseFirestore.instance
+                                //     .collection('Foods')
+                                //     .doc(foodModels[index].food_id);
+
+                                // try {
+                                //   await docker.delete();
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     SnackBar(content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
+                                //   );
+                                //   setState(() {
+                                //     foodModels.removeAt(index);
+                                //   });
+                                // } catch (e) {
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     SnackBar(
+                                //         content: Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
+                                //   );
+                                // }
+                                //},
+                                onPressed: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("ยืนยันการลบ"),
+                                        content: Text(
+                                            "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("ยกเลิก"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("ลบ"),
+                                            onPressed: () {
+                                              // print('Fuufood =' +
+                                              //     foodModels[index]
+                                              //         .food_id
+                                              //         .toString());
+
+                                              final deleteFood =
+                                                  DeleteFoodService();
+                                              //
+                                              deleteFood
+                                                  .DeleteFoodReplyCommentData(
+                                                      foodModels[index]
+                                                          .food_id
+                                                          .toString());
+                                              //
+                                              deleteFood.DeleteFoodReplyModData(
+                                                  foodModels[index]
+                                                      .food_id
+                                                      .toString());
+                                              //
+                                              deleteFood
+                                                  .DeleteFoodReplyReviewData(
+                                                      foodModels[index]
+                                                          .food_id
+                                                          .toString());
+                                              //
+                                              deleteFood.DeleteFoodCommentData(
+                                                  foodModels[index]
+                                                      .food_id
+                                                      .toString());
+                                              //
+                                              deleteFood.DeleteFoodModData(
+                                                  foodModels[index]
+                                                      .food_id
+                                                      .toString());
+                                              //
+                                              deleteFood.DeleteFoodReviewData(
+                                                  foodModels[index]
+                                                      .food_id
+                                                      .toString());
+                                              //
+                                              deleteFood.DeleteFoodData(
+                                                  foodModels[index]
+                                                      .food_id
+                                                      .toString());
+
+                                              Navigator.of(context)
+                                                  .pop(); // ปิด AlertDialog
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+
+                                child: Text(
+                                  'ลบข้อมูล',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       // showDescription(index),
                       // showIngredients(index),
-                
-                
+
                       // IconButton(
                       //   icon: new Icon(Icons.edit),
                       //   highlightColor: Colors.pink,
