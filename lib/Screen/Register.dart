@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             children: [
               const SizedBox(
-                height: 15,
+                height: 25,
               ),
               Text(
                 "สมัครสมาชิก",
@@ -45,12 +45,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Profile avatar
               GestureDetector(
                 onTap: () {
-                  authenticationController.captureImageWithCamera();
+                  authenticationController.chooseImageFromGallery();
                 },
                 child: const CircleAvatar(
                   radius: 80,
-                  backgroundImage: AssetImage("images/logo.png"),
-                  backgroundColor: Colors.black,
+                  backgroundImage: AssetImage("images/add-camera-icon-16.jpg"),
+                  backgroundColor: Color.fromARGB(255, 199, 199, 199),
+                  
                 ),
               ),
               const SizedBox(

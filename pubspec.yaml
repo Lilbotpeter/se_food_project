@@ -69,6 +69,7 @@ flutter:
 
   assets:
     - images/logo.png
+    - images/add-camera-icon-16.jpg
     - images/search-svgrepo-com.svg
     - images/food.jpg
     - images/james-person-1.jpg

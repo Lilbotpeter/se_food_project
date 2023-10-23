@@ -66,7 +66,7 @@ class AuthenticationController extends GetxController {
     String userPhone,
   ) async {
     try {
-      // 1. Create user in Firebase Authentication
+     
       UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: userEmail,
@@ -76,11 +76,9 @@ class AuthenticationController extends GetxController {
       String? imageDownloadUrl;
 
       if (imageFile != null) {
-        // 2. Save the user profile image to Firebase Storage
         imageDownloadUrl = await uploadImageToStorage(imageFile);
       }
 
-      // 3. Save user data to the Firestore database
       usermodel.User user = usermodel.User(
         email: userEmail,
         name: username,

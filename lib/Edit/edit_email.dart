@@ -34,59 +34,96 @@ class _EditEmailState extends State<EditEmail> {
     return Scaffold(
       body: ListView(
         children: [
-          const Text('อีเมลใหม่'),
-          const SizedBox(
-            height: 10.0,
+          Row(
+            
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 100,),
+              Padding(
+                padding: const EdgeInsets.only(left:7),
+                child: Icon(Icons.email),
+              ),
+              Text('เปลี่ยนอีเมล',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+            ],
           ),
-          TextField(
-            controller: newEmail,
-            decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              labelText: 'กรอกข้อมูล',
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('อีเมลใหม่'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: newEmail,
+              decoration: InputDecoration(
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                hintText: 'กรอกอีเมลใหม่',
+              ),
             ),
           ),
           SizedBox(
             height: 10.0,
           ),
-          Text('กรอกรหัสผ่านในการยืนยัน'),
-          SizedBox(
-            height: 10.0,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('กรอกรหัสผ่านในการยืนยัน'),
           ),
-          TextField(
-            controller: confirmPassword,
-            decoration: InputDecoration(
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              labelText: 'กรอกข้อมูล',
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: confirmPassword,
+              decoration: InputDecoration(
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                hintText: 'กรอกอีเมลใหม่อีกครั้ง',
+              ),
             ),
           ),
           SizedBox(
             height: 10.0,
           ),
-          TextButton(
-              onPressed: () async {
-                String Password = confirmPassword.text;
-                String email = newEmail.text;
-                if (Password.isEmpty || email.isEmpty) {
-                  // แสดง Snackbar ถ้ารหัสผ่านเดิมหรือรหัสผ่านใหม่เป็นค่าว่าง
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("กรุณากรอกรหัสผ่านเดิมหรืออีเมล"),
-                    ),
-                  );
-                } else {
-                  final docker =
-                      FirebaseFirestore.instance.collection('users').doc(Uid);
-                  AuthenticationController()
-                      .updateEmail(newEmail.text, confirmPassword.text);
-                  docker.update({
-                    'Email': newEmail.text,
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('ยืนยันการแก้ไขอีเมล')),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors
+                                                .black, // background (button) color
+                                            foregroundColor: Colors
+                                                .white, // foreground (text) color
+                                          ),
+                onPressed: () async {
+                  String Password = confirmPassword.text;
+                  String email = newEmail.text;
+                  if (Password.isEmpty || email.isEmpty) {
+                    // แสดง Snackbar ถ้ารหัสผ่านเดิมหรือรหัสผ่านใหม่เป็นค่าว่าง
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("กรุณากรอกรหัสผ่านเดิมหรืออีเมล"),
+                      ),
+                    );
+                  } else {
+                    final docker =
+                        FirebaseFirestore.instance.collection('users').doc(Uid);
+                    AuthenticationController()
+                        .updateEmail(newEmail.text, confirmPassword.text);
+                    docker.update({
+                      'Email': newEmail.text,
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.check),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: const Text('ยืนยันการเปลี่ยนอีเมล'),
+                      ),
+                    ],
+                  )),
+          ),
         ],
       ),
     );
