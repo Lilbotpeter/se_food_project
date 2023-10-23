@@ -98,7 +98,6 @@ class _DetailFoodState extends State<DetailFood> {
   late VideoPlayerController _videoPlayerController;
   late Future<void> _initializeVideoPlayerFuture;
 
-
   List<File> files = []; // List เก็บรูปภาพที่ถูกเลือก
   UploadTask? task;
   String? urlDownload,
@@ -260,7 +259,7 @@ class _DetailFoodState extends State<DetailFood> {
       Map<String, dynamic> dataMap = {
         'ID_Food': id_food,
         'ID_Review': foodDocRef.id,
-        'Uid' : userid,
+        'Uid': userid,
         'Image': urlDownload,
         'Video': food_video,
         'Comment': commentReview,
@@ -571,7 +570,7 @@ class _DetailFoodState extends State<DetailFood> {
     }
   }
 
-    Future<void> _fetchVideos() async {
+  Future<void> _fetchVideos() async {
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       ListResult result = await storage
@@ -607,27 +606,25 @@ class _DetailFoodState extends State<DetailFood> {
   }
 
   void _showImagePopup(BuildContext context, String imageUrl, int index) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        child: Container(
-          // กำหนดความกว้างและความสูงเพื่อให้เต็มจอ
-          // width: MediaQuery.of(context).size.width,
-          // height: MediaQuery.of(context).size.height,
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover, // ให้รูปภาพเต็มหน้าจอแนวนอน
-             width: MediaQuery.of(context).size.width,
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            // กำหนดความกว้างและความสูงเพื่อให้เต็มจอ
+            // width: MediaQuery.of(context).size.width,
+            // height: MediaQuery.of(context).size.height,
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover, // ให้รูปภาพเต็มหน้าจอแนวนอน
+              width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width,
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
-
-
+        );
+      },
+    );
+  }
 
 ///////////////////////////////////////////////initState
   @override
@@ -645,22 +642,23 @@ class _DetailFoodState extends State<DetailFood> {
         _fetchVideos();
       });
     });
-        _videoPlayerController = VideoPlayerController.network(
+    _videoPlayerController = VideoPlayerController.network(
       'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
     );
 
-    _initializeVideoPlayerFuture = _videoPlayerController.initialize().then((_) {
+    _initializeVideoPlayerFuture =
+        _videoPlayerController.initialize().then((_) {
       // อย่าลืมรอให้วิดีโอเริ่มต้นเสร็จ
       setState(() {}); // รีเรนเดอร์ UI หลังจากวิดีโอเริ่มต้นเสร็จ
     });
   }
 
-    @override
+  @override
   void dispose() {
     _videoPlayerController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     //Follower
@@ -1336,66 +1334,68 @@ class _DetailFoodState extends State<DetailFood> {
 //Slide
 
                             child: SizedBox(
-                              height: MediaQuery.of(context).size.width*0.75, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
+                              height: MediaQuery.of(context).size.width *
+                                  0.75, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
                               width: MediaQuery.of(context).size.width,
                               child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: imageUrls.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Slidable(
-                                  actionPane: SlidableStrechActionPane(),
-                                  actionExtentRatio: 0.50,
-                                  child: GestureDetector(
-                                    onTap: (){_showImagePopup(context,imageUrls[index],index);
-                                    },
-                                    child: AspectRatio(
-                                      aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
-                                      child: Image.network(
-                                        imageUrls[index],
-                                        fit: BoxFit.cover, // ลดขนาดรูปภาพเพื่อให้เต็มกรอบ
+                                scrollDirection: Axis.horizontal,
+                                itemCount: imageUrls.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Slidable(
+                                    actionPane: SlidableStrechActionPane(),
+                                    actionExtentRatio: 0.50,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _showImagePopup(
+                                            context, imageUrls[index], index);
+                                      },
+                                      child: AspectRatio(
+                                        aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
+                                        child: Image.network(
+                                          imageUrls[index],
+                                          fit: BoxFit
+                                              .cover, // ลดขนาดรูปภาพเพื่อให้เต็มกรอบ
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
-
-                            ),
-
                           ),
 
-                            // child: Column(
-                            //   children: <Widget>[
-                            //     SizedBox(
-                            //       height: 300,
-                            //       width: double.infinity,
-                            //       child: FutureBuilder(
-                            //         future: _fetchImages(),
-                            //         builder: (context, snapshot) {
-                            //           if (snapshot.connectionState == ConnectionState.done) {
-                            //           return AnotherCarousel(
-                            //             images: [
-                            //               //VideoCarouselItem(videoUrl: 'https://firebasestorage.googleapis.com/v0/b/project-food-c14c5.appspot.com/o/files%2FH5sET0TQaRIx9qXgkq4e%2FVideo%2FVID_20231013_234214.mp4?alt=media&token=a44332cb-2cb7-4418-b7f9-71f72a96baa7'),
-                            //               imageUrls.length
-                            //             ],
-                            //             dotSize: 4,
-                            //             indicatorBgPadding: 5.0,
-                            //           );
-                            //           } else{
-                            //             return Center(
-                            //               child: SpinKitCircle( // หรือใช้ SpinKitDualRing, SpinKitChasingDots, SpinKitFadingCircle, หรือสไตล์ที่คุณต้องการ
-                            //                   color: Colors.amber, // สีของวงกลม
-                            //                   size: 50.0, // ขนาดของวงกลม
-                            //                 ),
-                            //             );
-                            //           }
-                            //         }
-                            //       ),
-                            //     ),
-                                
-                            //   ],
-                            // ),
-                          ),
+                          // child: Column(
+                          //   children: <Widget>[
+                          //     SizedBox(
+                          //       height: 300,
+                          //       width: double.infinity,
+                          //       child: FutureBuilder(
+                          //         future: _fetchImages(),
+                          //         builder: (context, snapshot) {
+                          //           if (snapshot.connectionState == ConnectionState.done) {
+                          //           return AnotherCarousel(
+                          //             images: [
+                          //               //VideoCarouselItem(videoUrl: 'https://firebasestorage.googleapis.com/v0/b/project-food-c14c5.appspot.com/o/files%2FH5sET0TQaRIx9qXgkq4e%2FVideo%2FVID_20231013_234214.mp4?alt=media&token=a44332cb-2cb7-4418-b7f9-71f72a96baa7'),
+                          //               imageUrls.length
+                          //             ],
+                          //             dotSize: 4,
+                          //             indicatorBgPadding: 5.0,
+                          //           );
+                          //           } else{
+                          //             return Center(
+                          //               child: SpinKitCircle( // หรือใช้ SpinKitDualRing, SpinKitChasingDots, SpinKitFadingCircle, หรือสไตล์ที่คุณต้องการ
+                          //                   color: Colors.amber, // สีของวงกลม
+                          //                   size: 50.0, // ขนาดของวงกลม
+                          //                 ),
+                          //             );
+                          //           }
+                          //         }
+                          //       ),
+                          //     ),
+
+                          //   ],
+                          // ),
+                        ),
                         //),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -1432,28 +1432,27 @@ class _DetailFoodState extends State<DetailFood> {
                                 ),
                               ),
                             ],
-                            
                           ),
                         ),
                         Positioned(
                           top: 230,
                           left: 320,
                           child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      borderRadius: BorderRadius.circular(35)),
-                                  child: IconButton(
-                                    onPressed: () async {
-                                     Get.to(VideoPage(),arguments: videoUrls[0]);
-                                     //Get.snackbar('title',videoUrls[0]);
-                                    },
-                                    icon: Icon(
-                                          Icons.play_arrow,
-                                      color : Color.fromARGB(255, 255, 136, 0),
-                                      size: 35,
-                                    ),
-                                  ),
-                                ),
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                borderRadius: BorderRadius.circular(35)),
+                            child: IconButton(
+                              onPressed: () async {
+                                Get.to(VideoPage(), arguments: videoUrls);
+                                //Get.snackbar('title', videoUrls[0]);
+                              },
+                              icon: Icon(
+                                Icons.play_arrow,
+                                color: Color.fromARGB(255, 255, 136, 0),
+                                size: 35,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
