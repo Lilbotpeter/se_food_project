@@ -31,7 +31,8 @@ class _UserProfileState extends State<UserProfile> {
   String? email = '';
   String? phone = '';
   File? imageXFile;
-
+  int countfollow = 0;
+  int countbookmark = 0;
   List<FoodModel> foodModels = []; //List Model Food
   List<FoodModel> follower = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
@@ -40,22 +41,22 @@ class _UserProfileState extends State<UserProfile> {
 
 //Get data fromdatabase
   Future<void> _getDataFromDatabase() async {
-    try{
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(userid)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        setState(() {
-          name = snapshot.data()!["Name"];
-          email = snapshot.data()!["Email"];
-          phone = snapshot.data()!["Phone"];
-          image = snapshot.data()!["ImageP"];
-        });
-      }
-    });
-    }catch(error){
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userid)
+          .get()
+          .then((snapshot) {
+        if (snapshot.exists) {
+          setState(() {
+            name = snapshot.data()!["Name"];
+            email = snapshot.data()!["Email"];
+            phone = snapshot.data()!["Phone"];
+            image = snapshot.data()!["ImageP"];
+          });
+        }
+      });
+    } catch (error) {
       print('เกิดข้อผิดพลาด : $error');
     }
   }
@@ -103,8 +104,36 @@ class _UserProfileState extends State<UserProfile> {
     super.initState();
     _getDataFromDatabase();
     readData();
+    follow();
   }
 
+  Future follow() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('followers')
+        .doc(userid)
+        .collection('followersID')
+        .get();
+    countfollow = querySnapshot.size;
+    // for (QueryDocumentSnapshot countFollow in querySnapshot.docs) {
+    //   countfollow = countFollow.id
+    // }
+  }
+
+  Future bookmark() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('bookmark')
+        .doc(userid)
+        .collection('bookmarkID')
+        .get();
+    countbookmark = querySnapshot.size;
+    // for (QueryDocumentSnapshot countFollow in querySnapshot.docs) {
+    //   countfollow = countFollow.id
+    // }
+  }
 //   Widget buildFoodItem(int index) {
 //   return GestureDetector(
 //     onTap: () {
@@ -242,13 +271,13 @@ class _UserProfileState extends State<UserProfile> {
                         indent: 10,
                         endIndent: 160,
                       ),
-                      StatusText(54, 'ผู้ติดตาม'),
+                      StatusText(countfollow, 'ผู้ติดตาม'),
                       const VerticalDivider(
                         thickness: 1,
                         indent: 10,
                         endIndent: 160,
                       ),
-                      StatusText(4, 'เรทติ้ง'),
+                      StatusText(4, 'อาหารที่ชอบ'),
                     ],
                   )),
             ],

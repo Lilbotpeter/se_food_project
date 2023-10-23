@@ -34,6 +34,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
   File? imageXFile;
   List<dynamic> followUser = [];
   List<dynamic> countFollows = [];
+  int countfollow = 0;
+  int countbookmark = 0;
 
   List<FoodModel> foodModels = []; //List Model Food
   final userid = FirebaseAuth.instance.currentUser!.uid;
@@ -82,6 +84,33 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 //       }
 //     });
 //   }
+  Future follow() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('followers')
+        .doc(getUserID)
+        .collection('followersID')
+        .get();
+    countfollow = querySnapshot.size;
+    // for (QueryDocumentSnapshot countFollow in querySnapshot.docs) {
+    //   countfollow = countFollow.id
+    // }
+  }
+
+  Future bookmark() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    QuerySnapshot querySnapshot = await firestore
+        .collection('bookmark')
+        .doc(getUserID)
+        .collection('bookmarkID')
+        .get();
+    countbookmark = querySnapshot.size;
+    // for (QueryDocumentSnapshot countFollow in querySnapshot.docs) {
+    //   countfollow = countFollow.id
+    // }
+  }
 
   Future<void> readFollowUser() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -168,6 +197,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
     //_getDataFromDatabase();
     _getUserFromDatabase();
     readData();
+    bookmark();
+    follow();
   }
 
   @override
@@ -515,13 +546,13 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                             indent: 10,
                             endIndent: 160,
                           ),
-                          StatusText(followUser.length, 'ผู้ติดตาม'),
+                          StatusText(countfollow, 'ผู้ติดตาม'),
                           const VerticalDivider(
                             thickness: 1,
                             indent: 10,
                             endIndent: 160,
                           ),
-                          StatusText(4, 'เรทติ้ง'),
+                          StatusText(countbookmark, 'อาหารที่ชอบ'),
                         ],
                       )),
                 ],
