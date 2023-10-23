@@ -316,7 +316,7 @@ class DeleteFoodService {
       for (QueryDocumentSnapshot idFood in querySnapshot.docs) {
         if (idFood['Food_id'] == docID) {
           try {
-            //await firestore.collection('Foods').doc(idFood.id).delete();
+            await firestore.collection('Foods').doc(idFood.id).delete();
 
             print('Delete ' + idFood.id + ' Success');
 
