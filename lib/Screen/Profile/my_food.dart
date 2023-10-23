@@ -113,7 +113,7 @@ class _MyFoodsState extends State<MyFoods> {
     return Text(
       foodModels[index].food_name,
       style: TextStyle(
-          color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          color: const Color.fromARGB(255, 0, 0, 0), fontSize: 14, fontWeight: FontWeight.bold),
       maxLines: 5,
       overflow: TextOverflow.fade,
     );
@@ -144,7 +144,7 @@ class _MyFoodsState extends State<MyFoods> {
                 return Padding(
                   padding: const EdgeInsets.only(left: 5.0),
                   child: Card(
-                    color: Colors.black,
+                    color: Color.fromARGB(255, 255, 242, 221),
                     child: Row(children: <Widget>[
                       Container(
                           width: MediaQuery.of(context).size.width * 0.5,

@@ -2,6 +2,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
@@ -67,48 +69,174 @@ class _detailTypefoodState extends State<detailTypefood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('ตอบกลับ35'),
+      backgroundColor: const Color.fromARGB(255, 233, 233, 233),
+      appBar:AppBar(
+              flexibleSpace: ClipPath(
+                child: Container(
+                  height: 500,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 255, 127, 8),
+                        Color.fromARGB(255, 255, 198, 55),
+                      ],
+                    ),
+                  ),
+                  child: const Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
       ),
       body: SafeArea(
-        child: Center(
-          child: Card(
+        child: Padding(
+          padding: const EdgeInsets.only(top : 8.0),
+          child: Center(
             child: ListView.builder(
               itemCount: FoodList.length,
               itemBuilder: (context, index) {
                 final FoodData = FoodList[index];
                 if (getfoodID.toString() == FoodData['Food_Type']) {
-                  return Column(
+                  return Stack(
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('ชื่อ : ${FoodData['Food_Name']}',
-                                  style: TextStyle(fontSize: 10), maxLines: 5),
-                              Text('ประเภท : ${FoodData['Food_Type']}',
-                                  style: TextStyle(fontSize: 10), maxLines: 5),
-                              Text('สัญชาติ : ${FoodData['Food_Nation']}',
-                                  style: TextStyle(fontSize: 10), maxLines: 5),
-                              TextButton(
-                                  onPressed: () {
-                                    print(FoodData['Food_id']);
-                                    Get.to(DetailFood(),
-                                        arguments: FoodData['Food_id'],
-                                        transition: Transition.rightToLeft);
-                                  },
-                                  child: Text('ดูข้อมูลอาหาร'))
-                            ],
+                      GestureDetector(
+                        onTap: (){
+                          Get.to(DetailFood(), arguments: FoodData['Food_id']);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(20, 5.0, 20.0, 5.0),
+                          height: 150.0,
+                          width: double.infinity,
+                          decoration: BoxDecoration(color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
                           ),
-                        ],
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(160, 20.0, 20.0, 20.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    
+                                    Container(
+                                      width: 80,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('${FoodData['Food_Name']}',
+                                                  style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 2,overflow: TextOverflow.fade,),
+                                          Text('${FoodData['Food_Type']}',
+                                                  style: TextStyle(fontSize: 14,color: Colors.black54), maxLines: 2,overflow: TextOverflow.fade,),
+                                        ],
+                                      ),
+                                    ),
+                                    
+                                    Column(
+                                      
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.star,color: Colors.yellow,),
+                                            Text('${FoodData['Food_Point']}',
+                                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 5),
+                                          ],
+                                        ),
+                                        SizedBox(height: 50,),
+                                        
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 70.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber,
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.access_time),
+                                          Text(
+                                            '${FoodData['Food_Time']}'
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],),
+                          ),
+                        ),
                       ),
-                      SizedBox(
-                        height: 80,
-                      ),
+        
+                    //   ClipRRect(
+                    //     borderRadius: BorderRadius.circular(20.0),
+                    //     // child: Image.network(
+                    //     //     FoodData['Food_Name'],fit: BoxFit.cover,width: 110.0,
+                    //     //   ),
+                    //     child: Text(FoodData['Food_Image']),
+                    //   ),
+                    Positioned(
+                      left: 20.0,
+                      top: 5,
+                      bottom: 5.0,
+                      child: GestureDetector(
+                        onTap: (){
+                          Get.to(DetailFood(), arguments: FoodData['Food_id']);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.network(FoodData['Food_Image'],fit: BoxFit.cover,width: 150,)),
+                      )),
                     ],
                   );
+                  // return Column(
+                  //   children: <Widget>[
+                  //     Card(
+                  //       color: Color.fromARGB(255, 255, 255, 255),
+                  //       shadowColor: Colors.grey,
+                        
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               Text('ชื่อ : ${FoodData['Food_Name']}',
+                  //                   style: TextStyle(fontSize: 10), maxLines: 5),
+                  //               Text('ประเภท : ${FoodData['Food_Type']}',
+                  //                   style: TextStyle(fontSize: 10), maxLines: 5),
+                  //               Text('สัญชาติ : ${FoodData['Food_Nation']}',
+                  //                   style: TextStyle(fontSize: 10), maxLines: 5),
+                  //               TextButton(
+                  //                   onPressed: () {
+                  //                     print(FoodData['Food_id']);
+                  //                     Get.to(DetailFood(),
+                  //                         arguments: FoodData['Food_id'],
+                  //                         transition: Transition.rightToLeft);
+                  //                   },
+                  //                   child: Text('ดูข้อมูลอาหาร'))
+                  //             ],
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       height: 5,
+                  //     ),
+                  //   ],
+                  // );
                 } else {
                   return Container(); // Return an empty widget for non-matching items.
                 }
