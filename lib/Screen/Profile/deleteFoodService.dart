@@ -317,6 +317,30 @@ class DeleteFoodService {
         if (idFood['Food_id'] == docID) {
           try {
             await firestore.collection('Foods').doc(idFood.id).delete();
+            FirebaseStorage storage = FirebaseStorage.instance;
+            FirebaseStorage storage2 = FirebaseStorage.instance;
+            ListResult result = await storage
+                .ref()
+                .child('files')
+                .child(idFood.id)
+                .child('Image')
+                .listAll();
+            ListResult result2 = await storage2
+                .ref()
+                .child('ReviewFood')
+                .child(idFood.id)
+                .child('Video')
+                .listAll();
+            for (Reference ref in result.items) {
+              // ลบแต่ละรูปภาพ
+              await ref.delete();
+              print('Deleteref ' + ref.name + ' Success');
+            }
+            for (Reference ref2 in result2.items) {
+              // ลบแต่ละรูปภาพ
+              await ref2.delete();
+              print('Deleteref2 ' + ref2.name + ' Success');
+            }
 
             print('Delete ' + idFood.id + ' Success');
 
