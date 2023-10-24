@@ -301,47 +301,6 @@ class _FeedPageState extends State<FeedPage> {
       '';
     }
   }
-  // Future<void> SortByDate() async {
-  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //   String food_id;
-  //   String food_name,
-  //       food_image,
-  //       food_video,
-  //       food_level,
-  //       food_ingredients,
-  //       food_solution,
-  //       food_type,
-  //       food_description,
-  //       food_time,
-  //       food_nation,
-  //       food_point,
-  //       user_id;
-  //   QuerySnapshot querySnapshot =
-  //       await firestore.collection('Foods').orderBy('Food_Point').get();
-
-  //   List<FoodModel> sortedFoodModels = [];
-
-  //   for (QueryDocumentSnapshot fooData in querySnapshot.docs) {
-  //     food_id = fooData['Food_id'];
-  //     food_name = fooData['Food_Name'];
-  //     food_image = fooData['Food_Image'];
-  //     // //
-  //     // food_video = fooData[''];
-  //     // food_level = fooData[''];
-  //     // food_ingredients = fooData[''];
-  //     // food_solution = fooData[''];
-  //     // food_description = fooData['Food_Description'];
-  //     // food_time = fooData[''];
-  //     // food_nation = fooData[''];
-  //     // food_point = fooData[''];
-  //     user_id = fooData['User_id'];
-  //   }
-
-  //   setState(() {
-  //     // แทนที่ foodModels ด้วย sortedFoodModels เพื่อสั่งให้รายการเรียงลำดับตามเวลา
-  //     SortfoodModels = sortedFoodModels;
-  //   });
-  // }
 
   Future<void> SortByDate() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -597,47 +556,48 @@ class _FeedPageState extends State<FeedPage> {
                     shrinkWrap: true,
                     itemCount: typefood.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        width: 100,
-                        margin: EdgeInsets.only(left: 15),
-                        padding: EdgeInsets.symmetric(vertical: 5),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          //   gradient: LinearGradient(
-                          // begin: Alignment.topCenter,
-                          // end: Alignment.bottomCenter,
-                          // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
-                          // stops: [0.1, 0.5, 0.9],
-                          //   ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset(
-                              imageTypefood[index],
-                              height: 50,
-                              width: 50,
-                            ),
-                            //Icon(Icons.food_bank),
-                            TextButton(
-                              onPressed: () {
-                                //print(typefood[index]);
-                                Get.to(detailTypefood(),
-                                    arguments: typefood[index]);
-                              },
-                              child: Text(
-                                typefood[index],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                softWrap: false,
-                                maxLines: 1,
+                      return GestureDetector(
+                        onTap: (){
+                          Get.to(detailTypefood(),
+                                      arguments: typefood[index]);
+                                
+                        },
+                        child: Container(
+                          width: 100,
+                          margin: EdgeInsets.only(left: 15),
+                          padding: EdgeInsets.symmetric(vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            //   gradient: LinearGradient(
+                            // begin: Alignment.topCenter,
+                            // end: Alignment.bottomCenter,
+                            // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
+                            // stops: [0.1, 0.5, 0.9],
+                            //   ),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                imageTypefood[index],
+                                height: 50,
+                                width: 50,
                               ),
-                            ),
-                            //Text(typefood[index]),
-                          ],
+                              //Icon(Icons.food_bank),
+                                Text(
+                                  typefood[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  softWrap: false,
+                                  maxLines: 1,
+                                ),
+                              
+                              //Text(typefood[index]),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -742,40 +702,39 @@ class _FeedPageState extends State<FeedPage> {
                 itemCount: nationfood.length,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext buildContext, int index) {
-                  return Container(
-                    width: 100,
-                    margin: EdgeInsets.only(left: 15),
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      //   gradient: LinearGradient(
-                      // begin: Alignment.topCenter,
-                      // end: Alignment.bottomCenter,
-                      // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
-                      // stops: [0.1, 0.5, 0.9],
-                      //   ),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Image.asset(
-                          imagenationfood[index],
-                          height: 80,
-                          width: 80,
-                        ),
-
-                        TextButton(
-                          onPressed: () {
-                            print('Yes I does');
-                            print(nationfood[index]);
-                            Get.to(detailNationfood(),
-                                arguments: nationfood[index]);
-                          },
-                          child: Text(nationfood[index]),
-                        ),
-                        //Text(typefood[index]),
-                      ],
+                  return GestureDetector(
+                    onTap: (){
+                      Get.to(detailNationfood(),
+                                  arguments: nationfood[index]);
+                    },
+                    child: Container(
+                      width: 100,
+                      margin: EdgeInsets.only(left: 15),
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white70,
+                        //   gradient: LinearGradient(
+                        // begin: Alignment.topCenter,
+                        // end: Alignment.bottomCenter,
+                        // colors: [Color.fromARGB(255, 255, 145, 0), Color.fromARGB(255, 255, 211, 123), Color.fromARGB(255, 255, 132, 16)],
+                        // stops: [0.1, 0.5, 0.9],
+                        //   ),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            imagenationfood[index],
+                            height: 80,
+                            width: 80,
+                          ),
+                  
+                          Text(nationfood[index]),
+                          
+                          //Text(typefood[index]),
+                        ],
+                      ),
                     ),
                   );
                 },

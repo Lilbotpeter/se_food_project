@@ -703,6 +703,10 @@ class _UploadFoodState extends State<UploadFood> {
                 icon: Icons.attach_file,
                 text: 'เลือกรูปภาพและวิดีโอ',
                 onClick: selectFile),
+              Padding(
+                padding: const EdgeInsets.only(left:20.0),
+                child: Text('**อัพโหลดรูปและวิดีโออย่างน้อย 1 ไฟล์',style: TextStyle(color: Colors.red),),
+              ),
 
             //Under filename for "Spacebar naja"
             const SizedBox(

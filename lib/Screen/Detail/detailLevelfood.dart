@@ -120,32 +120,41 @@ class _detailLevelfoodState extends State<detailLevelfood> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Container(
-                                      width: 80,
+                                      width: 150,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text('${FoodData['Food_Name']}',
+                                          
                                                   style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 2,overflow: TextOverflow.fade,),
-                                          Text('${FoodData['Food_Level']}',
+                                          Row(
+                                          children: <Widget>[
+                                            Icon(Icons.star,color: Colors.yellow,size: 15,),
+                                            Text('${FoodData['Food_Point']}',
+                                                    style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold), maxLines: 5),
+                                          ],
+                                        ),
+                                          Text('ความยาก ${FoodData['Food_Level']}',
                                                   style: TextStyle(fontSize: 14,color: Colors.black54), maxLines: 2,overflow: TextOverflow.fade,),
+                                          
                                         ],
                                       ),
                                     ),
 
-                                     Column(
+                                    //  Column(
                                       
-                                      children: [
-                                        Row(
-                                          children: <Widget>[
-                                            Icon(Icons.star,color: Colors.yellow,),
-                                            Text('${FoodData['Food_Point']}',
-                                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 5),
-                                          ],
-                                        ),
-                                        SizedBox(height: 50,),
+                                    //   children: [
+                                    //     Row(
+                                    //       children: <Widget>[
+                                    //         Icon(Icons.star,color: Colors.yellow,),
+                                    //         Text('${FoodData['Food_Point']}',
+                                    //                 style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 5),
+                                    //       ],
+                                    //     ),
+                                    //     SizedBox(height: 50,),
                                         
-                                      ],
-                                    ),
+                                    //   ],
+                                    // ),
                               
                               ],
                             ),
@@ -166,7 +175,7 @@ class _detailLevelfoodState extends State<detailLevelfood> {
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
-                          child: Image.network(FoodData['Food_Image'],fit: BoxFit.cover,width: 150,)),
+                          child: Image.network(FoodData['Food_Image'],fit: BoxFit.cover,width: 140,)),
                       )),
                     ],
                   );

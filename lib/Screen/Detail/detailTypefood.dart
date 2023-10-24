@@ -126,14 +126,22 @@ class _detailTypefoodState extends State<detailTypefood> {
                                   children: <Widget>[
                                     
                                     Container(
-                                      width: 80,
+                                      width: 150,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text('${FoodData['Food_Name']}',
                                                   style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 2,overflow: TextOverflow.fade,),
+                                          Row(
+                                          children: <Widget>[
+                                            Icon(Icons.star,color: Colors.yellow,size: 15,),
+                                            Text('${FoodData['Food_Point']}',
+                                                    style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold), maxLines: 5),
+                                          ],
+                                        ),
                                           Text('${FoodData['Food_Type']}',
                                                   style: TextStyle(fontSize: 14,color: Colors.black54), maxLines: 2,overflow: TextOverflow.fade,),
+                                          
                                         ],
                                       ),
                                     ),
@@ -141,13 +149,6 @@ class _detailTypefoodState extends State<detailTypefood> {
                                     Column(
                                       
                                       children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.star,color: Colors.yellow,),
-                                            Text('${FoodData['Food_Point']}',
-                                                    style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 5),
-                                          ],
-                                        ),
                                         SizedBox(height: 50,),
                                         
                                       ],

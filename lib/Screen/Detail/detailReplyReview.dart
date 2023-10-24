@@ -133,31 +133,31 @@ body: SafeArea(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FutureBuilder<String>(
-                  future: getprofile(replyReviewData['Uid']),
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      String userName = snapshot.data ?? 'ไม่พบชื่อ';
-                      return InkWell(
-                        onTap: () {
-                          Get.to(UserLinkProfile(), arguments: replyReviewData['Uid']);
-                        },
-                        // child: SizedBox(
-                        //   height: 50,
-                        //   width: 50,
-                        //   child: ProfilePicture(
-                        //     imageXFile: imageXFile,
-                        //     image: userName,
-                        //   ),
-                        // ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  },
-                ),
+                // FutureBuilder<String>(
+                //   future: getprofile(replyReviewData['Uid']),
+                //   builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                //     if (snapshot.connectionState == ConnectionState.done) {
+                //       String userName = snapshot.data ?? 'ไม่พบชื่อ';
+                //       return InkWell(
+                //         onTap: () {
+                //           Get.to(UserLinkProfile(), arguments: replyReviewData['Uid']);
+                //         },
+                //         child: SizedBox(
+                //           height: 50,
+                //           width: 50,
+                //           child: ProfilePicture(
+                //             imageXFile: imageXFile,
+                //             image: userName,
+                //           ),
+                //         ),
+                //       );
+                //     } else if (snapshot.hasError) {
+                //       return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
+                //     } else {
+                //       return CircularProgressIndicator();
+                //     }
+                //   },
+                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -187,7 +187,7 @@ body: SafeArea(
                       padding: const EdgeInsets.only(left: 5, bottom: 5),
                       child: Text(
                         ' ${replyReviewData['Comment']}',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 18),
                         maxLines: 5,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
+import '../../service.dart';
+import '../Profile/user_link_profile.dart';
 
 class ReplyCommentFood extends StatefulWidget {
   const ReplyCommentFood({super.key});
@@ -15,12 +17,19 @@ class ReplyCommentFood extends StatefulWidget {
 
 class _ReplyCommentFoodState extends State<ReplyCommentFood> {
   List<dynamic> FoodReplyCommentList = [];
+  DataService dataService = DataService();
   final String getfoodID = Get.arguments as String;
 
   @override
   void initState() {
     super.initState();
     fetchReplyCommentData();
+  }
+
+    Future<String> getname(userid)async{
+    Map<String, dynamic> userData = await dataService.getUser(userid);
+    String udata = userData['Name'];
+    return udata;
   }
 
   Future<void> fetchReplyCommentData() async {
@@ -115,24 +124,46 @@ class _ReplyCommentFoodState extends State<ReplyCommentFood> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      FutureBuilder<String>(
+                      future: getname(replyCommentData['Uid']),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          String userName = snapshot.data ?? 'ไม่พบชื่อ';
+                          return InkWell(
+                            onTap: () {
+                              Get.to(UserLinkProfile(), arguments: replyCommentData['Uid']);
+                            },
+                            child: Text(
+                              userName,
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              maxLines: 5,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('เกิดข้อผิดพลาดในการดึงข้อมูล');
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
                       Padding(
                         padding: const EdgeInsets.only(left: 5, bottom: 5),
                         child: Text(
-                          'คอมเม้นต์ : ${replyCommentData['Comment']}',
-                          style: TextStyle(fontSize: 20),
+                          '${replyCommentData['Comment']}',
+                          style: TextStyle(fontSize: 18),
                           maxLines: 5,
                         ),
                       ),
-                      Text(
-                        'ไอดีรีไพ : ${replyCommentData['ID_ReplyComment']}',
-                        style: TextStyle(fontSize: 10),
-                        maxLines: 5,
-                      ),
-                      Text(
-                        'ไอดีผู้ใช้ : ${replyCommentData['Uid']}',
-                        style: TextStyle(fontSize: 10),
-                        maxLines: 5,
-                      ),
+                      // Text(
+                      //   'ไอดีรีไพ : ${replyCommentData['ID_ReplyComment']}',
+                      //   style: TextStyle(fontSize: 10),
+                      //   maxLines: 5,
+                      // ),
+                      // Text(
+                      //   'ไอดีผู้ใช้ : ${replyCommentData['Uid']}',
+                      //   style: TextStyle(fontSize: 10),
+                      //   maxLines: 5,
+                      // ),
                     ],
                   ),
                 );
