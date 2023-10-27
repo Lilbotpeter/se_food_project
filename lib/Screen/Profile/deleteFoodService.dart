@@ -358,6 +358,37 @@ class DeleteFoodService {
     }
   }
 
+  Future DeleteFollowData(String docID) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      QuerySnapshot querySnapshot = await firestore.collection('users').get();
+      for (QueryDocumentSnapshot idUser in querySnapshot.docs) {
+        QuerySnapshot querySnapshot2 = await firestore
+            .collection('followers')
+            .doc(idUser.id)
+            .collection('followersID')
+            .get();
+        for (QueryDocumentSnapshot idfollow in querySnapshot2.docs) {
+          print(idfollow.id);
+        }
+        // try {
+        //   await firestore.collection('Foods').doc(idUser.id).delete();
+        //   print('Delete ' + idUser.id + ' Success');
+
+        //   print(
+        //       'ลบข้อมูลเรียบร้อย'); // คุณสามารถแสดงข้อความนี้เพื่อแจ้งให้ทราบว่าข้อมูลถูกลบเรียบร้อย
+        // } catch (e) {
+        //   print('เกิดข้อผิดพลาดในการลบข้อมูล: $e');
+        // }
+      }
+      return;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
 // //--------------------------------------------
 //   Future DeleteReviewData(String docID) async {
 //     String IdFood;

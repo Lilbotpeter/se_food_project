@@ -45,6 +45,14 @@ class _UploadFoodState extends State<UploadFood> {
       food_time = '',
       food_nation = '',
       food_point = '';
+  String uploadStatus = '';
+  bool uploading = false;
+  // อัปเดตสถานะการอัปโหลด
+  void updateUploadStatus(String status) {
+    setState(() {
+      uploadStatus = status;
+    });
+  }
 
   //Current UID
   Widget _userUID() {
@@ -86,10 +94,16 @@ class _UploadFoodState extends State<UploadFood> {
   }
 
   Future<void> uploadFile() async {
+    setState(() {
+      uploading = true; // เริ่มแสดงหลอดการอัปโหลด
+    });
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference foodDocRef = firestore.collection("Foods").doc();
 
     if (files.isEmpty) {
+      setState(() {
+        uploading = false; // หยุดแสดงหลอดการอัปโหลด
+      });
       print("No files selected");
       Get.snackbar('โปรดอัปทั้งรูปภาพและวิดิโอ',
           'อัปโหลดไม่สำเร็จ ต้องอัปทั้งรูปภาพและวิดิโอ');
@@ -150,15 +164,30 @@ class _UploadFoodState extends State<UploadFood> {
         await foodDocRef.set(dataMap);
         files.clear();
         dataMap.clear();
+        setState(() {
+          uploading = false; // หยุดแสดงหลอดการอัปโหลด
+        });
+        Get.snackbar('ข้อมูลการอัปโหลด', 'อัปโหลดสำเร็จ');
         print("Upload complete");
+        Navigator.of(context as BuildContext).pushReplacement(
+          MaterialPageRoute(builder: (context) => UploadFood()),
+        );
       } else {
         print('ต้องอัปทั้งรูปภาพและวิดิโอ');
+        setState(() {
+          uploading = false; // หยุดแสดงหลอดการอัปโหลด
+        });
+        updateUploadStatus('เกิดข้อผิดพลาดในการอัปโหลด');
         Get.snackbar('โปรดอัปทั้งรูปภาพและวิดิโอ',
             'อัปโหลดไม่สำเร็จ ต้องอัปทั้งรูปภาพและวิดิโอ');
         files.clear();
         dataMap.clear();
       }
     } catch (e) {
+      setState(() {
+        uploading = false; // หยุดแสดงหลอดการอัปโหลด
+      });
+      updateUploadStatus('เกิดข้อผิดพลาดในการอัปโหลด');
       print("Error: $e");
     }
   }
@@ -302,143 +331,143 @@ class _UploadFoodState extends State<UploadFood> {
     return Container(
       width: 400,
       child: DropdownButtonFormField<String>(
-        value: foodtype,
-        onChanged: (value) {
-          //setState(() {
-          foodtype = value.toString();
-          food_type = foodtype;
-          //});
-        },
-        decoration: InputDecoration(
-          labelText: 'ประเภทอาหาร',
-          hintText: 'กรุณาเลือกประเภทอาหาร',
-          //icon: Icon(Icons.point_of_sale),
-          border:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          enabledBorder:
-              OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
-          isDense: true, // Added this
-          contentPadding: EdgeInsets.all(8),
-        ),
-        items: const <DropdownMenuItem<String>>[
-          DropdownMenuItem<String>(
-            value: 'ไม่มี',
-            child: Text('ไม่มี'),
+          value: foodtype,
+          onChanged: (value) {
+            //setState(() {
+            foodtype = value.toString();
+            food_type = foodtype;
+            //});
+          },
+          decoration: InputDecoration(
+            labelText: 'ประเภทอาหาร',
+            hintText: 'กรุณาเลือกประเภทอาหาร',
+            //icon: Icon(Icons.point_of_sale),
+            border: OutlineInputBorder(
+                borderSide: Divider.createBorderSide(context)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: Divider.createBorderSide(context)),
+            enabledBorder: OutlineInputBorder(
+                borderSide: Divider.createBorderSide(context)),
+            filled: true,
+            isDense: true, // Added this
+            contentPadding: EdgeInsets.all(8),
           ),
-          DropdownMenuItem<String>(
-            value: 'อาหารอีสาน',
-            child: Text('อาหารอีสาน'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารใต้',
-            child: Text('อาหารใต้'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารเหนือ',
-            child: Text('อาหารเหนือ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารเส้น',
-            child: Text('อาหารเส้น'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารสุขภาพ',
-            child: Text('อาหารสุขภาพ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารตามสั่ง',
-            child: Text('อาหารตามสั่ง'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารทะเล',
-            child: Text('อาหารทะเล'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ของทอด',
-            child: Text('ของทอด'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ชา/กาแฟ',
-            child: Text('ชา/กาแฟ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ชาบู/สุกี้',
-            child: Text('ชาบู/สุกี้'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ชานมไข่มุก',
-            child: Text('ชานมไข่มุก'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ซูชิ',
-            child: Text('ซูชิ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ของหวาน',
-            child: Text('ของหวาน'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ฟาสต์ฟู้ด',
-            child: Text('ฟาสต์ฟู้ด'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'หม่าล่า',
-            child: Text('หม่าล่า'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารจานด่วน',
-            child: Text('อาหารจานด่วน'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'โจ๊ก',
-            child: Text('โจ๊ก'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'โยเกิร์ต/ไอศกรีม',
-            child: Text('โยเกิร์ต/ไอศกรีม'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ปิ้งย่าง/บาร์บีคิว',
-            child: Text('ปิ้งย่าง/บาร์บีคิว'),
-            //--------------------------------
-          ),
-          DropdownMenuItem<String>(
-            value: 'เครื่องดื่ม/น้ำผลไม้',
-            child: Text('เครื่องดื่ม/น้ำผลไม้'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อาหารเจ',
-            child: Text('อาหารเจ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'โรตี',
-            child: Text('โรตี'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'สเต็ก',
-            child: Text('สเต็ก'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ของทานเล่น/ขนมขบเขี้ยว',
-            child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ติ่มซำ',
-            child: Text('ติ่มซำ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'ยำ',
-            child: Text('ยำ'),
-          ),
-          DropdownMenuItem<String>(
-            value: 'อื่นๆ',
-            child: Text('อื่นๆ'),
-          ),
-        ],
-      ),
+          items: const <DropdownMenuItem<String>>[
+            DropdownMenuItem<String>(
+              value: 'ไม่มี',
+              child: Text('ไม่มี'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารอีสาน',
+              child: Text('อาหารอีสาน'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารใต้',
+              child: Text('อาหารใต้'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารเหนือ',
+              child: Text('อาหารเหนือ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารเส้น',
+              child: Text('อาหารเส้น'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารสุขภาพ',
+              child: Text('อาหารสุขภาพ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารตามสั่ง',
+              child: Text('อาหารตามสั่ง'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารทะเล',
+              child: Text('อาหารทะเล'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ของทอด',
+              child: Text('ของทอด'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ชา/กาแฟ',
+              child: Text('ชา/กาแฟ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ชาบู/สุกี้',
+              child: Text('ชาบู/สุกี้'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ชานมไข่มุก',
+              child: Text('ชานมไข่มุก'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ซูชิ',
+              child: Text('ซูชิ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ของหวาน',
+              child: Text('ของหวาน'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ฟาสต์ฟู้ด',
+              child: Text('ฟาสต์ฟู้ด'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'หม่าล่า',
+              child: Text('หม่าล่า'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารจานด่วน',
+              child: Text('อาหารจานด่วน'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'โจ๊ก',
+              child: Text('โจ๊ก'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'โยเกิร์ต/ไอศกรีม',
+              child: Text('โยเกิร์ต/ไอศกรีม'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ปิ้งย่าง/บาร์บีคิว',
+              child: Text('ปิ้งย่าง/บาร์บีคิว'),
+              //--------------------------------
+            ),
+            DropdownMenuItem<String>(
+              value: 'เครื่องดื่ม/น้ำผลไม้',
+              child: Text('เครื่องดื่ม/น้ำผลไม้'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อาหารเจ',
+              child: Text('อาหารเจ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'โรตี',
+              child: Text('โรตี'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'สเต็ก',
+              child: Text('สเต็ก'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ของทานเล่น/ขนมขบเขี้ยว',
+              child: Text('ของทานเล่น/ขนมขบเขี้ยว'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ติ่มซำ',
+              child: Text('ติ่มซำ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'ยำ',
+              child: Text('ยำ'),
+            ),
+            DropdownMenuItem<String>(
+              value: 'อื่นๆ',
+              child: Text('อื่นๆ'),
+            ),
+          ].toList()
+            ..sort((a, b) => a.child.toString().compareTo(b.child.toString()))),
     );
   }
 
@@ -477,8 +506,8 @@ class _UploadFoodState extends State<UploadFood> {
           food_time = value.trim();
         },
         decoration: InputDecoration(
-          labelText: 'เวลาในการทำ',
-          hintText: 'กรุณากรอกเวลาในการทำ',
+          labelText: 'เวลาในการทำ(หน่วยเป็นนาที)',
+          hintText: 'กรุณากรอกเวลาในการทำ(หน่วยเป็นนาที)',
           // icon: Icon(Icons.description),
           border:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
@@ -569,7 +598,8 @@ class _UploadFoodState extends State<UploadFood> {
           value: 'อื่นๆ',
           child: Text('อื่นๆ'),
         ),
-      ],
+      ].toList()
+        ..sort((a, b) => a.child.toString().compareTo(b.child.toString())),
     );
   }
 
@@ -653,11 +683,11 @@ class _UploadFoodState extends State<UploadFood> {
         ? basename(file!.path)
         : 'ยังไม่มีไฟล์ที่เลือก!'; //set basename
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Upload Food'),
-      //   centerTitle: true,
-      //   ),
-
+      appBar: AppBar(
+        title: Text('หน้าอัปโหลดข้อมูลอาหาร'),
+        centerTitle: true,
+        backgroundColor: Colors.orangeAccent,
+      ),
       body: Container(
         padding: EdgeInsets.all(32),
         child: Container(
@@ -703,10 +733,13 @@ class _UploadFoodState extends State<UploadFood> {
                 icon: Icons.attach_file,
                 text: 'เลือกรูปภาพและวิดีโอ',
                 onClick: selectFile),
-              Padding(
-                padding: const EdgeInsets.only(left:20.0),
-                child: Text('**อัพโหลดรูปและวิดีโออย่างน้อย 1 ไฟล์',style: TextStyle(color: Colors.red),),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text(
+                '**อัพโหลดรูปและวิดีโออย่างน้อย 1 ไฟล์',
+                style: TextStyle(color: Colors.red),
               ),
+            ),
 
             //Under filename for "Spacebar naja"
             const SizedBox(
@@ -721,7 +754,12 @@ class _UploadFoodState extends State<UploadFood> {
             //     icon: Icons.upload_file_sharp,
             //     text: 'อัพโหลดสูตร',
             //     onClick: uploadFile),
+            // แสดงสถานะการอัปโหลด
+            Text(uploadStatus),
 
+            // แสดง ProgressBar สำหรับการอัปโหลด
+            if (uploading)
+              LinearProgressIndicator(), // if (uploading) CircularProgressIndicator(),
             FloatingActionButton(
               onPressed: uploadFile,
               child: Icon(
