@@ -87,7 +87,8 @@ class _UserReportState extends State<UserReport> {
       ),
       body: SafeArea(
         child: Center(
-          child: Card(
+          child: Container(
+            padding: EdgeInsets.all(8),
             child: ListView.builder(
               itemCount: UserReportList.length,
               // FoodReportList.length, // Replace with the actual data length
@@ -95,217 +96,243 @@ class _UserReportState extends State<UserReport> {
                 final reportUserData = UserReportList[index];
                 //final reportfoodData = FoodReportList[index];
 
-                return Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                return Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                  color: Color.fromARGB(255, 255, 247, 247),
+                  // boxShadow: [
+                  //       BoxShadow(
+                          
+                  //         blurRadius: 50,
+                          
+                  //         offset: Offset(
+                  //           5,
+                  //           10,
+                  //         ),
+                          
+                  //         ),
+                  // ],
+                  border: Border.all(color: Colors.black,width: 2)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          
                           children: [
-                            Text(
-                                'ไอดีผู้ใช้ที่ถูกรายงาน : ${reportUserData['ID_User']}',
-                                style: TextStyle(fontSize: 10),
-                                maxLines: 5),
-                            Text('หัวข้อรายงาน : ${reportUserData['Report']}',
-                                style: TextStyle(fontSize: 10), maxLines: 5),
-                            Text('รายละเอียด : ${reportUserData['Detail']}',
-                                style: TextStyle(fontSize: 10), maxLines: 5),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              
+                              children: [
+                                // Text(
+                                //     'ไอดีผู้ใช้ที่ถูกรายงาน : ${reportUserData['ID_User']}',
+                                //     style: TextStyle(fontSize: 10),
+                                //     maxLines: 5),
+                                Text('หัวข้อรายงาน : ${reportUserData['Report']}',
+                                    style: TextStyle(fontSize: 16), maxLines: 5,overflow: TextOverflow.fade,),
+                                Text('รายละเอียด : ${reportUserData['Detail']}',
+                                    style: TextStyle(fontSize: 16), maxLines: 5,overflow: TextOverflow.fade,),
+                              ],
+                            ),
                           ],
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.redAccent,
-                            textStyle: TextStyle(
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
+                        Column(   
+                          children: [
+                            SizedBox(height: 50,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: const Color.fromARGB(255, 0, 0, 0),
+                                    textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    print('ID_User = ');
+                                    print(reportUserData['ID_User']);
+                                    Get.to(UserLinkProfile(),
+                                        arguments: reportUserData['ID_User']);
+                                  },
+                                  child: Text('ดูข้อมูลผู้ใช้',style: TextStyle(color: Colors.white),),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.redAccent,
+                                    textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    // แสดงไดอล็อกยืนยันการลบผู้ใช้
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('ยืนยันการลบผู้ใช้'),
+                                          content: Text(
+                                              'คุณแน่ใจหรือไม่ที่ต้องการลบผู้ใช้นี้?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Get.snackbar('ลบข้อมูลผู้ใช้',
+                                                    'ลบข้อมูลผู้ใช้ไม่สำเร็จ');
+                                              },
+                                              child: Text('ยกเลิก'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                print(reportUserData['ID_Report']);
+                                                final docker = FirebaseFirestore
+                                                    .instance
+                                                    .collection('UserReport')
+                                                    .doc(reportUserData['ID_Report']);
+                                      
+                                                try {
+                                                  await docker.delete();
+                                                  Navigator.of(context)
+                                                      .pop(); // ปิดไดอล็อกหลังจากลบเสร็จ
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content:
+                                                          Text('ลบข้อมูลเรียบร้อยแล้ว'),
+                                                    ),
+                                                  );
+                                                  Navigator.of(context).pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UserReport(),
+                                                    ),
+                                                  );
+                                                  setState(() {
+                                                    reportUserData.removeAt(index);
+                                                  });
+                                                } catch (e) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          'เกิดข้อผิดพลาดในการลบข้อมูล'),
+                                                    ),
+                                                  );
+                                                }
+                                                final deleteUserdata = EditService();
+                                                deleteUserdata.DeleteReplyMod(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteReplyReview(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteReplyCommentData(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteCommentData(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteModData(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteReviewData(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteFood(
+                                                    reportUserData['ID_User']);
+                                                deleteUserdata.DeleteUser(
+                                                    reportUserData['ID_User']);
+                                      
+                                                Navigator.of(context).pop();
+                                                Get.snackbar('ลบข้อมูลผู้ใช้',
+                                                    'ลบข้อมูลผู้ใช้สำเร็จ');
+                                                signOut();
+                                              },
+                                              child: Text('ยืนยันการลบ'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text('ลบข้อมูลผู้ใช้',style: TextStyle(color: Colors.white),),
+                                ),
+                              ],
                             ),
-                          ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('ยืนยันการลบข้อมูล'),
-                                  content: Text(
-                                      'คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลนี้?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // ปิดไดอล็อก
-                                      },
-                                      child: Text('ยกเลิก'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        print(reportUserData['ID_Report']);
-                                        final docker = FirebaseFirestore
-                                            .instance
-                                            .collection('UserReport')
-                                            .doc(reportUserData['ID_Report']);
-
-                                        try {
-                                          await docker.delete();
-                                          Navigator.of(context)
-                                              .pop(); // ปิดไดอล็อกหลังจากลบเสร็จ
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content:
-                                                  Text('ลบข้อมูลเรียบร้อยแล้ว'),
-                                            ),
-                                          );
-                                          Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UserReport(),
-                                            ),
-                                          );
-                                          setState(() {
-                                            reportUserData.removeAt(index);
-                                          });
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'เกิดข้อผิดพลาดในการลบข้อมูล'),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Text('ยืนยันการลบ'),
-                                    ),
-                                  ],
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.redAccent,
+                                textStyle: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('ยืนยันการลบข้อมูล'),
+                                      content: Text(
+                                          'คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลนี้?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // ปิดไดอล็อก
+                                          },
+                                          child: Text('ยกเลิก'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            print(reportUserData['ID_Report']);
+                                            final docker = FirebaseFirestore
+                                                .instance
+                                                .collection('UserReport')
+                                                .doc(reportUserData['ID_Report']);
+                                  
+                                            try {
+                                              await docker.delete();
+                                              Navigator.of(context)
+                                                  .pop(); // ปิดไดอล็อกหลังจากลบเสร็จ
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content:
+                                                      Text('ลบข้อมูลเรียบร้อยแล้ว'),
+                                                ),
+                                              );
+                                              Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserReport(),
+                                                ),
+                                              );
+                                              setState(() {
+                                                reportUserData.removeAt(index);
+                                              });
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                      'เกิดข้อผิดพลาดในการลบข้อมูล'),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          child: Text('ยืนยันการลบ'),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
-                          child: Text('ลบข้อมูลรายงาน'),
+                              child: Text('ลบรายงาน',style: TextStyle(color: Colors.white,fontSize: 16),),
+                            ),
+                          ],
                         ),
+                        
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blueAccent,
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () async {
-                            print('ID_User = ');
-                            print(reportUserData['ID_User']);
-                            Get.to(UserLinkProfile(),
-                                arguments: reportUserData['ID_User']);
-                          },
-                          child: Text('ดูข้อมูลผู้ใช้'),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.redAccent,
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () async {
-                            // แสดงไดอล็อกยืนยันการลบผู้ใช้
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('ยืนยันการลบผู้ใช้'),
-                                  content: Text(
-                                      'คุณแน่ใจหรือไม่ที่ต้องการลบผู้ใช้นี้?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        Get.snackbar('ลบข้อมูลผู้ใช้',
-                                            'ลบข้อมูลผู้ใช้ไม่สำเร็จ');
-                                      },
-                                      child: Text('ยกเลิก'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        print(reportUserData['ID_Report']);
-                                        final docker = FirebaseFirestore
-                                            .instance
-                                            .collection('UserReport')
-                                            .doc(reportUserData['ID_Report']);
-
-                                        try {
-                                          await docker.delete();
-                                          Navigator.of(context)
-                                              .pop(); // ปิดไดอล็อกหลังจากลบเสร็จ
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content:
-                                                  Text('ลบข้อมูลเรียบร้อยแล้ว'),
-                                            ),
-                                          );
-                                          Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UserReport(),
-                                            ),
-                                          );
-                                          setState(() {
-                                            reportUserData.removeAt(index);
-                                          });
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'เกิดข้อผิดพลาดในการลบข้อมูล'),
-                                            ),
-                                          );
-                                        }
-                                        final deleteUserdata = EditService();
-                                        deleteUserdata.DeleteReplyMod(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteReplyReview(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteReplyCommentData(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteCommentData(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteModData(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteReviewData(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteFood(
-                                            reportUserData['ID_User']);
-                                        deleteUserdata.DeleteUser(
-                                            reportUserData['ID_User']);
-
-                                        Navigator.of(context).pop();
-                                        Get.snackbar('ลบข้อมูลผู้ใช้',
-                                            'ลบข้อมูลผู้ใช้สำเร็จ');
-                                        signOut();
-                                      },
-                                      child: Text('ยืนยันการลบ'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Text('ลบข้อมูลผู้ใช้'),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 80,
-                    ),
-                  ],
+                  ),
                 );
               },
             ),

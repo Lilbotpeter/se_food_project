@@ -155,27 +155,27 @@ class _detailTypefoodState extends State<detailTypefood> {
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                      width: 70.0,
-                                      decoration: BoxDecoration(
-                                        color: Colors.amber,
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.access_time),
-                                          Text(
-                                            '${FoodData['Food_Time']}'
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   children: <Widget>[
+                                //     Container(
+                                //       width: 70.0,
+                                //       decoration: BoxDecoration(
+                                //         color: Colors.amber,
+                                //         borderRadius: BorderRadius.circular(10.0),
+                                //       ),
+                                //       alignment: Alignment.center,
+                                //       child: Row(
+                                //         mainAxisAlignment: MainAxisAlignment.center,
+                                //         children: [
+                                //           Icon(Icons.access_time),
+                                //           Text(
+                                //             '${FoodData['Food_Time']}'
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],),
                           ),
                         ),

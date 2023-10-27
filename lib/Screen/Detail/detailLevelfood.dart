@@ -120,7 +120,7 @@ class _detailLevelfoodState extends State<detailLevelfood> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Container(
-                                      width: 150,
+                                      width: 100,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [

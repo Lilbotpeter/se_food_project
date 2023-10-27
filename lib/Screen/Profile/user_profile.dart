@@ -92,11 +92,18 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
+  AuthenticationController auth = AuthenticationController.instanceAuth;
+void signOut() async {
+  await FirebaseAuth.instance.signOut();
+  auth.signOut();
+}
+
+
   Future<void> logout() async {
     Get.snackbar('Logout', 'Logged out');
-
-    await clearData();
-    await readData();
+    signOut();
+    // await clearData();
+    // await readData();
   }
 
   @override
@@ -200,14 +207,38 @@ class _UserProfileState extends State<UserProfile> {
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                email ?? '',
-                style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black45),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    email ?? '',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black45),
+                  ),
+                  SizedBox(
+                    height: 25,
+                    child: const VerticalDivider(
+                          thickness: 1,
+                          indent: 5,
+                          endIndent: 5,
+                        ),
+                  ),
+                  
+                  Icon(Icons.phone,size: 20,color: Colors.black38,),
+                  SizedBox(width: 5,),
+                   Text(
+                    phone ?? '',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black45),
+                  ),
+                ],
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -241,7 +272,7 @@ class _UserProfileState extends State<UserProfile> {
                           elevation: 2,
                           backgroundColor: Colors.redAccent,
                           onPressed: () {
-                            logout();
+                            signOut();
                             AuthenticationController().signOut();
                           },
                           child: const Icon(
@@ -278,16 +309,15 @@ class _UserProfileState extends State<UserProfile> {
                         endIndent: 160,
                       ),
                       StatusText(4, 'อาหารที่ชอบ'),
+                      
                     ],
                   )),
+                  
             ],
           ),
         ),
-        const Divider(
-          height: 665,
-          thickness: 2,
-          color: Colors.black12,
-        ),
+        
+       
         Positioned(
           top: 335,
           right: 10,

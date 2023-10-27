@@ -59,246 +59,262 @@ class _FoodReportReportState extends State<FoodReport> {
       ),
       body: SafeArea(
         child: Center(
-          child: Card(
-            child: ListView.builder(
-              itemCount:
-                  FoodReportList.length, // Replace with the actual data length
-              itemBuilder: (context, index) {
-                // Replace yourFirestoreData[index] with the actual data structure
-                final reportData = FoodReportList[index];
-
-                return Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'ไอดีอาหารที่ถูกรายงาน : ${reportData['ID_Food']}',
-                                style: TextStyle(fontSize: 10),
-                                maxLines: 5),
-                            Text('หัวข้อรายงาน : ${reportData['Report']}',
-                                style: TextStyle(fontSize: 10), maxLines: 5),
-                            Text('รายละเอียด : ${reportData['Detail']}',
-                                style: TextStyle(fontSize: 10), maxLines: 5),
-                          ],
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.redAccent,
-                            textStyle: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('ยืนยันการลบข้อมูล'),
-                                  content: Text(
-                                      'คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลนี้?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // ปิดไดอล็อก
-                                      },
-                                      child: Text('ยกเลิก'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        print(reportData['ID_Report']);
-                                        final docker = FirebaseFirestore
-                                            .instance
-                                            .collection('FoodReport')
-                                            .doc(reportData['ID_Report']);
-
-                                        try {
-                                          await docker.delete();
-                                          Navigator.of(context)
-                                              .pop(); // ปิดไดอล็อกหลังจากลบเสร็จ
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content:
-                                                  Text('ลบข้อมูลเรียบร้อยแล้ว'),
-                                            ),
-                                          );
-                                          Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  FoodReport(),
-                                            ),
-                                          );
-                                          setState(() {
-                                            reportData.removeAt(index);
-                                          });
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'เกิดข้อผิดพลาดในการลบข้อมูล'),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Text('ยืนยันการลบ'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          child: Text('ลบข้อมูลรายงาน'),
-                        ),
-                      ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: ListView.builder(
+                itemCount:
+                    FoodReportList.length, // Replace with the actual data length
+                itemBuilder: (context, index) {
+                  // Replace yourFirestoreData[index] with the actual data structure
+                  final reportData = FoodReportList[index];
+          
+                  return Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                    color: Color.fromARGB(255, 255, 247, 247),
+                                      border: Border.all(color: Colors.black,width: 2)
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blueAccent,
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Text(
+                                  //     'ไอดีอาหารที่ถูกรายงาน : ${reportData['ID_Food']}',
+                                  //     style: TextStyle(fontSize: 10),
+                                  //     maxLines: 5),
+                                  Text('หัวข้อรายงาน : ${reportData['Report']}',
+                                      style: TextStyle(fontSize: 16), maxLines: 5,overflow: TextOverflow.fade,),
+                                  Text('รายละเอียด : ${reportData['Detail']}',
+                                      style: TextStyle(fontSize: 16), maxLines: 5,overflow: TextOverflow.fade,),
+                                ],
+                              ),
+                              
+                            ],
                           ),
-                          onPressed: () async {
-                            Get.to(DetailFood(),
-                                arguments: reportData['ID_Food'],
-                                transition: Transition.rightToLeft);
-                          },
-                          child: Text('ดูข้อมูลอาหาร'),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.redAccent,
-                            textStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Column(
+                            children: [
+                              SizedBox(height: 50,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: const Color.fromARGB(255, 0, 0, 0),
+                                      textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Get.to(DetailFood(),
+                                          arguments: reportData['ID_Food'],
+                                          transition: Transition.rightToLeft);
+                                    },
+                                    child: Text('ดูข้อมูลอาหาร',style: TextStyle(color: Colors.white),),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.redAccent,
+                                      textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text("ยืนยันการลบข้อมูล"),
+                                            content: Text(
+                                                "คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลนี้?"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // ปิดไดอลอก
+                                                },
+                                                child: Text("ยกเลิก"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  print(reportData['ID_Report']);
+                                                  final docker = FirebaseFirestore
+                                                      .instance
+                                                      .collection('FoodReport')
+                                                      .doc(reportData['ID_Report']);
+                                        
+                                                  try {
+                                                    await docker.delete();
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                              'ลบข้อมูลเรียบร้อยแล้ว')),
+                                                    );
+                                                    Navigator.of(context).pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                FoodReport()));
+                                                    setState(() {
+                                                      reportData.removeAt(index);
+                                                    });
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                              'เกิดข้อผิดพลาดในการลบข้อมูล')),
+                                                    );
+                                                  }
+                                                  final deleteFood = DeleteFoodService();
+                                                  // //
+                                                  deleteFood.DeleteFoodReplyCommentData(
+                                                      reportData['ID_Food'].toString());
+                                                  //
+                                                  deleteFood.DeleteFoodReplyModData(
+                                                      reportData['ID_Food'].toString());
+                                                  //
+                                                  deleteFood.DeleteFoodReplyReviewData(
+                                                      reportData['ID_Food'].toString());
+                                                  //
+                                                  deleteFood.DeleteFoodCommentData(
+                                                      reportData['ID_Food'].toString());
+                                                  //
+                                                  deleteFood.DeleteFoodModData(
+                                                      reportData['ID_Food'].toString());
+                                                  //
+                                                  deleteFood.DeleteFoodReviewData(
+                                                      reportData['ID_Food'].toString());
+                                                  //
+                                                  deleteFood.DeleteFoodData(
+                                                      reportData['ID_Food'].toString());
+                                        
+                                                  Navigator.of(context)
+                                                      .pop(); // ปิดไดอลอก
+                                                  print(reportData['ID_Food'].toString());
+                                                },
+                                                child: Text("ยืนยัน"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      // final deleteFood = DeleteFoodService();
+                                      // //
+                                      // deleteFood.DeleteFoodReplyCommentData(
+                                      //     reportData['ID_Food'].toString());
+                                      // //
+                                      // deleteFood.DeleteFoodReplyModData(
+                                      //     reportData['ID_Food'].toString());
+                                      // //
+                                      // deleteFood.DeleteFoodReplyReviewData(
+                                      //     reportData['ID_Food'].toString());
+                                      // //
+                                      // deleteFood.DeleteFoodCommentData(
+                                      //     reportData['ID_Food'].toString());
+                                      // //
+                                      // deleteFood.DeleteFoodModData(
+                                      //     reportData['ID_Food'].toString());
+                                      // //
+                                      // deleteFood.DeleteFoodReviewData(
+                                      //     reportData['ID_Food'].toString());
+                                      // //
+                                      // deleteFood.DeleteFoodData(
+                                      //     reportData['ID_Food'].toString());
+                                        
+                                      // Navigator.of(context).pop();
+                                    },
+                                    child: Text('ลบข้อมูลอาหาร',style: TextStyle(color: Colors.white),),
+                                  ),
+                                  
+                                ],
+                              ),
+                            ],
                           ),
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("ยืนยันการลบข้อมูล"),
-                                  content: Text(
-                                      "คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลนี้?"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pop(); // ปิดไดอลอก
-                                      },
-                                      child: Text("ยกเลิก"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        print(reportData['ID_Report']);
-                                        final docker = FirebaseFirestore
-                                            .instance
-                                            .collection('FoodReport')
-                                            .doc(reportData['ID_Report']);
-
-                                        try {
-                                          await docker.delete();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    'ลบข้อมูลเรียบร้อยแล้ว')),
-                                          );
-                                          Navigator.of(context).pushReplacement(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      FoodReport()));
-                                          setState(() {
-                                            reportData.removeAt(index);
-                                          });
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    'เกิดข้อผิดพลาดในการลบข้อมูล')),
-                                          );
-                                        }
-                                        final deleteFood = DeleteFoodService();
-                                        // //
-                                        deleteFood.DeleteFoodReplyCommentData(
-                                            reportData['ID_Food'].toString());
-                                        //
-                                        deleteFood.DeleteFoodReplyModData(
-                                            reportData['ID_Food'].toString());
-                                        //
-                                        deleteFood.DeleteFoodReplyReviewData(
-                                            reportData['ID_Food'].toString());
-                                        //
-                                        deleteFood.DeleteFoodCommentData(
-                                            reportData['ID_Food'].toString());
-                                        //
-                                        deleteFood.DeleteFoodModData(
-                                            reportData['ID_Food'].toString());
-                                        //
-                                        deleteFood.DeleteFoodReviewData(
-                                            reportData['ID_Food'].toString());
-                                        //
-                                        deleteFood.DeleteFoodData(
-                                            reportData['ID_Food'].toString());
-
-                                        Navigator.of(context)
-                                            .pop(); // ปิดไดอลอก
-                                        print(reportData['ID_Food'].toString());
-                                      },
-                                      child: Text("ยืนยัน"),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                            // final deleteFood = DeleteFoodService();
-                            // //
-                            // deleteFood.DeleteFoodReplyCommentData(
-                            //     reportData['ID_Food'].toString());
-                            // //
-                            // deleteFood.DeleteFoodReplyModData(
-                            //     reportData['ID_Food'].toString());
-                            // //
-                            // deleteFood.DeleteFoodReplyReviewData(
-                            //     reportData['ID_Food'].toString());
-                            // //
-                            // deleteFood.DeleteFoodCommentData(
-                            //     reportData['ID_Food'].toString());
-                            // //
-                            // deleteFood.DeleteFoodModData(
-                            //     reportData['ID_Food'].toString());
-                            // //
-                            // deleteFood.DeleteFoodReviewData(
-                            //     reportData['ID_Food'].toString());
-                            // //
-                            // deleteFood.DeleteFoodData(
-                            //     reportData['ID_Food'].toString());
-
-                            // Navigator.of(context).pop();
-                          },
-                          child: Text('ลบข้อมูลอาหาร'),
-                        ),
-                      ],
+                          ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.redAccent,
+                                  textStyle: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('ยืนยันการลบข้อมูล'),
+                                        content: Text(
+                                            'คุณแน่ใจหรือไม่ที่ต้องการลบข้อมูลนี้?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // ปิดไดอล็อก
+                                            },
+                                            child: Text('ยกเลิก'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              print(reportData['ID_Report']);
+                                              final docker = FirebaseFirestore
+                                                  .instance
+                                                  .collection('FoodReport')
+                                                  .doc(reportData['ID_Report']);
+                                    
+                                              try {
+                                                await docker.delete();
+                                                Navigator.of(context)
+                                                    .pop(); // ปิดไดอล็อกหลังจากลบเสร็จ
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content:
+                                                        Text('ลบข้อมูลเรียบร้อยแล้ว'),
+                                                  ),
+                                                );
+                                                Navigator.of(context).pushReplacement(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        FoodReport(),
+                                                  ),
+                                                );
+                                                setState(() {
+                                                  reportData.removeAt(index);
+                                                });
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'เกิดข้อผิดพลาดในการลบข้อมูล'),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            child: Text('ยืนยันการลบ'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Text('ลบรายงาน',style: TextStyle(color: Colors.white),),
+                              ),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 80,
-                    ),
-                  ],
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
