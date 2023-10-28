@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
 import 'package:se_project_food/Screen/Detail/detail.dart';
+import 'package:se_project_food/Screen/Detail/detail_step.dart';
 import 'package:url_launcher/url_launcher.dart';
 //import 'package:se_project_food/Authen/authen_part.dart';
 
@@ -44,6 +45,20 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 
   String? UsertypeReport = 'ใช้คำพูดที่ไม่เหมาะสม';
   TextEditingController Userdetail = TextEditingController();
+
+  Future<void> _refreshData() async {
+  // ทำอะไรก็ตามที่คุณต้องการในการรีเฟรชข้อมูล
+  await _getUserFromDatabase(); // รีเฟรชข้อมูลผู้ใช้
+  await readData(); // รีเฟรชข้อมูลอาหาร
+  await bookmark(); // รีเฟรชข้อมูลบุ๊คมาร์ค
+  await follow(); // รีเฟรชข้อมูลผู้ติดตาม
+
+  // รายงานการสิ้นสุดของการรีเฟรช
+  setState(() {
+    showProgressBar = false; // หยุดแสดง CircularProgressIndiciator
+  });
+}
+
 
   Future<void> _getUserFromDatabase() async {
     final DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -258,332 +273,362 @@ class UserLinkProfileState extends State<UserLinkProfile> {
             ),
           ),
         ),
-        body: Stack(
-          children: [
-            Positioned(
-              top: 10,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: <Widget>[
-                  //profile picture
-                  ProfilePicture(imageXFile: imageXFile, image: image),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
+        body: RefreshIndicator(
+          onRefresh: () => _refreshData(),
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 10,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: <Widget>[
+                      //profile picture
+                      ProfilePicture(imageXFile: imageXFile, image: image),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            name ?? '', //Show Name เด้อจ้า
+                            style: TextStyle(fontSize: 25.0),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        name ?? '', //Show Name เด้อจ้า
-                        style: TextStyle(fontSize: 25.0),
+                        email ?? '',
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black45),
+                      ),
+                      SizedBox(
+                        height: 25,
+                        child: const VerticalDivider(
+                              thickness: 1,
+                              indent: 5,
+                              endIndent: 5,
+                            ),
+                      ),
+                      
+                      Icon(Icons.phone,size: 20,color: Colors.black38,),
+                      SizedBox(width: 5,),
+                       Text(
+                        phone ?? '',
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black45),
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    email ?? '',
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black45),
-                  ),
-                  const SizedBox(height: 3),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          await followerService.addFollower(userid, getUserID);
-                          Get.snackbar('แจ้งเตือน', 'ติดตามผู้ใช้แล้ว');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: kPrimaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              // await followerService.addFollower(userid, getUserID);
+                              // Get.snackbar('แจ้งเตือน', 'ติดตามผู้ใช้แล้ว');
+                              Get.to(DetailStep());
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: kPrimaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
+                            child: const Padding(
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                              child: Text(
+                                "ติดตาม",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: kTextColor,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ),
-                        ),
-                        child: const Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-                          child: Text(
-                            "ติดตาม",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: kTextColor,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-
-                      //Report User Button
-                      IconButton(
-                        onPressed: () {
-                          print('Hello Report ');
-                          //ใส่ ฟังชันรีพอร์ตตรงนี้นะจ้ะ
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.red,
-                                title: Center(
-                                    child: Column(
-                                  children: [
-                                    Icon(Icons.warning_amber_outlined,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                        size: 75),
-                                    Text(
-                                      'รายงานผู้ใช้',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    ),
-                                  ],
-                                )),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'หัวข้อการรายงาน',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255),
-                                            fontSize: 14),
-                                      ),
-                                    ),
-                                    DropdownButtonFormField<String>(
-                                      value: UsertypeReport,
-                                      onChanged: (value) {
-                                        //setState(() {
-                                        UsertypeReport = value.toString();
-                                        //});
-                                      },
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                            borderSide:
-                                                Divider.createBorderSide(
-                                                    context)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide:
-                                                Divider.createBorderSide(
-                                                    context)),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide:
-                                                Divider.createBorderSide(
-                                                    context)),
-                                        filled: true,
-                                        contentPadding: const EdgeInsets.all(8),
-                                      ),
-                                      items: const <DropdownMenuItem<String>>[
-                                        DropdownMenuItem<String>(
-                                          value: 'ใช้คำพูดที่ไม่เหมาะสม',
-                                          child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
-                                        ),
-                                        DropdownMenuItem<String>(
-                                          value:
-                                              'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร',
-                                          child: Text(
-                                              'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร'),
-                                        ),
-                                        DropdownMenuItem<String>(
-                                          value: 'ใช้รูปที่ไม่เหมาะสม',
-                                          child: Text('ใช้รูปที่ไม่เหมาะสม'),
-                                        ),
-                                        DropdownMenuItem<String>(
-                                          value: 'ให้ข้อมูลเท็จ',
-                                          child: Text('ให้ข้อมูลเท็จ'),
-                                        ),
-                                        DropdownMenuItem<String>(
-                                          value: 'อื่นๆ',
-                                          child: Text('อื่นๆ'),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'หมายเหตุ',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          filled: true,
-                                          fillColor: const Color.fromARGB(
-                                              255, 253, 253, 253),
-                                        ),
-                                        cursorColor: Colors.white,
-                                        style: TextStyle(
-                                            color: const Color.fromARGB(
-                                                255, 0, 0, 0)),
-                                        maxLines: 4,
-                                        controller: Userdetail,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                actions: <Widget>[
-                                  Center(
-                                    child: Column(
+          
+                          //Report User Button
+                          IconButton(
+                            onPressed: () {
+                              print('Hello Report ');
+                              //ใส่ ฟังชันรีพอร์ตตรงนี้นะจ้ะ
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.red,
+                                    title: Center(
+                                        child: Column(
                                       children: [
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors
-                                                .black, // background (button) color
-                                            foregroundColor: Colors
-                                                .white, // foreground (text) color
-                                          ),
-                                          child: Text('ส่งรายงาน'),
-                                          onPressed: () async {
-                                            // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
-                                            FirebaseFirestore firestore =
-                                                FirebaseFirestore.instance;
-                                            final DocumentReference foodReport =
-                                                firestore
-                                                    .collection("UserReport")
-                                                    .doc();
-
-                                            try {
-                                              Map<String, dynamic> dataMap = {
-                                                'Report': UsertypeReport,
-                                                'Detail': Userdetail.text,
-                                                'Time': Timestamp.now(),
-                                                'ID_User': getUserID,
-                                                'ID_Report': foodReport.id
-                                              };
-
-                                              await foodReport.set(dataMap);
-                                              Userdetail.clear();
-                                              Get.snackbar('รายงานผู้ใช้',
-                                                  'รายงานผู้ใช้สำเร็จ');
-                                            } catch (e) {
-                                              print("Error: $e");
-                                              Get.snackbar('รายงานผู้ใช้',
-                                                  'รายงานผู้ใช้ไม่สำเร็จ');
-                                            }
-
-                                            print('getUserID = ');
-                                            print(getUserID);
-
-                                            Navigator.of(context).pop();
-                                          },
+                                        Icon(Icons.warning_amber_outlined,
+                                            color:
+                                                Color.fromARGB(255, 255, 255, 255),
+                                            size: 75),
+                                        Text(
+                                          'รายงานผู้ใช้',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
                                         ),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors
-                                                .black, // background (button) color
-                                            foregroundColor: Colors
-                                                .white, // foreground (text) color
+                                      ],
+                                    )),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'หัวข้อการรายงาน',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255),
+                                                fontSize: 14),
                                           ),
-                                          child: Text('ยกเลิก'),
-                                          onPressed: () {
-                                            // ปิด Dialog
-                                            Navigator.of(context).pop();
+                                        ),
+                                        DropdownButtonFormField<String>(
+                                          value: UsertypeReport,
+                                          onChanged: (value) {
+                                            //setState(() {
+                                            UsertypeReport = value.toString();
+                                            //});
                                           },
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                                borderSide:
+                                                    Divider.createBorderSide(
+                                                        context)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    Divider.createBorderSide(
+                                                        context)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    Divider.createBorderSide(
+                                                        context)),
+                                            filled: true,
+                                            contentPadding: const EdgeInsets.all(8),
+                                          ),
+                                          items: const <DropdownMenuItem<String>>[
+                                            DropdownMenuItem<String>(
+                                              value: 'ใช้คำพูดที่ไม่เหมาะสม',
+                                              child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
+                                            ),
+                                            DropdownMenuItem<String>(
+                                              value:
+                                                  'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร',
+                                              child: Text(
+                                                  'โพสต์สิ่งที่ไม่เกี่ยวกับอาหาร'),
+                                            ),
+                                            DropdownMenuItem<String>(
+                                              value: 'ใช้รูปที่ไม่เหมาะสม',
+                                              child: Text('ใช้รูปที่ไม่เหมาะสม'),
+                                            ),
+                                            DropdownMenuItem<String>(
+                                              value: 'ให้ข้อมูลเท็จ',
+                                              child: Text('ให้ข้อมูลเท็จ'),
+                                            ),
+                                            DropdownMenuItem<String>(
+                                              value: 'อื่นๆ',
+                                              child: Text('อื่นๆ'),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'หมายเหตุ',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: const Color.fromARGB(
+                                                  255, 253, 253, 253),
+                                            ),
+                                            cursorColor: Colors.white,
+                                            style: TextStyle(
+                                                color: const Color.fromARGB(
+                                                    255, 0, 0, 0)),
+                                            maxLines: 4,
+                                            controller: Userdetail,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    actions: <Widget>[
+                                      Center(
+                                        child: Column(
+                                          children: [
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors
+                                                    .black, // background (button) color
+                                                foregroundColor: Colors
+                                                    .white, // foreground (text) color
+                                              ),
+                                              child: Text('ส่งรายงาน'),
+                                              onPressed: () async {
+                                                // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
+                                                FirebaseFirestore firestore =
+                                                    FirebaseFirestore.instance;
+                                                final DocumentReference foodReport =
+                                                    firestore
+                                                        .collection("UserReport")
+                                                        .doc();
+          
+                                                try {
+                                                  Map<String, dynamic> dataMap = {
+                                                    'Report': UsertypeReport,
+                                                    'Detail': Userdetail.text,
+                                                    'Time': Timestamp.now(),
+                                                    'ID_User': getUserID,
+                                                    'ID_Report': foodReport.id
+                                                  };
+          
+                                                  await foodReport.set(dataMap);
+                                                  Userdetail.clear();
+                                                  Get.snackbar('รายงานผู้ใช้',
+                                                      'รายงานผู้ใช้สำเร็จ');
+                                                } catch (e) {
+                                                  print("Error: $e");
+                                                  Get.snackbar('รายงานผู้ใช้',
+                                                      'รายงานผู้ใช้ไม่สำเร็จ');
+                                                }
+          
+                                                print('getUserID = ');
+                                                print(getUserID);
+          
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors
+                                                    .black, // background (button) color
+                                                foregroundColor: Colors
+                                                    .white, // foreground (text) color
+                                              ),
+                                              child: Text('ยกเลิก'),
+                                              onPressed: () {
+                                                // ปิด Dialog
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                        icon: Icon(
-                          Icons.report_problem,
-                          color: Colors.red,
-                        ),
+                            icon: Icon(
+                              Icons.report_problem,
+                              color: Colors.red,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () async {
+                                String? encodeQueryParameters(
+                                    Map<String, String> params) {
+                                  return params.entries
+                                      .map((MapEntry<String, String> e) =>
+                                          '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                      .join('&');
+                                }
+          
+                                final Uri emailUri = Uri(
+                                  scheme: 'mailto',
+                                  path: email,
+                                  query: encodeQueryParameters(<String, String>{
+                                    'subject': 'ผู้ใช้ต้องการติดต่อ',
+                                    'body':
+                                        'มีการติดต่อจากผู้ใช้มาหาคุณ โปรดติดต่อกลับ',
+                                  }),
+                                );
+          
+                                if (await canLaunchUrl(emailUri)) {
+                                  launchUrl(emailUri);
+                                } else {
+                                  throw Exception('ไม่สามารถติดต่อ $emailUri');
+                                }
+                              },
+                              icon: Icon(Icons.mail))
+                        ],
                       ),
-                      IconButton(
-                          onPressed: () async {
-                            String? encodeQueryParameters(
-                                Map<String, String> params) {
-                              return params.entries
-                                  .map((MapEntry<String, String> e) =>
-                                      '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-                                  .join('&');
-                            }
-
-                            final Uri emailUri = Uri(
-                              scheme: 'mailto',
-                              path: email,
-                              query: encodeQueryParameters(<String, String>{
-                                'subject': 'ผู้ใช้ต้องการติดต่อ',
-                                'body':
-                                    'มีการติดต่อจากผู้ใช้มาหาคุณ โปรดติดต่อกลับ',
-                              }),
-                            );
-
-                            if (await canLaunchUrl(emailUri)) {
-                              launchUrl(emailUri);
-                            } else {
-                              throw Exception('ไม่สามารถติดต่อ $emailUri');
-                            }
-                          },
-                          icon: Icon(Icons.mail))
+                      const SizedBox(height: 5),
+                      SizedBox(
+                          height: 200,
+                          width: 300,
+                          //Stat Row
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              //Status
+                              StatusText(foodModels.length, 'สูตรอาหาร'),
+                              const VerticalDivider(
+                                thickness: 1,
+                                indent: 10,
+                                endIndent: 160,
+                              ),
+                              StatusText(countfollow, 'ผู้ติดตาม'),
+                              const VerticalDivider(
+                                thickness: 1,
+                                indent: 10,
+                                endIndent: 160,
+                              ),
+                              StatusText(countbookmark, 'อาหารที่ชอบ'),
+                            ],
+                          )),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                      height: 200,
-                      width: 300,
-                      //Stat Row
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          //Status
-                          StatusText(foodModels.length, 'สูตรอาหาร'),
-                          const VerticalDivider(
-                            thickness: 1,
-                            indent: 10,
-                            endIndent: 160,
-                          ),
-                          StatusText(countfollow, 'ผู้ติดตาม'),
-                          const VerticalDivider(
-                            thickness: 1,
-                            indent: 10,
-                            endIndent: 160,
-                          ),
-                          StatusText(countbookmark, 'อาหารที่ชอบ'),
-                        ],
-                      )),
-                ],
-              ),
-            ),
-            const Divider(
-              height: 660,
-              thickness: 2,
-              color: Colors.black12,
-            ),
-            Positioned(
-              top: 335,
-              right: 10,
-              left: 10,
-              bottom: 0,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
-                  mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
-                  crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน
-                  childAspectRatio:
-                      1, // อัตราส่วนของความกว้างต่อความสูงของรายการ
                 ),
-                itemCount: foodModels.length, // จำนวนรายการใน GridView
-                itemBuilder: (BuildContext buildContext, int index) {
-                  return buildFoodItem(index);
-                },
-              ),
+                const Divider(
+                  height: 660,
+                  thickness: 2,
+                  color: Colors.black12,
+                ),
+                Positioned(
+                  top: 335,
+                  right: 10,
+                  left: 10,
+                  bottom: 0,
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
+                      mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
+                      crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน
+                      childAspectRatio:
+                          1, // อัตราส่วนของความกว้างต่อความสูงของรายการ
+                    ),
+                    itemCount: foodModels.length, // จำนวนรายการใน GridView
+                    itemBuilder: (BuildContext buildContext, int index) {
+                      return buildFoodItem(index);
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ));
   }
 

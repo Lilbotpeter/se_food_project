@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:se_project_food/Authen/authen_part.dart';
+import 'package:se_project_food/Screen/Detail/detail_step.dart';
 import '../../Api/firebase_api.dart';
 import '../../Models/foodmodels.dart';
 import '../../Models/user.dart' as usermodel;
@@ -47,6 +48,7 @@ class _UploadFoodState extends State<UploadFood> {
       food_point = '';
   String uploadStatus = '';
   bool uploading = false;
+  String id_food=''; 
   // อัปเดตสถานะการอัปโหลด
   void updateUploadStatus(String status) {
     setState(() {
@@ -99,7 +101,7 @@ class _UploadFoodState extends State<UploadFood> {
     });
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final DocumentReference foodDocRef = firestore.collection("Foods").doc();
-
+    id_food = foodDocRef.id;
     if (files.isEmpty) {
       setState(() {
         uploading = false; // หยุดแสดงหลอดการอัปโหลด
@@ -708,26 +710,26 @@ class _UploadFoodState extends State<UploadFood> {
             const SizedBox(
               height: 15.0,
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 50, bottom: 5),
-              child: Text(
-                'อัพโหลดสูตรของคุณ',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 30, bottom: 25),
-              child: Text(
-                'กรอกรายละเอียดได้เลย !',
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 50, bottom: 5),
+            //   child: Text(
+            //     'อัพโหลดสูตรของคุณ',
+            //     style: TextStyle(
+            //       fontSize: 25,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 30, bottom: 25),
+            //   child: Text(
+            //     'กรอกรายละเอียดได้เลย !',
+            //     style: TextStyle(
+            //         fontSize: 25,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.amber),
+            //   ),
+            // ),
             ButtonWidget(
                 //Button Select file
                 icon: Icons.attach_file,
@@ -761,7 +763,10 @@ class _UploadFoodState extends State<UploadFood> {
             if (uploading)
               LinearProgressIndicator(), // if (uploading) CircularProgressIndicator(),
             FloatingActionButton(
-              onPressed: uploadFile,
+              onPressed: (){
+                uploadFile();
+                Get.to(DetailStep(),arguments: id_food);
+                },
               child: Icon(
                 Icons.upload_sharp,
                 color: Colors.white,

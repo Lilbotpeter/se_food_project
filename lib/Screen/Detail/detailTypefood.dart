@@ -7,6 +7,7 @@ import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Screen/Detail/detail_service.dart';
+import '../../global.dart';
 import 'detail.dart';
 
 class detailTypefood extends StatefulWidget {
@@ -26,6 +27,15 @@ class _detailTypefoodState extends State<detailTypefood> {
     getfoodID = Get.arguments as String;
     fetchFoodData();
   }
+
+  Future<void> _refreshData() async {
+  await fetchFoodData(); 
+
+  // รายงานการสิ้นสุดของการรีเฟรช
+  setState(() {
+    showProgressBar = false; // หยุดแสดง CircularProgressIndiciator
+  });
+}
 
   Future<void> fetchFoodData() async {
     try {
