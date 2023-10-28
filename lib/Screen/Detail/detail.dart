@@ -79,6 +79,9 @@ class _DetailFoodState extends State<DetailFood> {
   List<String> urls = [];
   List<dynamic> modifyList = [];
   List<dynamic> reviewList = [];
+  List<dynamic> reviewCountList = [];
+  List<dynamic> modCountList = [];
+  List<dynamic> commentCountList = [];
   List<dynamic> commentList = [];
   List<List<String>> AllImageAllImageModify = [];
   List<List<String>> AllImageAllImageReview = [];
@@ -501,6 +504,7 @@ class _DetailFoodState extends State<DetailFood> {
     try {
       List<dynamic> MofifyList = await DetailService()
           .fetchModifyData('ModifyFood', id_food!, 'ModID');
+      MofifyList.sort((a, b) => b['Time'].compareTo(a['Time']));
       modifyList = MofifyList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData ที่นี่
@@ -510,6 +514,7 @@ class _DetailFoodState extends State<DetailFood> {
     try {
       List<dynamic> ReviewList = await DetailService()
           .fetchReviewData('ReviewFood', id_food!, 'ReviewID');
+      ReviewList.sort((a, b) => b['Time'].compareTo(a['Time']));
       reviewList = ReviewList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
@@ -518,10 +523,38 @@ class _DetailFoodState extends State<DetailFood> {
     try {
       List<dynamic> CommentList = await DetailService()
           .fetchCommentData('CommentFood', id_food!, 'CommentID');
+      CommentList.sort((a, b) => b['Time'].compareTo(a['Time']));
       commentList = CommentList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
       print('Error in fetchCommentData (Comment): $e');
+    }
+
+    try {
+      List<dynamic> ReviewList = await DetailService()
+          .CountReviewData('ReviewFood', id_food!, 'ReviewID');
+      reviewCountList = ReviewList;
+    } catch (e) {
+      // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
+      print('Error in fetchReviewData (Review): $e');
+    }
+
+    try {
+      List<dynamic> ReviewList =
+          await DetailService().CountModData('ModifyFood', id_food!, 'ModID');
+      modCountList = ReviewList;
+    } catch (e) {
+      // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
+      print('Error in fetchReviewData (Review): $e');
+    }
+
+    try {
+      List<dynamic> ReviewList = await DetailService()
+          .CountCommentData('CommentFood', id_food!, 'CommentID');
+      commentCountList = ReviewList;
+    } catch (e) {
+      // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData (Review) ที่นี่
+      print('Error in fetchReviewData (Review): $e');
     }
   }
 
@@ -1141,12 +1174,14 @@ class _DetailFoodState extends State<DetailFood> {
                                       for (int i = 1; i <= 5; i++)
                                         GestureDetector(
                                           onTapDown: (_) {
-                                            tempRating = i;
-                                            setState(
-                                                () {}); // อัปเดตสถานะใน StatefulBuilder
+                                            if (tempRating != i) {
+                                              tempRating = i;
+                                              setState(
+                                                  () {}); // อัปเดตสถานะใน StatefulBuilder เฉพาะเมื่อคะแนนเปลี่ยนแปลง
+                                            }
                                           },
                                           onTapUp: (_) {
-                                            _rating = 0;
+                                            _rating = tempRating;
                                           },
                                           child: Icon(
                                             Icons.star,
@@ -2082,6 +2117,8 @@ class _DetailFoodState extends State<DetailFood> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
+                                                Text(modCountList.length
+                                                    .toString()),
                                               ],
                                             ),
                                           ),
@@ -2384,6 +2421,8 @@ class _DetailFoodState extends State<DetailFood> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
+                                                Text(commentCountList.length
+                                                    .toString()),
                                               ],
                                             ),
                                           ),
@@ -2416,6 +2455,13 @@ class _DetailFoodState extends State<DetailFood> {
                               itemBuilder: (BuildContext context, int index) {
                                 Map<String, dynamic> reviewData =
                                     reviewList[index];
+                                String idrv = reviewData['ID_Review'];
+                                //reviewData[index].
+                                Map<String, dynamic> reviewC =
+                                    reviewCountList[index];
+                                // print('reviewC = ');
+                                //print(reviewC['ID_Review']);
+
                                 Timestamp timestamp =
                                     reviewData['Time'] as Timestamp;
                                 DateTime dateTime = timestamp.toDate();
@@ -2684,6 +2730,15 @@ class _DetailFoodState extends State<DetailFood> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
+                                                // if (reviewData['ID_Review'] ==
+                                                //     reviewCountdata[
+                                                //         'ID_Review'])
+
+                                                //tONegkuQUWsiy0aLkKci
+                                                if (reviewData['ID_Review'] ==
+                                                    reviewC['ID_Review'])
+                                                  Text(reviewCountList.length
+                                                      .toString()),
                                               ],
                                             ),
                                           ),
