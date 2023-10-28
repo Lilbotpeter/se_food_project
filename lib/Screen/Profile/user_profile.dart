@@ -111,6 +111,7 @@ void signOut() async {
     super.initState();
     _getDataFromDatabase();
     readData();
+    bookmark();
     follow();
   }
 
@@ -308,7 +309,7 @@ void signOut() async {
                         indent: 10,
                         endIndent: 160,
                       ),
-                      StatusText(4, 'อาหารที่ชอบ'),
+                      StatusText(countbookmark, 'อาหารที่ชอบ'),
                       
                     ],
                   )),

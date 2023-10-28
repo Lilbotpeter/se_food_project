@@ -11,6 +11,9 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() async {
   await initializeDateFormatting('th_TH', null);
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,]);
 
   await Firebase.initializeApp().then((value) {
     Get.put(AuthenticationController());

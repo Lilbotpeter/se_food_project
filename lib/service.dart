@@ -84,7 +84,54 @@ class DataService {
           });
         }
         return reviewDataList;
-    }    
+    }
+
+  //   Future<List<dynamic>> fetchStepDetail(
+  //     String mainCollection, String docID, String subCollection) async {
+  //   try {
+  //     FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //     List<dynamic> stepDataList = [];
+
+  //     QuerySnapshot querySnapshot = await firestore
+  //         .collection(mainCollection)
+  //         .doc(docID)
+  //         .collection(subCollection)
+  //         .get();
+
+  //     for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+  //       String snapID = docSnapshot.id;
+
+  //       String Snapidx = snapID;
+  //       //pull id review
+  //       DocumentSnapshot docFirestoreDoc = await firestore
+  //           .collection(mainCollection)
+  //           .doc(docID)
+  //           .collection(subCollection)
+  //           .doc(Snapidx)
+  //           .get();
+
+  //       if (docFirestoreDoc.exists) {
+  //         Map<String, dynamic> stepData =
+  //             docFirestoreDoc.data() as Map<String, dynamic>;
+
+  //         stepDataList.add({
+  //           'food_id': stepData['food_id'],
+  //           'user_id': stepData['user_id'],
+  //           'step' : stepData['step'],
+  //           'title': stepData['title'],
+  //           'time': stepData['time'],
+  //           'video_url': stepData['video_url'],
+  //           'description': stepData['description'],
+  //         });
+  //       }
+  //     }
+  //     return stepDataList;
+  //   } catch (e) {
+  //     print("Error fetching images: $e");
+  //     throw e;
+  //   }
+  // }
+
   }
 
   
