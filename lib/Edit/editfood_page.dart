@@ -118,7 +118,8 @@ class _EditFoodsState extends State<EditFoods> {
           value: 'อื่นๆ',
           child: Text('อื่นๆ'),
         ),
-      ],
+      ].toList()
+        ..sort((a, b) => a.child.toString().compareTo(b.child.toString())),
     );
   }
 
@@ -305,7 +306,8 @@ class _EditFoodsState extends State<EditFoods> {
           value: 'อื่นๆ',
           child: Text('อื่นๆ'),
         ),
-      ],
+      ].toList()
+        ..sort((a, b) => a.child.toString().compareTo(b.child.toString())),
     );
   }
 
@@ -591,41 +593,40 @@ class _EditFoodsState extends State<EditFoods> {
   }
 
   void _showVideoPopup(BuildContext context, String videoUrl, int index) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      final VideoPlayerController _controller =
-          VideoPlayerController.network(videoUrl);
-      _controller.initialize();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final VideoPlayerController _controller =
+            VideoPlayerController.network(videoUrl);
+        _controller.initialize();
 
-      return Dialog(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AspectRatio(
-              aspectRatio: 16 / 9, // ปรับค่าตามสัดส่วนของวิดีโอของคุณ
-              child: VideoPlayer(_controller),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _controller.dispose(); // ปิดควบคุมเวลาเมื่อเสร็จ
-                    Navigator.of(context).pop(); // ปิดไดอล็อก
-                  },
-                  icon: Icon(Icons.close),
-                  color: Colors.red,
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9, // ปรับค่าตามสัดส่วนของวิดีโอของคุณ
+                child: VideoPlayer(_controller),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _controller.dispose(); // ปิดควบคุมเวลาเมื่อเสร็จ
+                      Navigator.of(context).pop(); // ปิดไดอล็อก
+                    },
+                    icon: Icon(Icons.close),
+                    color: Colors.red,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
 //ลบรูปภาพ
   Future<void> deleteImage(String imageUrl, int index) async {

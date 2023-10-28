@@ -74,65 +74,63 @@ class _FeedPageState extends State<FeedPage> {
     'images/5star.png',
   ];
   List<String> imagenationfood = [
-    'images/nation/thai.png',
-    'images/nation/usa.png',
-    'images/nation/english.png',
-    'images/nation/france.png',
-    'images/nation/germany.png',
+    'images/nation/china.jpg',
     'images/nation/japan.jpg',
+    'images/nation/france.png',
+    'images/nation/spain.png',
+    'images/nation/english.png',
     'images/nation/italy.png',
     'images/nation/india.png',
-    'images/nation/spain.png',
-    'images/nation/korea.png',
-    'images/nation/china.jpg',
     'images/nation/nations.jpeg',
+    'images/nation/usa.png',
+    'images/nation/korea.png',
+    'images/nation/germany.png',
+    'images/nation/thai.png',
   ];
 
   List<String> nationfood = [
-    'ไทย',
-    'อเมริกา',
-    'อังกฤษ',
-    'ฝรั่งเศษ',
-    'เยอรมัน',
+    'จีน',
     'ญี่ปุ่น',
+    'ฝรั่งเศษ',
+    'สเปน',
+    'อังกฤษ',
     'อิตาลี',
     'อินเดีย',
-    'สเปน',
-    'เกาหลี',
-    'จีน',
     'อื่นๆ',
+    'อเมริกา',
+    'เกาหลี',
+    'เยอรมัน',
+    'ไทย',
   ];
 
   //
   List<String> typefood = [
-    'ไม่มี',
-    'อาหารอีสาน',
-    'อาหารใต้',
-    'อาหารเหนือ',
-    'อาหารเส้น',
-    'อาหารสุขภาพ',
-    'อาหารตามสั่ง',
-    'อาหารทะเล',
-    'ของทอด',
-    'ชา/กาแฟ',
-    'ชาบู/สุกี้',
-    'ชานมไข่มุก',
-    'ซูชิ',
-    'ของหวาน',
-    'ฟาสต์ฟู้ด',
-    'หม่าล่า',
-    'อาหารจานด่วน',
-    'โจ๊ก',
-    'โยเกิร์ต/ไอศกรีม',
-    'ปิ้งย่าง/บาร์บีคิว',
-    'เครื่องดื่ม/น้ำผลไม้',
-    'อาหารเจ',
-    'โรตี',
-    'สเต็ก',
-    'ของทานเล่น/ขนมขบเขี้ยว',
-    'ติ่มซำ',
-    'ยำ',
-    'อื่นๆ',
+    "กาแฟ/ชา",
+    "ของทานเล่น/ขนมขบเขี้ยว",
+    "ของหวาน",
+    "ของทอด",
+    "ชาบู/สุกี้",
+    "ชานมไข่มุก",
+    "ติ่มซำ",
+    "ซูชิ",
+    "สเต็ก",
+    "โจ๊ก",
+    "โรตี",
+    "โยเกิร์ต/ไอศกรีม",
+    "ปิ้งย่าง/บาร์บีคิว",
+    "อาหารจานด่วน",
+    "อาหารทะเล",
+    "อาหารตามสั่ง",
+    "อาหารสุขภาพ",
+    "อาหารอีสาน",
+    "อาหารใต้",
+    "อาหารเจ",
+    "อาหารเหนือ",
+    "อาหารเส้น",
+    "ยำ",
+    "อื่นๆ",
+    "หม่าล่า",
+    "ฟาสต์ฟู้ด"
   ];
 
   List<String> imageTypefood = [
@@ -275,6 +273,7 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   Future<void> readFollowUser() async {
+    try{
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     setState(() {
       showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
@@ -304,6 +303,7 @@ class _FeedPageState extends State<FeedPage> {
         }
       }
     }
+    
 
     try {
       setState(() {
@@ -312,6 +312,9 @@ class _FeedPageState extends State<FeedPage> {
       });
     } catch (e) {
       '';
+    }
+    }catch(e){
+      print('พบปัญหาโดย $e');
     }
   }
 
