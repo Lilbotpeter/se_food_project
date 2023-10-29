@@ -195,6 +195,146 @@ class DetailService {
     }
   }
 
+  Future<List<dynamic>> CountReviewData(
+      String mainCollection, String docID, String subCollection) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<dynamic> reviewDataList = [];
+      List<dynamic> reviewCount = [];
+      String count;
+      String Iid;
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection(mainCollection)
+          .doc(docID)
+          .collection(subCollection)
+          .get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        String snapID = docSnapshot.id;
+
+        String Snapidx = snapID;
+        //pull id review
+        QuerySnapshot docFirestoreDoc = await firestore
+            .collection('ReplyReview')
+            .doc(docSnapshot.id)
+            .collection('ReplyReviewID')
+            .get();
+
+        for (QueryDocumentSnapshot docSnapshot2 in docFirestoreDoc.docs) {
+          count = docSnapshot2.id;
+          reviewCount.add(count);
+
+          reviewDataList.add({
+            'ID_ReplyReview': docSnapshot2['ID_ReplyReview'],
+            'ID_Review': docSnapshot2['ID_Review'],
+            'Comment': docSnapshot2['Comment'],
+            'Time': docSnapshot2['Time'],
+            'Uid': docSnapshot2['Uid'],
+          });
+        }
+      }
+      return reviewDataList;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
+  //-----------------------------------------------------------------
+  Future<List<dynamic>> CountModData(
+      String mainCollection, String docID, String subCollection) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<dynamic> reviewDataList = [];
+      List<dynamic> reviewCount = [];
+      String count;
+      String Iid;
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection(mainCollection)
+          .doc(docID)
+          .collection(subCollection)
+          .get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        String snapID = docSnapshot.id;
+
+        String Snapidx = snapID;
+        //pull id review
+        QuerySnapshot docFirestoreDoc = await firestore
+            .collection('ReplyMod')
+            .doc(docSnapshot.id)
+            .collection('ReplyModID')
+            .get();
+
+        for (QueryDocumentSnapshot docSnapshot2 in docFirestoreDoc.docs) {
+          count = docSnapshot2.id;
+          reviewCount.add(count);
+
+          reviewDataList.add({
+            'ID_ReplyMod': docSnapshot2['ID_ReplyMod'],
+            'ID_Mod': docSnapshot2['ID_Mod'],
+            'Comment': docSnapshot2['Comment'],
+            'Time': docSnapshot2['Time'],
+            'Uid': docSnapshot2['Uid'],
+          });
+        }
+      }
+      return reviewDataList;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
+  //-----------------------------------------------------------------
+  Future<List<dynamic>> CountCommentData(
+      String mainCollection, String docID, String subCollection) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<dynamic> reviewDataList = [];
+      List<dynamic> reviewCount = [];
+      String count;
+      String Iid;
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection(mainCollection)
+          .doc(docID)
+          .collection(subCollection)
+          .get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        String snapID = docSnapshot.id;
+
+        String Snapidx = snapID;
+        //pull id review
+        QuerySnapshot docFirestoreDoc = await firestore
+            .collection('ReplyComment')
+            .doc(docSnapshot.id)
+            .collection('ReplyCommentID')
+            .get();
+
+        for (QueryDocumentSnapshot docSnapshot2 in docFirestoreDoc.docs) {
+          count = docSnapshot2.id;
+          reviewCount.add(count);
+
+          reviewDataList.add({
+            'ID_ReplyComment': docSnapshot2['ID_ReplyComment'],
+            'ID_Comment': docSnapshot2['ID_Comment'],
+            'Comment': docSnapshot2['Comment'],
+            'Time': docSnapshot2['Time'],
+            'Uid': docSnapshot2['Uid'],
+          });
+        }
+      }
+      return reviewDataList;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
   // Future<List<List<String>>> fetchImagesReview(
   //     String mainCollection, String docID, String subCollection) async {
   //   List<List<String>> imageUrlsList = [];
