@@ -13,6 +13,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:se_project_food/Api/firebase_api.dart';
+import 'package:se_project_food/Screen/Detail/stepview.dart';
 import 'package:se_project_food/Screen/Profile/user_link_profile.dart';
 import 'package:se_project_food/Widgets/button_widget.dart';
 import 'package:se_project_food/Widgets/custom_icon.dart';
@@ -1356,34 +1357,38 @@ class _DetailFoodState extends State<DetailFood> {
 
 //Slide
 
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.width *
-                                  0.75, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
-                              width: MediaQuery.of(context).size.width,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: imageUrls.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Slidable(
-                                    actionPane: SlidableStrechActionPane(),
-                                    actionExtentRatio: 0.50,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        _showImagePopup(
-                                            context, imageUrls[index], index);
-                                      },
-                                      child: AspectRatio(
-                                        aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
-                                        child: Image.network(
-                                          imageUrls[index],
-                                          fit: BoxFit
-                                              .cover, // ลดขนาดรูปภาพเพื่อให้เต็มกรอบ
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.width *
+                                      0.75, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: imageUrls.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Slidable(
+                                        actionPane: SlidableStrechActionPane(),
+                                        actionExtentRatio: 0.50,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _showImagePopup(
+                                                context, imageUrls[index], index);
+                                          },
+                                          child: AspectRatio(
+                                            aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
+                                            child: Image.network(
+                                              imageUrls[index],
+                                              fit: BoxFit
+                                                  .cover, // ลดขนาดรูปภาพเพื่อให้เต็มกรอบ
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
 
@@ -1457,9 +1462,8 @@ class _DetailFoodState extends State<DetailFood> {
                             ],
                           ),
                         ),
-                        Positioned(
-                          top: 230,
-                          left: 320,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 200,left: 280),
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 0, 0, 0),
@@ -1533,7 +1537,9 @@ class _DetailFoodState extends State<DetailFood> {
                                             child: Text(
                                               '$name',
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w600),
+                                                  fontWeight: FontWeight.w600, ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
                                             ),
                                           ),
                                           SizedBox(
@@ -1603,16 +1609,18 @@ class _DetailFoodState extends State<DetailFood> {
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          Icons.timer,
-                                          color: Colors.white,
-                                        ),
+                                        // Icon(
+                                        //   Icons.timer,
+                                        //   color: Colors.white,
+                                        // ),
                                         Text(
                                           "$time_food",
                                           style: TextStyle(
                                               fontSize: 30,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.white),
+                                              overflow: TextOverflow.fade,
+                                              maxLines: 1,
                                         ),
                                       ],
                                     ),
@@ -1628,157 +1636,161 @@ class _DetailFoodState extends State<DetailFood> {
                               ),
                             ),
 ////////////////////////////////////////////////Video
-                            //   Flexible(
-                            //     child: Padding(
-                            //       padding: const EdgeInsets.all(8.0),
-                            //       child: Expanded(
-                            //         child: Container(
-                            //           margin:
-                            //               EdgeInsets.fromLTRB(20.0, 215, 20, 5),
-                            //           width: double.infinity,
-                            //           decoration: BoxDecoration(
-                            //             color: Colors.white,
-                            //             borderRadius: BorderRadius.circular(20),
-                            //           ),
-                            //           child:  Padding(
-                            //             padding: EdgeInsets.all(10.0),
-                            //             child: Column(
-                            //                 mainAxisAlignment:
-                            //                     MainAxisAlignment.start,
-                            //                 crossAxisAlignment:
-                            //                     CrossAxisAlignment.start,
-                            //                 children: <Widget>[
-                            //                   Container(
-                            //                     color: Colors.white,
-                            //                     height: 200,
-                            //                     child: _controller.value.isInitialized
-                            //                     ?Column(
-                            //                       children: <Widget>[
-                            //                         SizedBox(
-                            //                           height: 150,
-                            //                           child: VideoPlayer(_controller),
-                            //                         )
-                            //                       ],
-                            //                     )
-                            //                     : const Center(
-                            //                       child: CircularProgressIndicator(color: Colors.amber,),
-                            //                     ),
-                            //                   ),
-                            // ]),)
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
+                              Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Container(
+    margin: EdgeInsets.fromLTRB(20.0, 215, 20, 5),
+    width: double.infinity,
+    decoration: BoxDecoration(
+      gradient: new LinearGradient(
+        colors: [Color.fromARGB(240, 255, 153, 0), Color.fromARGB(255, 61, 37, 0)],
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+      ),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: GestureDetector(
+      onTap: () {
+        Get.to(StepViewer(),transition: Transition.zoom,arguments: id_food );
+      },
+      child: SizedBox(
+        height: 73,
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left:40.0,top:15),
+              child: Row(
+                children: [
+                  Icon(Icons.play_arrow_rounded,color: Colors.white),
+                  Text('ดูวิดีโอขั้นตอน',style: TextStyle(color: Colors.white,fontSize: 28)),
+                ],
+              ),
+            ),
+            Opacity(opacity: 0.3,
+            child: Container(
+              decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: new NetworkImage(image_food??''),
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.centerLeft,
+    
+              ),
+              ),
+            ),
+            )
+          ],
+        ),
+      ),
+    )
+  ),
+),
 
 /////////////////////////////////////////////////Detail
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(20.0, 215, 20, 5),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Column(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(20.0, 300, 20, 5),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                const Text(
-                                                  'รายละเอียด',
-                                                  style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
+                                            const Text(
+                                              'รายละเอียด',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight:
+                                                      FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
 
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      description_food ?? ''),
-                                                ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                  description_food ?? ''),
+                                            ),
 /////////Solution
-                                                ExpansionTile(
-                                                  title: const Text(
-                                                    'วัตถุดิบ',
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                  trailing: Icon(
-                                                    isExpanded
-                                                        ? Icons.arrow_drop_up
-                                                        : Icons.arrow_drop_down,
-                                                    color: Colors.amber,
-                                                  ),
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title: Text(
-                                                          ingradent_food ?? ''),
-                                                    ),
-                                                  ],
-                                                  onExpansionChanged:
-                                                      (bool expanded) {
-                                                    setState(() =>
-                                                        isExpanded = expanded);
-                                                  },
-                                                ),
-/////////////Ingredients
-                                                ExpansionTile(
-                                                  title: const Text(
-                                                    'วิธีการทำ',
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                  trailing: Icon(
-                                                    isExpanded
-                                                        ? Icons.arrow_drop_up
-                                                        : Icons.arrow_drop_down,
-                                                    color: Colors.amber,
-                                                  ),
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title: Text(
-                                                          solution_food ?? ''),
-                                                    ),
-                                                  ],
-                                                  onExpansionChanged:
-                                                      (bool expanded) {
-                                                    setState(() =>
-                                                        isExpanded = expanded);
-                                                  },
+                                            ExpansionTile(
+                                              title: const Text(
+                                                'วัตถุดิบ',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                              trailing: Icon(
+                                                isExpanded
+                                                    ? Icons.arrow_drop_up
+                                                    : Icons.arrow_drop_down,
+                                                color: Colors.amber,
+                                              ),
+                                              children: <Widget>[
+                                                ListTile(
+                                                  title: Text(
+                                                      ingradent_food ?? ''),
                                                 ),
                                               ],
+                                              onExpansionChanged:
+                                                  (bool expanded) {
+                                                setState(() =>
+                                                    isExpanded = expanded);
+                                              },
                                             ),
-                                            const Text(''),
-                                            const SizedBox(
-                                              height: 10,
+/////////////Ingredients
+                                            ExpansionTile(
+                                              title: const Text(
+                                                'วิธีการทำ',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                              trailing: Icon(
+                                                isExpanded
+                                                    ? Icons.arrow_drop_up
+                                                    : Icons.arrow_drop_down,
+                                                color: Colors.amber,
+                                              ),
+                                              children: <Widget>[
+                                                ListTile(
+                                                  title: Text(
+                                                      solution_food ?? ''),
+                                                ),
+                                              ],
+                                              onExpansionChanged:
+                                                  (bool expanded) {
+                                                setState(() =>
+                                                    isExpanded = expanded);
+                                              },
                                             ),
+                                          ],
+                                        ),
+                                        const Text(''),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
 ///////////////////////
-                                          ]),
-                                    ),
-                                  ),
+                                      ]),
                                 ),
                               ),
                             ),

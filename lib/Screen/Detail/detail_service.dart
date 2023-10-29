@@ -104,6 +104,52 @@ class DetailService {
     }
   }
 
+  Future<List<dynamic>> fetchStepData(
+    String docID
+  ) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      List<dynamic> stepDataList = [];
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('StepFoodDetail')
+          .doc(docID)
+          .collection('StepID')
+          .get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        String snapID = docSnapshot.id;
+
+        String Snapidx = snapID;
+        //pull id review
+        DocumentSnapshot docFirestoreDoc = await firestore
+            .collection('StepFoodDetail')
+            .doc(docID)
+            .collection('StepID')
+            .doc(Snapidx)
+            .get();
+
+        if (docFirestoreDoc.exists) {
+          Map<String, dynamic> stepData =
+              docFirestoreDoc.data() as Map<String, dynamic>;
+
+          stepDataList.add({
+            'food_id': stepData['food_id'],
+            'step': stepData['step'],
+            'description': stepData['description'],
+            'title': stepData['title'],
+            'video_url': stepData['video_url'],
+            'time' : stepData['time'],
+          });
+        }
+      }
+      return stepDataList;
+    } catch (e) {
+      print("Error fetching images: $e");
+      throw e;
+    }
+  }
+
   Future<List<dynamic>> fetchModifyData(
       String mainCollection, String docID, String subCollection) async {
     try {

@@ -653,73 +653,71 @@ class _EditFoodsState extends State<EditFoods> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: <Widget>[
-        Expanded(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.width,
-                width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: imageUrls.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Slidable(
-                        actionPane: SlidableDrawerActionPane(),
-                        actionExtentRatio: 0.25,
-                        child: GestureDetector(
-                          onTap: () {
-                            _showImagePopup(context, imageUrls[index], index);
-                            // _showVideoPopup(context, videoUrls[index], index);
-                          },
-                          child: Image.network(imageUrls[index]),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  pickImage(); // Function to pick a new image
-                },
-                child: Text('เพิ่มรูปภาพ'),
-              ),
-//////////////////////////////
-              SizedBox(
-                height: MediaQuery.of(context).size.width,
-                width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: videoUrls.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Slidable(
+        Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.width,
+              width: double.infinity,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: imageUrls.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Slidable(
                       actionPane: SlidableDrawerActionPane(),
                       actionExtentRatio: 0.25,
                       child: GestureDetector(
                         onTap: () {
-                          _showVideoPopup(context, videoUrls[index], index);
+                          _showImagePopup(context, imageUrls[index], index);
+                          // _showVideoPopup(context, videoUrls[index], index);
                         },
-                        child: VideoPlayer(
-                          VideoPlayerController.networkUrl(
-                              Uri.parse(videoUrls[index])),
-                        ),
+                        child: Image.network(imageUrls[index]),
                       ),
-                    );
-                  },
-                ),
-              ),
-              Text(videoUrls.toString()),
-              //Text(imageUrls.toString()),
-              ElevatedButton(
-                onPressed: () {
-                  pickVideo(); // Function to pick a new image
+                    ),
+                  );
                 },
-                child: Text('เพิ่มวิดิโอ'),
               ),
-            ],
-          ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                pickImage(); // Function to pick a new image
+              },
+              child: Text('เพิ่มรูปภาพ'),
+            ),
+//////////////////////////////
+            SizedBox(
+              height: MediaQuery.of(context).size.width,
+              width: double.infinity,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: videoUrls.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    actionExtentRatio: 0.25,
+                    child: GestureDetector(
+                      onTap: () {
+                        _showVideoPopup(context, videoUrls[index], index);
+                      },
+                      child: VideoPlayer(
+                        VideoPlayerController.networkUrl(
+                            Uri.parse(videoUrls[index])),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Text(videoUrls.toString()),
+            //Text(imageUrls.toString()),
+            ElevatedButton(
+              onPressed: () {
+                pickVideo(); // Function to pick a new image
+              },
+              child: Text('เพิ่มวิดิโอ'),
+            ),
+          ],
         ),
         Text('ชื่ออาหาร'),
         SizedBox(

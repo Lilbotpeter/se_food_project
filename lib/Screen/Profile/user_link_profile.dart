@@ -61,6 +61,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 
 
   Future<void> _getUserFromDatabase() async {
+    try{
     final DocumentSnapshot snapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(getUserID)
@@ -79,6 +80,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
         });
       }
     }
+    }catch(e){'$e';}
   }
 
 // //Get data fromdatabase

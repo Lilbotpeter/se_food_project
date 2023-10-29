@@ -310,7 +310,7 @@ void signOut() async {
                         endIndent: 160,
                       ),
                       StatusText(countbookmark, 'อาหารที่ชอบ'),
-                      
+                     
                     ],
                   )),
                   
@@ -320,7 +320,7 @@ void signOut() async {
         
        
         Positioned(
-          top: 335,
+          top: 350,
           right: 10,
           left: 10,
           bottom: 0,
