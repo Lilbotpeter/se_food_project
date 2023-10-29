@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +19,16 @@ class StepViewer extends StatefulWidget {
 }
 
 class _StepViewerState extends State<StepViewer> {
-
   // late VideoPlayerController _videoPlayerController;
   // late Future<void> _initializeVideoPlayerFuture;
   // final List<String> getVdoID = Get.arguments as List<String>;
   int selectedVideoIndex = 0;
-    List<String> videoUrls = [];
+  List<String> videoUrls = [];
   List<File> thumbnails = [];
   final String getfoodID = Get.arguments as String; //รับ Food ID
-    List<dynamic> stepList = [];
-  
+  List<dynamic> stepList = [];
 
- Future<void> getVideoThumbnails() async {
+  Future<void> getVideoThumbnails() async {
     for (String? videoUrl in videoUrls) {
       if (videoUrl != null) {
         final thumbnail = await VideoThumbnail.thumbnailData(
@@ -49,8 +47,6 @@ class _StepViewerState extends State<StepViewer> {
       }
     }
   }
-
-
 
   Future<void> _fetchVideos() async {
     try {
@@ -87,18 +83,15 @@ class _StepViewerState extends State<StepViewer> {
     }
   }
 
-  Future<void> _fetchStepData()async{
+  Future<void> _fetchStepData() async {
     try {
-      List<dynamic> StepList = await DetailService()
-          .fetchStepData(getfoodID);
+      List<dynamic> StepList = await DetailService().fetchStepData(getfoodID);
       stepList = StepList;
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData ที่นี่
       print('Error in fetchReviewData (Modify): $e');
     }
   }
-   
-
 
   // Future<List<String>> getDownloadURLs() async {
   // final storage = FirebaseStorage.instance;
@@ -108,15 +101,13 @@ class _StepViewerState extends State<StepViewer> {
   //         ListResult videoResult = await storage
   //           .ref(destination).listAll();
 
-
   //       for (Reference ref in videoResult.items) {
   //         String videoURL = await ref.getDownloadURL();
   //         videoUrls.add(videoURL);
   //       }
-    
+
   //     return videoUrls;
   //   }
-    
 
   @override
   void initState() {
@@ -141,72 +132,94 @@ class _StepViewerState extends State<StepViewer> {
   //   super.dispose();
   // }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('ขั้นตอน')),
-      body: Container(
-  decoration: BoxDecoration(
-    gradient: LinearGradient(
-      colors: [Colors.amber.withOpacity(0.9), Colors.orange],
-      begin: FractionalOffset(0.0, 0.4),
-      end: Alignment.topRight,
-    ),
-  ),
-  child: Column(
-    children: [
-
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              
+        appBar: AppBar(title: Text('ขั้นตอน')),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.amber.withOpacity(0.9), Colors.orange],
+              begin: FractionalOffset(0.0, 0.4),
+              end: Alignment.topRight,
             ),
-            child: videoUrls.length != 0 ? ListView.builder(
-              itemCount: videoUrls.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map<String, dynamic> stepdata =
-                                      stepList[index];
-                // กำหนดวิดีโอที่ต้องการแสดงเป็นรูปและข้อมูลอื่น ๆ ที่ต้องการ
-                // เช่นรูป thumbnail จาก thumbnails[index]
-                // และคำอธิบายอื่น ๆ
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white
-                    ),
-                    child: ListTile(
-                      // นี่คือวิดีโอที่คุณต้องการแสดง
-                      // ในรูปแบบรูป thumbnail หรืออื่น ๆ
-                     title: Text('${stepdata['title']}',style: TextStyle(fontWeight: FontWeight.bold),maxLines: 2,),
-                      
-                      // leading: thumbnails.isNotEmpty && thumbnails[index] != null
-                      //               ? Image.file(thumbnails[index],fit: BoxFit.fill,)
-                      //               : Center(child: CircularProgressIndicator()), // ตรวจสอบว่ามี thumbnails และ thumbnails[index] ไม่เป็น null
-                      // ข้อมูลเพิ่มเติมหรือคำอธิบาย
-                      subtitle: Text('${stepdata['description']}',maxLines: 5,),
-                    ),
-                  ),
-                );
-              },
-            ):Center(child: Text('ไม่มีวิดีโอ')),
           ),
-        ),
-      ),
-      SizedBox(height: 30),
-      // ElevatedButton(
-      //   onPressed: () {
-      //     Get.snackbar('title', '$videoUrls');
-      //   },
-      //   child: Text('Show SnackBar'),
-      // ),
-    ],
-  ),
-)
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(),
+                    child: videoUrls.length != 0
+                        ? ListView.builder(
+                            itemCount: videoUrls.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              Map<String, dynamic> stepdata = stepList[index];
+                              // กำหนดวิดีโอที่ต้องการแสดงเป็นรูปและข้อมูลอื่น ๆ ที่ต้องการ
+                              // เช่นรูป thumbnail จาก thumbnails[index]
+                              // และคำอธิบายอื่น ๆ
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration:
+                                          BoxDecoration(color: Colors.white),
+                                      child: ListTile(
+                                        // นี่คือวิดีโอที่คุณต้องการแสดง
+                                        // ในรูปแบบรูป thumbnail หรืออื่น ๆ
+                                        title: Text(
+                                          '${stepdata['title']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                          maxLines: 2,
+                                        ),
 
-    );
+                                        // leading: thumbnails.isNotEmpty && thumbnails[index] != null
+                                        //               ? Image.file(thumbnails[index],fit: BoxFit.fill,)
+                                        //               : Center(child: CircularProgressIndicator()), // ตรวจสอบว่ามี thumbnails และ thumbnails[index] ไม่เป็น null
+                                        // ข้อมูลเพิ่มเติมหรือคำอธิบาย
+                                        subtitle: Text(
+                                          '${stepdata['description']}',
+                                          maxLines: 5,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(videoUrls[index].toString()),
+                                    // Image.network(videoUrls[index]),
+                                    Chewie(
+                                      controller: ChewieController(
+                                        videoPlayerController:
+                                            VideoPlayerController.network(
+                                                videoUrls[index]),
+                                        aspectRatio: 16 / 9, // สัดส่วนของวิดีโอ
+                                        autoPlay:
+                                            false, // กำหนดให้วิดีโอไม่ถูกเล่นอัตโนมัติ
+                                        looping:
+                                            false, // กำหนดให้วิดีโอไม่วนซ้ำ
+                                        autoInitialize:
+                                            true, // กำหนดให้วิดีโอเตรียมพร้อมในระหว่างการโหลด
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : Center(child: Text('ไม่มีวิดีโอ')),
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Get.snackbar('title', '$videoUrls');
+              //   },
+              //   child: Text('Show SnackBar'),
+              // ),
+            ],
+          ),
+        ));
   }
 }

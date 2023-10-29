@@ -68,28 +68,30 @@ class _detailLevelfoodState extends State<detailLevelfood> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-              flexibleSpace: ClipPath(
-                child: Container(
-                  height: 500,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 255, 127, 8),
-                        Color.fromARGB(255, 255, 198, 55),
-                      ],
-                    ),
-                  ),
-                  child: const Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
-                      ],
-                    ),
-                  ),
-                ),
+        title: Text('หน้าข้อมูลความยากอาหาร'),
+        centerTitle: true,
+        flexibleSpace: ClipPath(
+          child: Container(
+            height: 500,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 127, 8),
+                  Color.fromARGB(255, 255, 198, 55),
+                ],
               ),
+            ),
+            child: const Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -103,80 +105,103 @@ class _detailLevelfoodState extends State<detailLevelfood> {
                   return Stack(
                     children: <Widget>[
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Get.to(DetailFood(), arguments: FoodData['Food_id']);
                         },
                         child: Container(
                           margin: EdgeInsets.fromLTRB(20, 5.0, 20.0, 5.0),
                           height: 150.0,
                           width: double.infinity,
-                          decoration: BoxDecoration(color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                           child: Padding(
-                            padding:  const EdgeInsets.fromLTRB(160, 20.0, 20.0, 20.0),
+                            padding: const EdgeInsets.fromLTRB(
+                                160, 20.0, 20.0, 20.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Container(
-                                      width: 100,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text('${FoodData['Food_Name']}',
-                                          
-                                                  style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 2,overflow: TextOverflow.fade,),
-                                          Row(
-                                          children: <Widget>[
-                                            Icon(Icons.star,color: Colors.yellow,size: 15,),
-                                            Text('${FoodData['Food_Point']}',
-                                                    style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold), maxLines: 5),
-                                          ],
-                                        ),
-                                          Text('ความยาก ${FoodData['Food_Level']}',
-                                                  style: TextStyle(fontSize: 14,color: Colors.black54), maxLines: 2,overflow: TextOverflow.fade,),
-                                          
+                                  width: 100,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${FoodData['Food_Name']}',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 15,
+                                          ),
+                                          Text('${FoodData['Food_Point']}',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold),
+                                              maxLines: 5),
                                         ],
                                       ),
-                                    ),
+                                      Text(
+                                        'ความยาก ${FoodData['Food_Level']}',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
-                                    //  Column(
-                                      
-                                    //   children: [
-                                    //     Row(
-                                    //       children: <Widget>[
-                                    //         Icon(Icons.star,color: Colors.yellow,),
-                                    //         Text('${FoodData['Food_Point']}',
-                                    //                 style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 5),
-                                    //       ],
-                                    //     ),
-                                    //     SizedBox(height: 50,),
-                                        
-                                    //   ],
-                                    // ),
-                              
+                                //  Column(
+
+                                //   children: [
+                                //     Row(
+                                //       children: <Widget>[
+                                //         Icon(Icons.star,color: Colors.yellow,),
+                                //         Text('${FoodData['Food_Point']}',
+                                //                 style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 5),
+                                //       ],
+                                //     ),
+                                //     SizedBox(height: 50,),
+
+                                //   ],
+                                // ),
                               ],
                             ),
-                            
                           ),
                         ),
                       ),
                       SizedBox(
                         height: 80,
                       ),
-                       Positioned(
-                      left: 20.0,
-                      top: 5,
-                      bottom: 5.0,
-                      child: GestureDetector(
-                        onTap: (){
-                          Get.to(DetailFood(), arguments: FoodData['Food_id']);
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Image.network(FoodData['Food_Image'],fit: BoxFit.cover,width: 140,)),
-                      )),
+                      Positioned(
+                          left: 20.0,
+                          top: 5,
+                          bottom: 5.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(DetailFood(),
+                                  arguments: FoodData['Food_id']);
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Image.network(
+                                  FoodData['Food_Image'],
+                                  fit: BoxFit.cover,
+                                  width: 140,
+                                )),
+                          )),
                     ],
                   );
                 } else {

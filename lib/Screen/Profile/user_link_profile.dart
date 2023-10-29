@@ -47,40 +47,41 @@ class UserLinkProfileState extends State<UserLinkProfile> {
   TextEditingController Userdetail = TextEditingController();
 
   Future<void> _refreshData() async {
-  // ทำอะไรก็ตามที่คุณต้องการในการรีเฟรชข้อมูล
-  await _getUserFromDatabase(); // รีเฟรชข้อมูลผู้ใช้
-  await readData(); // รีเฟรชข้อมูลอาหาร
-  await bookmark(); // รีเฟรชข้อมูลบุ๊คมาร์ค
-  await follow(); // รีเฟรชข้อมูลผู้ติดตาม
+    // ทำอะไรก็ตามที่คุณต้องการในการรีเฟรชข้อมูล
+    await _getUserFromDatabase(); // รีเฟรชข้อมูลผู้ใช้
+    await readData(); // รีเฟรชข้อมูลอาหาร
+    await bookmark(); // รีเฟรชข้อมูลบุ๊คมาร์ค
+    await follow(); // รีเฟรชข้อมูลผู้ติดตาม
 
-  // รายงานการสิ้นสุดของการรีเฟรช
-  setState(() {
-    showProgressBar = false; // หยุดแสดง CircularProgressIndiciator
-  });
-}
-
+    // รายงานการสิ้นสุดของการรีเฟรช
+    setState(() {
+      showProgressBar = false; // หยุดแสดง CircularProgressIndiciator
+    });
+  }
 
   Future<void> _getUserFromDatabase() async {
-    try{
-    final DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(getUserID)
-        .get();
+    try {
+      final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(getUserID)
+          .get();
 
-    if (snapshot.exists) {
-      final Map<String, dynamic>? data =
-          snapshot.data() as Map<String, dynamic>?;
+      if (snapshot.exists) {
+        final Map<String, dynamic>? data =
+            snapshot.data() as Map<String, dynamic>?;
 
-      if (data != null) {
-        setState(() {
-          name = data["Name"];
-          image = data["ImageP"];
-          email = data["Email"];
-          phone = data["Phone"];
-        });
+        if (data != null) {
+          setState(() {
+            name = data["Name"];
+            image = data["ImageP"];
+            email = data["Email"];
+            phone = data["Phone"];
+          });
+        }
       }
+    } catch (e) {
+      '$e';
     }
-    }catch(e){'$e';}
   }
 
 // //Get data fromdatabase
@@ -241,6 +242,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
 
     return Scaffold(
         appBar: AppBar(
+          title: Text('หน้าโปรไฟล์'),
+          centerTitle: true,
           toolbarHeight: 60,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -304,36 +307,41 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                         height: 3,
                       ),
                       Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        email ?? '',
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black45),
-                      ),
-                      SizedBox(
-                        height: 25,
-                        child: const VerticalDivider(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            email ?? '',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black45),
+                          ),
+                          SizedBox(
+                            height: 25,
+                            child: const VerticalDivider(
                               thickness: 1,
                               indent: 5,
                               endIndent: 5,
                             ),
+                          ),
+                          Icon(
+                            Icons.phone,
+                            size: 20,
+                            color: Colors.black38,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            phone ?? '',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black45),
+                          ),
+                        ],
                       ),
-                      
-                      Icon(Icons.phone,size: 20,color: Colors.black38,),
-                      SizedBox(width: 5,),
-                       Text(
-                        phone ?? '',
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black45),
-                      ),
-                    ],
-                  ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -351,8 +359,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                               ),
                             ),
                             child: const Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 2),
                               child: Text(
                                 "ติดตาม",
                                 style: TextStyle(
@@ -362,7 +370,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                               ),
                             ),
                           ),
-          
+
                           //Report User Button
                           IconButton(
                             onPressed: () {
@@ -377,8 +385,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                         child: Column(
                                       children: [
                                         Icon(Icons.warning_amber_outlined,
-                                            color:
-                                                Color.fromARGB(255, 255, 255, 255),
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
                                             size: 75),
                                         Text(
                                           'รายงานผู้ใช้',
@@ -423,12 +431,15 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                                     Divider.createBorderSide(
                                                         context)),
                                             filled: true,
-                                            contentPadding: const EdgeInsets.all(8),
+                                            contentPadding:
+                                                const EdgeInsets.all(8),
                                           ),
-                                          items: const <DropdownMenuItem<String>>[
+                                          items: const <DropdownMenuItem<
+                                              String>>[
                                             DropdownMenuItem<String>(
                                               value: 'ใช้คำพูดที่ไม่เหมาะสม',
-                                              child: Text('ใช้คำพูดที่ไม่เหมาะสม'),
+                                              child:
+                                                  Text('ใช้คำพูดที่ไม่เหมาะสม'),
                                             ),
                                             DropdownMenuItem<String>(
                                               value:
@@ -438,7 +449,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                             ),
                                             DropdownMenuItem<String>(
                                               value: 'ใช้รูปที่ไม่เหมาะสม',
-                                              child: Text('ใช้รูปที่ไม่เหมาะสม'),
+                                              child:
+                                                  Text('ใช้รูปที่ไม่เหมาะสม'),
                                             ),
                                             DropdownMenuItem<String>(
                                               value: 'ให้ข้อมูลเท็จ',
@@ -454,7 +466,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             'หมายเหตุ',
-                                            style: TextStyle(color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ),
                                         ),
                                         Padding(
@@ -491,20 +504,22 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                                 // ทำอะไรก็ตามที่คุณต้องการเมื่อผู้ใช้ส่งรายงาน
                                                 FirebaseFirestore firestore =
                                                     FirebaseFirestore.instance;
-                                                final DocumentReference foodReport =
-                                                    firestore
-                                                        .collection("UserReport")
+                                                final DocumentReference
+                                                    foodReport = firestore
+                                                        .collection(
+                                                            "UserReport")
                                                         .doc();
-          
+
                                                 try {
-                                                  Map<String, dynamic> dataMap = {
+                                                  Map<String, dynamic> dataMap =
+                                                      {
                                                     'Report': UsertypeReport,
                                                     'Detail': Userdetail.text,
                                                     'Time': Timestamp.now(),
                                                     'ID_User': getUserID,
                                                     'ID_Report': foodReport.id
                                                   };
-          
+
                                                   await foodReport.set(dataMap);
                                                   Userdetail.clear();
                                                   Get.snackbar('รายงานผู้ใช้',
@@ -514,10 +529,10 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                                   Get.snackbar('รายงานผู้ใช้',
                                                       'รายงานผู้ใช้ไม่สำเร็จ');
                                                 }
-          
+
                                                 print('getUserID = ');
                                                 print(getUserID);
-          
+
                                                 Navigator.of(context).pop();
                                               },
                                             ),
@@ -556,7 +571,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                           '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
                                       .join('&');
                                 }
-          
+
                                 final Uri emailUri = Uri(
                                   scheme: 'mailto',
                                   path: email,
@@ -566,7 +581,7 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                                         'มีการติดต่อจากผู้ใช้มาหาคุณ โปรดติดต่อกลับ',
                                   }),
                                 );
-          
+
                                 if (await canLaunchUrl(emailUri)) {
                                   launchUrl(emailUri);
                                 } else {
@@ -615,7 +630,8 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                   left: 10,
                   bottom: 0,
                   child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
                       mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
                       crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน

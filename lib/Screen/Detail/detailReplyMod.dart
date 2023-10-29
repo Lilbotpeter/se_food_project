@@ -80,7 +80,7 @@ class _ReplyModFoodState extends State<ReplyModFood> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'ตอบกลับ',
+          'หน้าตอบกลับการปรับสูตร',
           style: TextStyle(color: Colors.white),
         ),
         flexibleSpace: ClipPath(

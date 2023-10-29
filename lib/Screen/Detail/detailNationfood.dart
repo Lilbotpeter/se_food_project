@@ -68,28 +68,30 @@ class _detailNationfoodState extends State<detailNationfood> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-              flexibleSpace: ClipPath(
-                child: Container(
-                  height: 500,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 255, 127, 8),
-                        Color.fromARGB(255, 255, 198, 55),
-                      ],
-                    ),
-                  ),
-                  child: const Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
-                      ],
-                    ),
-                  ),
-                ),
+        title: Text('หน้าข้อมูลสัญชาติอาหาร'),
+        centerTitle: true,
+        flexibleSpace: ClipPath(
+          child: Container(
+            height: 500,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 127, 8),
+                  Color.fromARGB(255, 255, 198, 55),
+                ],
               ),
+            ),
+            child: const Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -103,18 +105,20 @@ class _detailNationfoodState extends State<detailNationfood> {
                   return Stack(
                     children: <Widget>[
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Get.to(DetailFood(), arguments: FoodData['Food_id']);
                         },
                         child: Container(
                           margin: EdgeInsets.fromLTRB(20, 5.0, 20.0, 5.0),
-                            height: 150.0,
-                            width: double.infinity,
-                            decoration: BoxDecoration(color: Colors.white,
+                          height: 150.0,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(20.0),
-                            ),
+                          ),
                           child: Padding(
-                            padding:  const EdgeInsets.fromLTRB(160, 20.0, 20.0, 20.0),
+                            padding: const EdgeInsets.fromLTRB(
+                                160, 20.0, 20.0, 20.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,19 +126,39 @@ class _detailNationfoodState extends State<detailNationfood> {
                                 Container(
                                   width: 100,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('${FoodData['Food_Name']}',
-                                          style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold), maxLines: 2,overflow: TextOverflow.fade,),
+                                      Text(
+                                        '${FoodData['Food_Name']}',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.fade,
+                                      ),
                                       Row(
-                                          children: <Widget>[
-                                            Icon(Icons.star,color: Colors.yellow,size: 15,),
-                                            Text('${FoodData['Food_Point']}',
-                                                    style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold), maxLines: 5),
-                                          ],
-                                        ),
-                                          Text('${FoodData['Food_Nation']}',
-                                                  style: TextStyle(fontSize: 14,color: Colors.black54), maxLines: 2,overflow: TextOverflow.fade,),
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 15,
+                                          ),
+                                          Text('${FoodData['Food_Point']}',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold),
+                                              maxLines: 5),
+                                        ],
+                                      ),
+                                      Text(
+                                        '${FoodData['Food_Nation']}',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.fade,
+                                      ),
                                       // TextButton(
                                       //     onPressed: () {
                                       //       print(FoodData['Food_id']);
@@ -147,7 +171,7 @@ class _detailNationfoodState extends State<detailNationfood> {
                                   ),
                                 ),
                                 // Column(
-                                      
+
                                 //       children: [
                                 //         Row(
                                 //           children: <Widget>[
@@ -157,7 +181,7 @@ class _detailNationfoodState extends State<detailNationfood> {
                                 //           ],
                                 //         ),
                                 //         SizedBox(height: 50,),
-                                        
+
                                 //       ],
                                 //     ),
                               ],
@@ -169,17 +193,22 @@ class _detailNationfoodState extends State<detailNationfood> {
                         height: 80,
                       ),
                       Positioned(
-                      left: 20.0,
-                      top: 5,
-                      bottom: 5.0,
-                      child: GestureDetector(
-                        onTap: (){
-                          Get.to(DetailFood(), arguments: FoodData['Food_id']);
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Image.network(FoodData['Food_Image'],fit: BoxFit.cover,width: 150,)),
-                      )),
+                          left: 20.0,
+                          top: 5,
+                          bottom: 5.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(DetailFood(),
+                                  arguments: FoodData['Food_id']);
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Image.network(
+                                  FoodData['Food_Image'],
+                                  fit: BoxFit.cover,
+                                  width: 150,
+                                )),
+                          )),
                     ],
                   );
                 } else {

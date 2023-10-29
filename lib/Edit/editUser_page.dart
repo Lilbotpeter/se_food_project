@@ -144,6 +144,8 @@ class _EditUserState extends State<EditUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('หน้าแก้ไขโปรไฟล์ผู้ใช้'),
+        centerTitle: true,
         flexibleSpace: ClipPath(
           child: Container(
             height: 500,

@@ -701,6 +701,11 @@ class _DetailFoodState extends State<DetailFood> {
     //ตัวรับ Parameter
     return Scaffold(
         backgroundColor: Color.fromARGB(239, 255, 255, 255),
+        // appBar: AppBar(
+        //   title: Text('หน้าข้อมูลอาหาร'),
+        //   centerTitle: true,
+        //   backgroundColor: Colors.orangeAccent,
+        // ),
         //Floating Menu
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: SpeedDial(
@@ -1323,6 +1328,8 @@ class _DetailFoodState extends State<DetailFood> {
           length: 4,
           child: Scaffold(
             appBar: AppBar(
+              title: Text('หน้าข้อมูลอาหาร'),
+              centerTitle: true,
               flexibleSpace: ClipPath(
                 child: Container(
                   height: 500,
@@ -1401,17 +1408,19 @@ class _DetailFoodState extends State<DetailFood> {
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemCount: imageUrls.length,
-                                    itemBuilder: (BuildContext context, int index) {
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
                                       return Slidable(
                                         actionPane: SlidableStrechActionPane(),
                                         actionExtentRatio: 0.50,
                                         child: GestureDetector(
                                           onTap: () {
-                                            _showImagePopup(
-                                                context, imageUrls[index], index);
+                                            _showImagePopup(context,
+                                                imageUrls[index], index);
                                           },
                                           child: AspectRatio(
-                                            aspectRatio: 1.0, // รักษาสัดส่วนรูปภาพ
+                                            aspectRatio:
+                                                1.0, // รักษาสัดส่วนรูปภาพ
                                             child: Image.network(
                                               imageUrls[index],
                                               fit: BoxFit
@@ -1498,7 +1507,7 @@ class _DetailFoodState extends State<DetailFood> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 200,left: 280),
+                          padding: const EdgeInsets.only(top: 200, left: 280),
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 0, 0, 0),
@@ -1572,9 +1581,10 @@ class _DetailFoodState extends State<DetailFood> {
                                             child: Text(
                                               '$name',
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w600, ),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.fade,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.fade,
                                             ),
                                           ),
                                           SizedBox(
@@ -1654,8 +1664,8 @@ class _DetailFoodState extends State<DetailFood> {
                                               fontSize: 30,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.white),
-                                              overflow: TextOverflow.fade,
-                                              maxLines: 1,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
                                         ),
                                       ],
                                     ),
@@ -1671,62 +1681,73 @@ class _DetailFoodState extends State<DetailFood> {
                               ),
                             ),
 ////////////////////////////////////////////////Video
-                              Padding(
-  padding: const EdgeInsets.all(8.0),
-  child: Container(
-    margin: EdgeInsets.fromLTRB(20.0, 215, 20, 5),
-    width: double.infinity,
-    decoration: BoxDecoration(
-      gradient: new LinearGradient(
-        colors: [Color.fromARGB(240, 255, 153, 0), Color.fromARGB(255, 61, 37, 0)],
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-      ),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: GestureDetector(
-      onTap: () {
-        Get.to(StepViewer(),transition: Transition.zoom,arguments: id_food );
-      },
-      child: SizedBox(
-        height: 73,
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left:40.0,top:15),
-              child: Row(
-                children: [
-                  Icon(Icons.play_arrow_rounded,color: Colors.white),
-                  Text('ดูวิดีโอขั้นตอน',style: TextStyle(color: Colors.white,fontSize: 28)),
-                ],
-              ),
-            ),
-            Opacity(opacity: 0.3,
-            child: Container(
-              decoration: new BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: new NetworkImage(image_food??''),
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.centerLeft,
-    
-              ),
-              ),
-            ),
-            )
-          ],
-        ),
-      ),
-    )
-  ),
-),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                  margin: EdgeInsets.fromLTRB(20.0, 215, 20, 5),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    gradient: new LinearGradient(
+                                      colors: [
+                                        Color.fromARGB(240, 255, 153, 0),
+                                        Color.fromARGB(255, 61, 37, 0)
+                                      ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Get.to(StepViewer(),
+                                          transition: Transition.zoom,
+                                          arguments: id_food);
+                                    },
+                                    child: SizedBox(
+                                      height: 73,
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 40.0, top: 15),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.play_arrow_rounded,
+                                                    color: Colors.white),
+                                                Text('ดูวิดีโอขั้นตอน',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 28)),
+                                              ],
+                                            ),
+                                          ),
+                                          Opacity(
+                                            opacity: 0.3,
+                                            child: Container(
+                                              decoration: new BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                image: DecorationImage(
+                                                  image: new NetworkImage(
+                                                      image_food ?? ''),
+                                                  fit: BoxFit.fitWidth,
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                            ),
 
 /////////////////////////////////////////////////Detail
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                margin:
-                                    EdgeInsets.fromLTRB(20.0, 300, 20, 5),
+                                margin: EdgeInsets.fromLTRB(20.0, 300, 20, 5),
                                 width: double.infinity,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -1742,8 +1763,7 @@ class _DetailFoodState extends State<DetailFood> {
                                       children: <Widget>[
                                         Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
@@ -1751,8 +1771,7 @@ class _DetailFoodState extends State<DetailFood> {
                                               'รายละเอียด',
                                               style: TextStyle(
                                                   fontSize: 24,
-                                                  fontWeight:
-                                                      FontWeight.w600),
+                                                  fontWeight: FontWeight.w600),
                                             ),
                                             const SizedBox(
                                               width: 5,
@@ -1761,8 +1780,8 @@ class _DetailFoodState extends State<DetailFood> {
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                  description_food ?? ''),
+                                              child:
+                                                  Text(description_food ?? ''),
                                             ),
 /////////Solution
                                             ExpansionTile(
@@ -1808,8 +1827,8 @@ class _DetailFoodState extends State<DetailFood> {
                                               ),
                                               children: <Widget>[
                                                 ListTile(
-                                                  title: Text(
-                                                      solution_food ?? ''),
+                                                  title:
+                                                      Text(solution_food ?? ''),
                                                 ),
                                               ],
                                               onExpansionChanged:

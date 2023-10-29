@@ -93,11 +93,10 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   AuthenticationController auth = AuthenticationController.instanceAuth;
-void signOut() async {
-  await FirebaseAuth.instance.signOut();
-  auth.signOut();
-}
-
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+    auth.signOut();
+  }
 
   Future<void> logout() async {
     Get.snackbar('Logout', 'Logged out');
@@ -183,162 +182,169 @@ void signOut() async {
 
     // Capture the index value
     return Scaffold(
+        appBar: AppBar(
+          title: Text('หน้าโปรไฟล์'),
+          centerTitle: true,
+          backgroundColor: Colors.orangeAccent,
+        ),
         body: Stack(
-      children: [
-        Positioned(
-          top: 10,
-          left: 0,
-          right: 0,
-          child: Column(
-            children: <Widget>[
-              //profile picture
-              ProfilePicture(imageXFile: imageXFile, image: image),
-              const SizedBox(
-                height: 9,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    name ?? '', //Show Name เด้อจ้า
-                    style: TextStyle(fontSize: 25.0),
+          children: [
+            Positioned(
+              top: 10,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: <Widget>[
+                  //profile picture
+                  ProfilePicture(imageXFile: imageXFile, image: image),
+                  const SizedBox(
+                    height: 9,
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    email ?? '',
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black45),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name ?? '', //Show Name เด้อจ้า
+                        style: TextStyle(fontSize: 25.0),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 25,
-                    child: const VerticalDivider(
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        email ?? '',
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black45),
+                      ),
+                      SizedBox(
+                        height: 25,
+                        child: const VerticalDivider(
                           thickness: 1,
                           indent: 5,
                           endIndent: 5,
                         ),
-                  ),
-                  
-                  Icon(Icons.phone,size: 20,color: Colors.black38,),
-                  SizedBox(width: 5,),
-                   Text(
-                    phone ?? '',
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black45),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.snackbar("Check", "currect $userid");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
                       ),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        Get.to(const EditUser(), arguments: userid);
-                      },
-                      child: const Text(
-                        'แก้ไขข้อมูลส่วนตัว',
-                        style: TextStyle(color: Colors.white),
+                      Icon(
+                        Icons.phone,
+                        size: 20,
+                        color: Colors.black38,
                       ),
-                    ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        phone ?? '',
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black45),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: FittedBox(
-                        child: FloatingActionButton(
-                          elevation: 2,
-                          backgroundColor: Colors.redAccent,
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.snackbar("Check", "currect $userid");
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kPrimaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
+                        child: TextButton(
                           onPressed: () {
-                            signOut();
-                            AuthenticationController().signOut();
+                            Get.to(const EditUser(), arguments: userid);
                           },
-                          child: const Icon(
-                            Icons.logout,
-                            size: 35,
-                            color: Colors.white,
+                          child: const Text(
+                            'แก้ไขข้อมูลส่วนตัว',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: FittedBox(
+                            child: FloatingActionButton(
+                              elevation: 2,
+                              backgroundColor: Colors.redAccent,
+                              onPressed: () {
+                                signOut();
+                                AuthenticationController().signOut();
+                              },
+                              child: const Icon(
+                                Icons.logout,
+                                size: 35,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                      height: 200,
+                      width: 300,
+                      //Stat Row
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          //Status
+                          StatusText(foodModels.length, 'สูตรอาหาร'),
+                          const VerticalDivider(
+                            thickness: 1,
+                            indent: 10,
+                            endIndent: 160,
+                          ),
+                          StatusText(countfollow, 'ผู้ติดตาม'),
+                          const VerticalDivider(
+                            thickness: 1,
+                            indent: 10,
+                            endIndent: 160,
+                          ),
+                          StatusText(countbookmark, 'อาหารที่ชอบ'),
+                        ],
+                      )),
                 ],
               ),
-              const SizedBox(height: 10),
-              SizedBox(
-                  height: 200,
-                  width: 300,
-                  //Stat Row
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      //Status
-                      StatusText(foodModels.length, 'สูตรอาหาร'),
-                      const VerticalDivider(
-                        thickness: 1,
-                        indent: 10,
-                        endIndent: 160,
-                      ),
-                      StatusText(countfollow, 'ผู้ติดตาม'),
-                      const VerticalDivider(
-                        thickness: 1,
-                        indent: 10,
-                        endIndent: 160,
-                      ),
-                      StatusText(countbookmark, 'อาหารที่ชอบ'),
-                     
-                    ],
-                  )),
-                  
-            ],
-          ),
-        ),
-        
-       
-        Positioned(
-          top: 350,
-          right: 10,
-          left: 10,
-          bottom: 0,
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
-              mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
-              crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน
-              childAspectRatio: 1, // อัตราส่วนของความกว้างต่อความสูงของรายการ
             ),
-            itemCount: foodModels.length, // จำนวนรายการใน GridView
-            itemBuilder: (BuildContext buildContext, int index) {
-              return buildFoodItem(index);
-            },
-          ),
-        ),
-      ],
-    ));
+            Positioned(
+              top: 350,
+              right: 10,
+              left: 10,
+              bottom: 0,
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // จำนวนคอลัมน์ในกริด
+                  mainAxisSpacing: 2, // ระยะห่างระหว่างรายการในแนวตั้ง
+                  crossAxisSpacing: 5, // ระยะห่างระหว่างรายการในแนวนอน
+                  childAspectRatio:
+                      1, // อัตราส่วนของความกว้างต่อความสูงของรายการ
+                ),
+                itemCount: foodModels.length, // จำนวนรายการใน GridView
+                itemBuilder: (BuildContext buildContext, int index) {
+                  return buildFoodItem(index);
+                },
+              ),
+            ),
+          ],
+        ));
   }
 
 //Status Text

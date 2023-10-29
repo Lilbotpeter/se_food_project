@@ -16,6 +16,7 @@ dependencies:
   email_validator: ^2.1.17
   video_player: ^2.7.2
   video_thumbnail: ^0.5.3
+  chewie: ^1.7.1
 
   #Firebase Dependencies
   firebase_core: ^2.14.0

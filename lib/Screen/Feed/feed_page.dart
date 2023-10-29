@@ -189,17 +189,16 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   Future<void> _refreshData() async {
-  await SortByDate(); 
-  await readData(); 
-  await readBookMarkFood(); 
-  await readFollowUser(); 
-  await _getUserDataFromDatabase();
+    await SortByDate();
+    await readData();
+    await readBookMarkFood();
+    await readFollowUser();
+    await _getUserDataFromDatabase();
 
-  
-  setState(() {
-    showProgressBar = false; 
-  });
-}
+    setState(() {
+      showProgressBar = false;
+    });
+  }
 
   Future<void> _getUserDataFromDatabase() async {
     try {
@@ -273,47 +272,48 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   Future<void> readFollowUser() async {
-    try{
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    setState(() {
-      showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
-    });
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      setState(() {
+        showProgressBar = true; // เริ่มแสดง CircularProgressIndicator
+      });
 
-    CollectionReference collectionReference =
-        firestore.collection('followers').doc(userid).collection('followersID');
-    final snapshots = await collectionReference.get();
+      CollectionReference collectionReference = firestore
+          .collection('followers')
+          .doc(userid)
+          .collection('followersID');
+      final snapshots = await collectionReference.get();
 
-    List<String> newuserData = []; // สร้างรายการของ FoodModel ใหม่
-    List<dynamic> dataFollows = [];
-    String id, image, iduser, name;
-    for (QueryDocumentSnapshot idUser in snapshots.docs) {
-      id = idUser.id;
-      newuserData.add(id);
-      QuerySnapshot comment = await firestore.collection('users').get();
-      for (QueryDocumentSnapshot datauser in comment.docs) {
-        if (idUser.id == datauser.id) {
-          // print('idUser =' + idUser.id);
-          // print('datauser =' + datauser.id);
-          // print('BallTrue');
-          iduser = datauser['Uid'];
-          image = datauser['ImageP'];
-          name = datauser['Name'];
-          dataFollows.add({'Uid': iduser, 'ImageP': image, 'Name': name});
-          // dataFollows.add(image);
+      List<String> newuserData = []; // สร้างรายการของ FoodModel ใหม่
+      List<dynamic> dataFollows = [];
+      String id, image, iduser, name;
+      for (QueryDocumentSnapshot idUser in snapshots.docs) {
+        id = idUser.id;
+        newuserData.add(id);
+        QuerySnapshot comment = await firestore.collection('users').get();
+        for (QueryDocumentSnapshot datauser in comment.docs) {
+          if (idUser.id == datauser.id) {
+            // print('idUser =' + idUser.id);
+            // print('datauser =' + datauser.id);
+            // print('BallTrue');
+            iduser = datauser['Uid'];
+            image = datauser['ImageP'];
+            name = datauser['Name'];
+            dataFollows.add({'Uid': iduser, 'ImageP': image, 'Name': name});
+            // dataFollows.add(image);
+          }
         }
       }
-    }
-    
 
-    try {
-      setState(() {
-        followUser = dataFollows; // อัปเดต foodModels ด้วยรายการใหม่
-        countFollows = dataFollows;
-      });
+      try {
+        setState(() {
+          followUser = dataFollows; // อัปเดต foodModels ด้วยรายการใหม่
+          countFollows = dataFollows;
+        });
+      } catch (e) {
+        '';
+      }
     } catch (e) {
-      '';
-    }
-    }catch(e){
       print('พบปัญหาโดย $e');
     }
   }
@@ -416,12 +416,13 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
+
     return Material(
         child: RefreshIndicator(
-          onRefresh: () => _refreshData(),
-          child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Container(
+      onRefresh: () => _refreshData(),
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -501,7 +502,8 @@ class _FeedPageState extends State<FeedPage> {
                           }
                         },
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 10.0, bottom: 25),
+                          padding:
+                              const EdgeInsets.only(right: 10.0, bottom: 25),
                           child: Container(
                             height: 50,
                             width: 50,
@@ -538,7 +540,8 @@ class _FeedPageState extends State<FeedPage> {
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 13),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 255, 255, 255),
                         borderRadius: BorderRadius.circular(10),
@@ -575,10 +578,9 @@ class _FeedPageState extends State<FeedPage> {
                       itemCount: typefood.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Get.to(detailTypefood(),
-                                        arguments: typefood[index]);
-                                  
+                                arguments: typefood[index]);
                           },
                           child: Container(
                             width: 100,
@@ -603,16 +605,16 @@ class _FeedPageState extends State<FeedPage> {
                                   width: 50,
                                 ),
                                 //Icon(Icons.food_bank),
-                                  Text(
-                                    typefood[index],
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    softWrap: false,
-                                    maxLines: 1,
+                                Text(
+                                  typefood[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                
+                                  softWrap: false,
+                                  maxLines: 1,
+                                ),
+
                                 //Text(typefood[index]),
                               ],
                             ),
@@ -623,7 +625,7 @@ class _FeedPageState extends State<FeedPage> {
                   ),
                 ),
               ),
-        /////////////////////////////////////////////////////////////Follower
+              /////////////////////////////////////////////////////////////Follower
               SizedBox(
                 height: 30,
               ),
@@ -640,7 +642,7 @@ class _FeedPageState extends State<FeedPage> {
                     String iduser = followUser[index]['Uid'];
                     String image = followUser[index]['ImageP'];
                     String name = followUser[index]['Name'];
-        
+
                     return InkWell(
                       onTap: () {
                         // เมื่อคลิกที่รูปภาพ
@@ -664,7 +666,7 @@ class _FeedPageState extends State<FeedPage> {
                   },
                 ),
               ),
-        
+
               ///////////////////////////////แนะนำ
               TitleCustomWithMore(icon: Icons.star, text: "เมนูแนะนำ!"),
               SizedBox(
@@ -721,9 +723,9 @@ class _FeedPageState extends State<FeedPage> {
                   shrinkWrap: true,
                   itemBuilder: (BuildContext buildContext, int index) {
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Get.to(detailNationfood(),
-                                    arguments: nationfood[index]);
+                            arguments: nationfood[index]);
                       },
                       child: Container(
                         width: 100,
@@ -747,9 +749,9 @@ class _FeedPageState extends State<FeedPage> {
                               height: 80,
                               width: 80,
                             ),
-                    
+
                             Text(nationfood[index]),
-                            
+
                             //Text(typefood[index]),
                           ],
                         ),
@@ -790,7 +792,7 @@ class _FeedPageState extends State<FeedPage> {
                             height: 80,
                             width: 80,
                           ),
-        
+
                           TextButton(
                             onPressed: () {
                               print('Yes I does');
@@ -807,8 +809,9 @@ class _FeedPageState extends State<FeedPage> {
                   },
                 ),
               ),
-        
-              TitleCustomWithMore(icon: Icons.bookmark, text: "อาหารที่กดติดตาม"),
+
+              TitleCustomWithMore(
+                  icon: Icons.bookmark, text: "อาหารที่กดติดตาม"),
               SizedBox(
                 height: 15,
               ),
@@ -822,7 +825,7 @@ class _FeedPageState extends State<FeedPage> {
                     String image = followFoods[index]['ImageP'];
                     String name = followFoods[index]['Name'];
                     String ratingf = followFoods[index]['Name'];
-        
+
                     return InkWell(
                       onTap: () {
                         // เมื่อคลิกที่รูปภาพ
@@ -857,9 +860,9 @@ class _FeedPageState extends State<FeedPage> {
               ),
             ],
           ),
-              ),
-            ),
-        ));
+        ),
+      ),
+    ));
   }
 }
 

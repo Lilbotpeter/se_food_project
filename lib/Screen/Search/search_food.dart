@@ -87,20 +87,28 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        title: Text('หน้าค้นหาอาหาร'),
+        centerTitle: true,
+        backgroundColor: Colors.orangeAccent,
       ),
       body: Column(
         children: [
-          Icon(Icons.search,size: 50,),
+          Icon(
+            Icons.search,
+            size: 50,
+          ),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text('ค้นหาสูตรอาหาร',style: TextStyle(fontSize: 20),),
+            child: Text(
+              'ค้นหาสูตรอาหาร',
+              style: TextStyle(fontSize: 20),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CupertinoSearchTextField(
-            controller: _searchController,
-                  ),
+              controller: _searchController,
+            ),
           ),
           Visibility(
             visible:
@@ -113,7 +121,7 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
                   return GestureDetector(
                     onTap: () {
                       try {
-                        Get.to(DetailFood(),arguments: user['Food_id']);
+                        Get.to(DetailFood(), arguments: user['Food_id']);
                       } catch (e) {
                         Get.back();
                         Get.snackbar('พบข้อผิดพลาด', 'ลองใหม่อีกครั้ง');
@@ -133,7 +141,7 @@ class _SearchFoodStreamState extends State<SearchFoodStream> {
                 !_showListView, // กำหนดการแสดงผลของข้อความ "No Data" ตามค่า _showListView
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.only(top:200.0),
+                padding: const EdgeInsets.only(top: 200.0),
                 child: Text('ไม่พบข้อมูลสูตรอาหาร'),
               ),
             ),

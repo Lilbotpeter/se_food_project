@@ -113,7 +113,9 @@ class _MyFoodsState extends State<MyFoods> {
     return Text(
       foodModels[index].food_name,
       style: TextStyle(
-          color: const Color.fromARGB(255, 0, 0, 0), fontSize: 14, fontWeight: FontWeight.bold),
+          color: const Color.fromARGB(255, 0, 0, 0),
+          fontSize: 14,
+          fontWeight: FontWeight.bold),
       maxLines: 5,
       overflow: TextOverflow.fade,
     );
@@ -135,6 +137,11 @@ class _MyFoodsState extends State<MyFoods> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('หน้าอาหารของฉัน'),
+        centerTitle: true,
+        backgroundColor: Colors.orangeAccent,
+      ),
       body: SafeArea(
         child: Center(
           child: Container(

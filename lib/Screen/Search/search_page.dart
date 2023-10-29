@@ -80,21 +80,28 @@ class _SearchPageState extends State<SearchPageStream> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        
+        title: Text('หน้าค้นหาผู้ใช้'),
+        centerTitle: true,
+        backgroundColor: Colors.orangeAccent,
       ),
       body: Column(
         children: [
-          Icon(Icons.search,size: 50,),
+          Icon(
+            Icons.search,
+            size: 50,
+          ),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text('ค้นหาผู้ใช้',style: TextStyle(fontSize: 20),),
+            child: Text(
+              'ค้นหาผู้ใช้',
+              style: TextStyle(fontSize: 20),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CupertinoSearchTextField(
-            controller: _searchController,
-                  ),
+              controller: _searchController,
+            ),
           ),
           Visibility(
             visible:
@@ -123,12 +130,12 @@ class _SearchPageState extends State<SearchPageStream> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top:20.0),
+            padding: const EdgeInsets.only(top: 20.0),
             child: Visibility(
               visible: !_showListView,
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top:150.0),
+                  padding: const EdgeInsets.only(top: 150.0),
                   child: Text('ไม่พบข้อมูลผู้ใช้'),
                 ),
               ),
