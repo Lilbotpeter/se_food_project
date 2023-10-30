@@ -170,6 +170,7 @@ class _UploadFoodState extends State<UploadFood> {
           uploading = false; // หยุดแสดงหลอดการอัปโหลด
         });
         Get.snackbar('ข้อมูลการอัปโหลด', 'อัปโหลดสำเร็จ');
+        Get.to(DetailStep(),arguments: id_food);
         print("Upload complete");
         Navigator.of(context as BuildContext).pushReplacement(
           MaterialPageRoute(builder: (context) => UploadFood()),
@@ -765,7 +766,7 @@ class _UploadFoodState extends State<UploadFood> {
             FloatingActionButton(
               onPressed: (){
                 uploadFile();
-                Get.to(DetailStep(),arguments: id_food);
+                
                 },
               child: Icon(
                 Icons.upload_sharp,

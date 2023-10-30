@@ -80,7 +80,7 @@ class _SearchPageState extends State<SearchPageStream> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('หน้าค้นหาผู้ใช้'),
+        // title: Text('หน้าค้นหาผู้ใช้'),
         centerTitle: true,
         backgroundColor: Colors.orangeAccent,
       ),

@@ -22,6 +22,7 @@ class _DetailStepState extends State<DetailStep> {
   UploadTask? task;
   List<TextEditingController> controllers = [TextEditingController()];
   List<TextEditingController> descontrollers = [TextEditingController()];
+  
   final userid = FirebaseAuth.instance.currentUser!.uid;
   File? file; //file can null
   PlatformFile? pickedFile;
@@ -237,10 +238,25 @@ Future<void> selectVideoFile() async {
     return Scaffold(
       appBar: AppBar(
         title: const Text('เพิ่มวิดีโอขั้นตอน'),
+        actions: <Widget>[
+    Padding(
+      padding: EdgeInsets.only(right: 20.0),
+      child: GestureDetector(
+        onTap: () {},
+        child: Icon(
+          Icons.check,
+          size: 26.0,
+
+        ),
+      )
+    ),
+  ],
       ),
       body: ListView.builder(
         itemCount: controllers.length,
         itemBuilder: (context, index) {
+          List<bool> isDisabled = List.filled(controllers.length, false);
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -258,27 +274,32 @@ Future<void> selectVideoFile() async {
                   }, icon: Icon(Icons.add_box)),
                   TextFormField(
                     controller: controllers[index],
+                    enabled: !isDisabled[index],
                     decoration:  InputDecoration(
-                      labelText: 'ขั้นตอนที่ ${index+1}',
+                      labelText: 'หัวข้อ ',
                     ),
                   ),
                   TextFormField(
                     controller: descontrollers[index],
+                    enabled: !isDisabled[index],
                     decoration:  InputDecoration(
-                      labelText: 'รายละเอียด ${index+1}',
+                      labelText: 'รายละเอียด ',
                     ),
                   ),
                   SizedBox(height: 40,),
-                  FloatingActionButton(onPressed: uploading==false ?()async{
+                  FloatingActionButton(onPressed: uploading == false && !isDisabled[index] ? () async {
                     video_title = controllers[index].text;
                     video_des = descontrollers[index].text;
+                    
                     step = '${index+1}';
                     uploadFile();
                     uploadFileStep();
+                    setState(() {
+                  isDisabled[index] = true; 
+                });
                   }:null,
                   child: Icon(Icons.check,color: Colors.white,),
-                  backgroundColor: uploading==false? Colors.black
-                  :Colors.grey,
+                  backgroundColor: uploading == false && !isDisabled[index] ? Colors.black : Colors.grey,
                   ),
 
                 ],

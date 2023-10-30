@@ -27,6 +27,7 @@ class _StepViewerState extends State<StepViewer> {
   List<File> thumbnails = [];
   final String getfoodID = Get.arguments as String; //รับ Food ID
   List<dynamic> stepList = [];
+    bool isFetching = false;
 
   Future<void> getVideoThumbnails() async {
     for (String? videoUrl in videoUrls) {
@@ -49,6 +50,9 @@ class _StepViewerState extends State<StepViewer> {
   }
 
   Future<void> _fetchVideos() async {
+    setState(() {
+      isFetching = true;
+    });
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       ListResult result = await storage
@@ -74,6 +78,7 @@ class _StepViewerState extends State<StepViewer> {
 
         setState(() {
           videoUrls = urls;
+          isFetching = false;
         });
       } catch (e) {
         print("Error fetching Video: $e");
@@ -84,14 +89,21 @@ class _StepViewerState extends State<StepViewer> {
   }
 
   Future<void> _fetchStepData() async {
+    setState(() {
+      isFetching = true;
+    });
     try {
       List<dynamic> StepList = await DetailService().fetchStepData(getfoodID);
       stepList = StepList;
+      setState(() {
+      isFetching = false;
+    });
     } catch (e) {
       // จัดการกับข้อผิดพลาดในการเรียก fetchReviewData ที่นี่
       print('Error in fetchReviewData (Modify): $e');
     }
   }
+
 
   // Future<List<String>> getDownloadURLs() async {
   // final storage = FirebaseStorage.instance;
@@ -151,7 +163,8 @@ class _StepViewerState extends State<StepViewer> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(),
-                    child: videoUrls.length != 0
+                    child: isFetching? Center(child: CircularProgressIndicator())
+                    : videoUrls.length != 0
                         ? ListView.builder(
                             itemCount: videoUrls.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -164,44 +177,60 @@ class _StepViewerState extends State<StepViewer> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      decoration:
-                                          BoxDecoration(color: Colors.white),
+                                      decoration: BoxDecoration(color: Colors.white),
                                       child: ListTile(
-                                        // นี่คือวิดีโอที่คุณต้องการแสดง
-                                        // ในรูปแบบรูป thumbnail หรืออื่น ๆ
-                                        title: Text(
-                                          '${stepdata['title']}',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 2,
+                                        title: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height: 30,width: 30,
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                color: const Color.fromARGB(255, 0, 0, 0),
+                                                shape: BoxShape.circle,
+                                                
+                                              ),
+                                              child: Text('${stepdata['step']}',style: TextStyle(color: Colors.white,fontSize: 16),),
+                                              ),
+                                            ),
+                                            Text(
+                                              '${stepdata['title']}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 2,
+                                            ),
+                                            Text(
+                                              '${stepdata['description']}',
+                                              maxLines: 5,
+                                            ),
+                                            SizedBox(height: 25,),
+                                      SizedBox(
+                                        height: 150,
+                                        width: double.infinity,
+                                        child: Chewie(
+                                        controller: ChewieController(
+                                          videoPlayerController:
+                                              VideoPlayerController.network(
+                                                  videoUrls[index]),
+                                          //aspectRatio: 16 / 9, // สัดส่วนของวิดีโอ
+                                          autoPlay:
+                                              false, // กำหนดให้วิดีโอไม่ถูกเล่นอัตโนมัติ
+                                          looping:
+                                              false, // กำหนดให้วิดีโอไม่วนซ้ำ
+                                          autoInitialize:
+                                              true, // กำหนดให้วิดีโอเตรียมพร้อมในระหว่างการโหลด
                                         ),
+                                                                          ),
+                                      ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
 
-                                        // leading: thumbnails.isNotEmpty && thumbnails[index] != null
-                                        //               ? Image.file(thumbnails[index],fit: BoxFit.fill,)
-                                        //               : Center(child: CircularProgressIndicator()), // ตรวจสอบว่ามี thumbnails และ thumbnails[index] ไม่เป็น null
-                                        // ข้อมูลเพิ่มเติมหรือคำอธิบาย
-                                        subtitle: Text(
-                                          '${stepdata['description']}',
-                                          maxLines: 5,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(videoUrls[index].toString()),
+                                    //Text(videoUrls[index].toString()),
                                     // Image.network(videoUrls[index]),
-                                    Chewie(
-                                      controller: ChewieController(
-                                        videoPlayerController:
-                                            VideoPlayerController.network(
-                                                videoUrls[index]),
-                                        aspectRatio: 16 / 9, // สัดส่วนของวิดีโอ
-                                        autoPlay:
-                                            false, // กำหนดให้วิดีโอไม่ถูกเล่นอัตโนมัติ
-                                        looping:
-                                            false, // กำหนดให้วิดีโอไม่วนซ้ำ
-                                        autoInitialize:
-                                            true, // กำหนดให้วิดีโอเตรียมพร้อมในระหว่างการโหลด
-                                      ),
-                                    ),
                                   ],
                                 ),
                               );
