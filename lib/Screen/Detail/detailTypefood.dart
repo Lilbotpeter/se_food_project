@@ -81,7 +81,7 @@ class _detailTypefoodState extends State<detailTypefood> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 233, 233, 233),
       appBar: AppBar(
-        title: Text('หน้าข้อมูลประเภทอาหาร'),
+        title: Text('ประเภทอาหาร'),
         centerTitle: true,
         flexibleSpace: ClipPath(
           child: Container(

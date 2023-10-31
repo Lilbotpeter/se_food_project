@@ -146,7 +146,7 @@ class _StepViewerState extends State<StepViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('ขั้นตอน')),
+        appBar: AppBar(title: Text('วิดีโอขั้นตอน')),
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

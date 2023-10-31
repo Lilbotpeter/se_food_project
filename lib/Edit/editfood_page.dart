@@ -59,14 +59,12 @@ class _EditFoodsState extends State<EditFoods> {
         //});
       },
       decoration: InputDecoration(
-        icon: Icon(Icons.point_of_sale),
         border:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         focusedBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
         contentPadding: const EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
@@ -132,16 +130,14 @@ class _EditFoodsState extends State<EditFoods> {
         //});
       },
       decoration: InputDecoration(
-        labelText: 'ความยากในการทำ',
+        //"labelText: 'ความยากในการทำ',
         hintText: 'กรุณาเลือกความยากในการทำ',
-        icon: Icon(Icons.point_of_sale),
         border:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         focusedBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
         contentPadding: const EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
@@ -182,14 +178,12 @@ class _EditFoodsState extends State<EditFoods> {
         //});
       },
       decoration: InputDecoration(
-        icon: Icon(Icons.point_of_sale),
         border:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         focusedBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
         contentPadding: const EdgeInsets.all(8),
       ),
       items: const <DropdownMenuItem<String>>[
@@ -652,12 +646,39 @@ class _EditFoodsState extends State<EditFoods> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('แก้ไขสูตรอาหาร'),
+        centerTitle: true,
+        flexibleSpace: ClipPath(
+          child: Container(
+            height: 500,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 127, 8),
+                  Color.fromARGB(255, 255, 198, 55),
+                ],
+              ),
+            ),
+            child: const Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       body: ListView(children: <Widget>[
         Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.width,
-              width: double.infinity,
+               height: MediaQuery.of(context).size.width *
+                                      0.70, // ตั้งความสูงให้เท่ากับความกว้างเพื่อทำให้รูปภาพเป็นสี่เหลี่ยม
+                                  width: MediaQuery.of(context).size.width,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: imageUrls.length,
@@ -680,42 +701,54 @@ class _EditFoodsState extends State<EditFoods> {
               ),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors
+                                            .black, // background (button) color
+                                        foregroundColor: Colors
+                                            .white, // foreground (text) color
+                                      ),
               onPressed: () {
                 pickImage(); // Function to pick a new image
               },
-              child: Text('เพิ่มรูปภาพ'),
+              child: Text('+ เพิ่มรูปภาพ'),
             ),
 //////////////////////////////
-            SizedBox(
-              height: MediaQuery.of(context).size.width,
-              width: double.infinity,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: videoUrls.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.25,
-                    child: GestureDetector(
-                      onTap: () {
-                        _showVideoPopup(context, videoUrls[index], index);
-                      },
-                      child: VideoPlayer(
-                        VideoPlayerController.networkUrl(
-                            Uri.parse(videoUrls[index])),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Text(videoUrls.toString()),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.width,
+            //   width: double.infinity,
+            //   child: ListView.builder(
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: videoUrls.length,
+            //     itemBuilder: (BuildContext context, int index) {
+            //       return Slidable(
+            //         actionPane: SlidableDrawerActionPane(),
+            //         actionExtentRatio: 0.25,
+            //         child: GestureDetector(
+            //           onTap: () {
+            //             _showVideoPopup(context, videoUrls[index], index);
+            //           },
+            //           child: VideoPlayer(
+            //             VideoPlayerController.networkUrl(
+            //                 Uri.parse(videoUrls[index])),
+            //           ),
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
+            //Text(videoUrls.toString()),
             //Text(imageUrls.toString()),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors
+                                            .black, // background (button) color
+                                        foregroundColor: Colors
+                                            .white, // foreground (text) color
+                                      ),
               onPressed: () {
                 pickVideo(); // Function to pick a new image
               },
-              child: Text('เพิ่มวิดิโอ'),
+              child: Text('+ เพิ่มวิดิโอ'),
             ),
           ],
         ),
@@ -723,11 +756,19 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        TextField(
-          controller: edit_name,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-            labelText: 'กรอกข้อมูล',
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: edit_name,
+            decoration: InputDecoration(
+            border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        hintText:
+                                            'กรอกความคิดเห็นเกี่ยวกับการปรับสูตร',
+                                      
+            ),
+            maxLines: 1,
           ),
         ),
         SizedBox(
@@ -737,10 +778,19 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        TextField(
-          controller: edit_description,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: edit_description,
+            decoration: InputDecoration(
+               border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        hintText:
+                                            'กรอกความคิดเห็นเกี่ยวกับการปรับสูตร',
+          contentPadding: EdgeInsets.all(8),
+            ),
+            maxLines: 5,
           ),
         ),
         SizedBox(
@@ -750,10 +800,19 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        TextField(
-          controller: edit_ingredients,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: edit_ingredients,
+            decoration: InputDecoration(
+                 border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          hintText:
+                                              'กรอกความคิดเห็นเกี่ยวกับการปรับสูตร',
+            contentPadding: EdgeInsets.all(8),
+              ),
+              maxLines: 5,
           ),
         ),
         SizedBox(
@@ -763,7 +822,10 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        level(context),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: level(context),
+        ),
         SizedBox(
           height: 10.0,
         ),
@@ -771,7 +833,10 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        nation(context),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: nation(context),
+        ),
         // SizedBox(
         //   height: 10.0,
         // ),
@@ -788,14 +853,23 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        Text("วิธทำ : "),
+        Text("วิธีทำ : "),
         SizedBox(
           height: 10.0,
         ),
-        TextField(
-          controller: edit_solution,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: edit_solution,
+            decoration: InputDecoration(
+                 border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          hintText:
+                                              'กรอกความคิดเห็นเกี่ยวกับการปรับสูตร',
+            contentPadding: EdgeInsets.all(8),
+              ),
+              maxLines: 5,
           ),
         ),
         SizedBox(
@@ -805,10 +879,16 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        TextField(
-          controller: edit_time,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: edit_time,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+            keyboardType: TextInputType.numberWithOptions(
+            decimal: true,
+          )
           ),
         ),
         SizedBox(
@@ -818,42 +898,54 @@ class _EditFoodsState extends State<EditFoods> {
         SizedBox(
           height: 10.0,
         ),
-        type(context),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: type(context),
+        ),
         SizedBox(
           height: 10.0,
         ),
-        TextButton(
-            onPressed: () async {
-              String _editname = edit_name.text;
-              String _editdescription = edit_description.text;
-              String _editingredients = edit_ingredients.text;
-              String _editlevel = edit_level!;
-              String _editnation = edit_nation!;
-              // String _editpoint = edit_point.text;
-              String _editsolution = edit_solution.text;
-              String _edittime = edit_time.text;
-              String _edittype = edit_type!;
-
-              final docker =
-                  FirebaseFirestore.instance.collection('Foods').doc(getfoodID);
-
-              docker.update({
-                'Food_Name': _editname,
-                'Food_Description': _editdescription,
-                'Food_Ingredients': _editingredients,
-                'Food_Level': _editlevel,
-                'Food_Nation': _editnation,
-                //'Food_Point': _editpoint,
-                'Food_Solution': _editsolution,
-                'Food_Time': _edittime,
-                'Food_Type': _edittype,
-                'Food_Image': imageUrl,
-              });
-
-              Navigator.of(context).pop();
-              //
-            },
-            child: const Text('ยืนยันการแก้ไข'))
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors
+                                              .black, // background (button) color
+                                          foregroundColor: Colors
+                                              .white, // foreground (text) color
+                                        ),
+              onPressed: () async {
+                String _editname = edit_name.text;
+                String _editdescription = edit_description.text;
+                String _editingredients = edit_ingredients.text;
+                String _editlevel = edit_level!;
+                String _editnation = edit_nation!;
+                // String _editpoint = edit_point.text;
+                String _editsolution = edit_solution.text;
+                String _edittime = edit_time.text;
+                String _edittype = edit_type!;
+        
+                final docker =
+                    FirebaseFirestore.instance.collection('Foods').doc(getfoodID);
+        
+                docker.update({
+                  'Food_Name': _editname,
+                  'Food_Description': _editdescription,
+                  'Food_Ingredients': _editingredients,
+                  'Food_Level': _editlevel,
+                  'Food_Nation': _editnation,
+                  //'Food_Point': _editpoint,
+                  'Food_Solution': _editsolution,
+                  'Food_Time': _edittime,
+                  'Food_Type': _edittype,
+                  'Food_Image': imageUrl,
+                });
+        
+                Navigator.of(context).pop();
+                //
+              },
+              child: const Text('ยืนยันการแก้ไข')),
+        )
       ]),
     );
 

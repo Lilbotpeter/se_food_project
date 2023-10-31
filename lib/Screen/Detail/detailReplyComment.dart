@@ -80,7 +80,7 @@ class _ReplyCommentFoodState extends State<ReplyCommentFood> {
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
         title: Text(
-          'หน้าตอบกลับคอมเมนต์',
+          'ตอบกลับคอมเมนต์',
           style: TextStyle(color: Colors.white),
         ),
         flexibleSpace: ClipPath(

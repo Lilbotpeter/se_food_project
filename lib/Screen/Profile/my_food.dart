@@ -6,6 +6,7 @@ import 'package:se_project_food/Edit/editfood_page.dart';
 import 'package:se_project_food/Screen/Profile/user_profile.dart';
 
 import '../../Models/foodmodels.dart';
+import '../../global.dart';
 import 'deleteFoodService.dart';
 
 class MyFoods extends StatefulWidget {
@@ -21,6 +22,14 @@ class _MyFoodsState extends State<MyFoods> {
   final TextEditingController edit_description = TextEditingController();
   final TextEditingController edit_ingredients = TextEditingController();
   //Method ที่ทำงาน อ่านค่าที่อยู่ใน fire store
+
+    Future<void> _refreshData() async {
+    await readData();
+
+    setState(() {
+      showProgressBar = false;
+    });
+  }
 
   @override
   void initState() {
@@ -138,188 +147,186 @@ class _MyFoodsState extends State<MyFoods> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('หน้าอาหารของฉัน'),
+        title: Text('อาหารของฉัน',),
         centerTitle: true,
         backgroundColor: Colors.orangeAccent,
       ),
       body: SafeArea(
         child: Center(
-          child: Container(
-            child: ListView.builder(
-              itemCount: foodModels.length,
-              itemBuilder: (BuildContext buildContext, int index) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 242, 221),
-                    child: Row(children: <Widget>[
-                      Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: MediaQuery.of(context).size.width * 0.5,
-                          child: Image.network(
-                            foodModels[index].food_image,
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            showName(
-                              index,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.amber,
-                                    textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                onPressed: () {
-                                  print(foodModels[index].food_id);
-                                  Get.to(EditFoods(),
-                                      arguments: foodModels[index].food_id);
-                                },
-                                child: Text(
-                                  'แก้ไขข้อมูล',
-                                  style: TextStyle(
-                                      color:
-                                          const Color.fromARGB(255, 0, 0, 0)),
-                                ),
+          child: ListView.builder(
+            itemCount: foodModels.length,
+            itemBuilder: (BuildContext buildContext, int index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: Card(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  child: Row(children: <Widget>[
+                    Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: MediaQuery.of(context).size.width * 0.5,
+                        child: Image.network(
+                          foodModels[index].food_image,
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          showName(
+                            index,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: const Color.fromARGB(255, 0, 0, 0),
+                                  textStyle: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              onPressed: () {
+                                print(foodModels[index].food_id);
+                                Get.to(EditFoods(),
+                                    arguments: foodModels[index].food_id);
+                              },
+                              child: Text(
+                                'แก้ไขข้อมูล',
+                                style: TextStyle(
+                                    color:
+                                        Color.fromARGB(255, 255, 255, 255)),
                               ),
                             ),
-                            Center(
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.redAccent,
-                                    textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                // onPressed: () async {
+                          ),
+                          Center(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.redAccent,
+                                  textStyle: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              // onPressed: () async {
 
-                                // final docker = FirebaseFirestore.instance
-                                //     .collection('Foods')
-                                //     .doc(foodModels[index].food_id);
+                              // final docker = FirebaseFirestore.instance
+                              //     .collection('Foods')
+                              //     .doc(foodModels[index].food_id);
 
-                                // try {
-                                //   await docker.delete();
-                                //   ScaffoldMessenger.of(context).showSnackBar(
-                                //     SnackBar(content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
-                                //   );
-                                //   setState(() {
-                                //     foodModels.removeAt(index);
-                                //   });
-                                // } catch (e) {
-                                //   ScaffoldMessenger.of(context).showSnackBar(
-                                //     SnackBar(
-                                //         content: Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
-                                //   );
-                                // }
-                                //},
-                                onPressed: () async {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text("ยืนยันการลบ"),
-                                        content: Text(
-                                            "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?"),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text("ยกเลิก"),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: Text("ลบ"),
-                                            onPressed: () {
-                                              // print('Fuufood =' +
-                                              //     foodModels[index]
-                                              //         .food_id
-                                              //         .toString());
+                              // try {
+                              //   await docker.delete();
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(content: Text('ลบข้อมูลเรียบร้อยแล้ว')),
+                              //   );
+                              //   setState(() {
+                              //     foodModels.removeAt(index);
+                              //   });
+                              // } catch (e) {
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(
+                              //         content: Text('เกิดข้อผิดพลาดในการลบข้อมูล')),
+                              //   );
+                              // }
+                              //},
+                              onPressed: () async {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("ยืนยันการลบ"),
+                                      content: Text(
+                                          "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text("ยกเลิก"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text("ลบ"),
+                                          onPressed: () {
+                                            // print('Fuufood =' +
+                                            //     foodModels[index]
+                                            //         .food_id
+                                            //         .toString());
 
-                                              final deleteFood =
-                                                  DeleteFoodService();
-                                              //
-                                              deleteFood
-                                                  .DeleteFoodReplyCommentData(
-                                                      foodModels[index]
-                                                          .food_id
-                                                          .toString());
-                                              //
-                                              deleteFood.DeleteFoodReplyModData(
-                                                  foodModels[index]
-                                                      .food_id
-                                                      .toString());
-                                              //
-                                              deleteFood
-                                                  .DeleteFoodReplyReviewData(
-                                                      foodModels[index]
-                                                          .food_id
-                                                          .toString());
-                                              //
-                                              deleteFood.DeleteFoodCommentData(
-                                                  foodModels[index]
-                                                      .food_id
-                                                      .toString());
-                                              //
-                                              deleteFood.DeleteFoodModData(
-                                                  foodModels[index]
-                                                      .food_id
-                                                      .toString());
-                                              //
-                                              deleteFood.DeleteFoodReviewData(
-                                                  foodModels[index]
-                                                      .food_id
-                                                      .toString());
-                                              //
-                                              deleteFood.DeleteFoodData(
-                                                  foodModels[index]
-                                                      .food_id
-                                                      .toString());
+                                            final deleteFood =
+                                                DeleteFoodService();
+                                            //
+                                            deleteFood
+                                                .DeleteFoodReplyCommentData(
+                                                    foodModels[index]
+                                                        .food_id
+                                                        .toString());
+                                            //
+                                            deleteFood.DeleteFoodReplyModData(
+                                                foodModels[index]
+                                                    .food_id
+                                                    .toString());
+                                            //
+                                            deleteFood
+                                                .DeleteFoodReplyReviewData(
+                                                    foodModels[index]
+                                                        .food_id
+                                                        .toString());
+                                            //
+                                            deleteFood.DeleteFoodCommentData(
+                                                foodModels[index]
+                                                    .food_id
+                                                    .toString());
+                                            //
+                                            deleteFood.DeleteFoodModData(
+                                                foodModels[index]
+                                                    .food_id
+                                                    .toString());
+                                            //
+                                            deleteFood.DeleteFoodReviewData(
+                                                foodModels[index]
+                                                    .food_id
+                                                    .toString());
+                                            //
+                                            deleteFood.DeleteFoodData(
+                                                foodModels[index]
+                                                    .food_id
+                                                    .toString());
 
-                                              Navigator.of(context)
-                                                  .pop(); // ปิด AlertDialog
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
+                                            Navigator.of(context)
+                                                .pop(); // ปิด AlertDialog
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
 
-                                child: Text(
-                                  'ลบข้อมูล',
-                                  style: TextStyle(color: Colors.black),
-                                ),
+                              child: Text(
+                                'ลบข้อมูล',
+                                style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      // showDescription(index),
-                      // showIngredients(index),
+                    ),
+                    // showDescription(index),
+                    // showIngredients(index),
 
-                      // IconButton(
-                      //   icon: new Icon(Icons.edit),
-                      //   highlightColor: Colors.pink,
-                      //   onPressed: () {
-                      //     print("kuay");
-                      //     MaterialPageRoute route = MaterialPageRoute(
-                      //       builder: (Index) => UploadFoodPage(),
-                      //     );
-                      //   },
-                      // ),
-                    ]),
-                  ),
-                );
-              },
-            ),
+                    // IconButton(
+                    //   icon: new Icon(Icons.edit),
+                    //   highlightColor: Colors.pink,
+                    //   onPressed: () {
+                    //     print("kuay");
+                    //     MaterialPageRoute route = MaterialPageRoute(
+                    //       builder: (Index) => UploadFoodPage(),
+                    //     );
+                    //   },
+                    // ),
+                  ]),
+                ),
+              );
+            },
           ),
         ),
       ),

@@ -201,7 +201,7 @@ class _UploadFoodState extends State<UploadFood> {
         food_name = value.toString();
       },
       decoration: InputDecoration(
-        labelText: 'ชื่ออาหาร',
+        labelText: 'ชื่ออาหาร*',
         hintText: 'กรุณากรอกชื่ออาหาร',
         //icon: Icon(Icons.format_align_center),
         border:
@@ -210,7 +210,6 @@ class _UploadFoodState extends State<UploadFood> {
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
         isDense: true, // Added this
         contentPadding: EdgeInsets.all(8),
       ),
@@ -239,7 +238,6 @@ class _UploadFoodState extends State<UploadFood> {
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
         isDense: true, // Added this
         contentPadding: EdgeInsets.all(8),
       ),
@@ -290,7 +288,6 @@ class _UploadFoodState extends State<UploadFood> {
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
           isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
         ),
@@ -318,7 +315,6 @@ class _UploadFoodState extends State<UploadFood> {
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
           isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
         ),
@@ -351,7 +347,6 @@ class _UploadFoodState extends State<UploadFood> {
                 borderSide: Divider.createBorderSide(context)),
             enabledBorder: OutlineInputBorder(
                 borderSide: Divider.createBorderSide(context)),
-            filled: true,
             isDense: true, // Added this
             contentPadding: EdgeInsets.all(8),
           ),
@@ -493,7 +488,6 @@ class _UploadFoodState extends State<UploadFood> {
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
           isDense: true, // Added this
           contentPadding: EdgeInsets.all(8),
         ),
@@ -518,7 +512,6 @@ class _UploadFoodState extends State<UploadFood> {
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
           enabledBorder:
               OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-          filled: true,
           isDense: true,
           contentPadding: const EdgeInsets.all(8),
         ),
@@ -548,7 +541,7 @@ class _UploadFoodState extends State<UploadFood> {
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
         enabledBorder:
             OutlineInputBorder(borderSide: Divider.createBorderSide(context)),
-        filled: true,
+
         isDense: true,
         contentPadding: const EdgeInsets.all(8),
       ),
@@ -687,9 +680,10 @@ class _UploadFoodState extends State<UploadFood> {
         : 'ยังไม่มีไฟล์ที่เลือก!'; //set basename
     return Scaffold(
       appBar: AppBar(
-        title: Text('หน้าอัปโหลดข้อมูลอาหาร'),
+        title: Text('หน้าอัปโหลดข้อมูลอาหาร',style: TextStyle(fontSize: 16),),
         centerTitle: true,
-        backgroundColor: Colors.orangeAccent,
+        backgroundColor: Color.fromARGB(255, 255, 198, 74),
+        
       ),
       body: Container(
         padding: EdgeInsets.all(32),
@@ -700,7 +694,7 @@ class _UploadFoodState extends State<UploadFood> {
             if (pickedFile != null)
               Expanded(
                 child: Container(
-                  color: Colors.amber,
+                  color: Color.fromARGB(255, 255, 220, 143),
                   child: Image.file(
                     File(pickedFile!.path!),
                     width: double.infinity,

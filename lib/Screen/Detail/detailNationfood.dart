@@ -68,7 +68,7 @@ class _detailNationfoodState extends State<detailNationfood> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('หน้าข้อมูลสัญชาติอาหาร'),
+        title: Text('สัญชาติอาหาร'),
         centerTitle: true,
         flexibleSpace: ClipPath(
           child: Container(

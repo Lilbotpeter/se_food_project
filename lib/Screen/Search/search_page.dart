@@ -79,11 +79,6 @@ class _SearchPageState extends State<SearchPageStream> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: Text('หน้าค้นหาผู้ใช้'),
-        centerTitle: true,
-        backgroundColor: Colors.orangeAccent,
-      ),
       body: Column(
         children: [
           Icon(

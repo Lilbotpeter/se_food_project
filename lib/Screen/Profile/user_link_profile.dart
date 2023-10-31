@@ -348,9 +348,9 @@ class UserLinkProfileState extends State<UserLinkProfile> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              // await followerService.addFollower(userid, getUserID);
-                              // Get.snackbar('แจ้งเตือน', 'ติดตามผู้ใช้แล้ว');
-                              Get.to(DetailStep());
+                              await followerService.addFollower(userid, getUserID);
+                              Get.snackbar('แจ้งเตือน', 'ติดตามผู้ใช้แล้ว');
+                              //Get.to(DetailStep());
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: kPrimaryColor,

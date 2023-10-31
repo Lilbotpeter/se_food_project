@@ -68,7 +68,7 @@ class _detailLevelfoodState extends State<detailLevelfood> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('หน้าข้อมูลความยากอาหาร'),
+        title: Text('ระดับความยาก'),
         centerTitle: true,
         flexibleSpace: ClipPath(
           child: Container(

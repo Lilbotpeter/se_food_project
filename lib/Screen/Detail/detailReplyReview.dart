@@ -90,7 +90,7 @@ class _ReplyReviewFoodState extends State<ReplyReviewFood> {
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
         title: Text(
-          'หน้าตอบกลับรีวิว',
+          'ตอบกลับรีวิว',
           style: TextStyle(color: Colors.white),
         ),
         flexibleSpace: ClipPath(

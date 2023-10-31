@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //Text('Food Homework Commu',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white,),),
-
+                  Image(image: AssetImage('images/logo.png'),)
                 ],
               ),
             ),

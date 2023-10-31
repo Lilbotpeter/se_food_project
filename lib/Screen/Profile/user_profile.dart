@@ -182,11 +182,6 @@ class _UserProfileState extends State<UserProfile> {
 
     // Capture the index value
     return Scaffold(
-        appBar: AppBar(
-          //title: Text('หน้าโปรไฟล์'),
-          centerTitle: true,
-          backgroundColor: Colors.orangeAccent,
-        ),
         body: Stack(
           children: [
             Positioned(

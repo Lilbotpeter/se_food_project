@@ -63,7 +63,7 @@ class _VideoPageState extends State<VideoPage> {
                 final index = entry.key;
                 return BottomNavigationBarItem(
                   icon: Icon(Icons.video_label),
-                  label: 'Video $index',
+                  label: 'Video ${index+1}',
                 );
               }).toList(),
               currentIndex: selectedVideoIndex,

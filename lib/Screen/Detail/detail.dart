@@ -1359,15 +1359,19 @@ class _DetailFoodState extends State<DetailFood> {
                 tabs: [
                   Tab(
                     icon: Icon(Icons.notes_outlined),
+                    text: 'สูตรอาหาร',
                   ),
                   Tab(
                     icon: Icon(Icons.menu_book_outlined),
+                    text: 'การบ้าน',
                   ),
                   Tab(
                     icon: Icon(Icons.comment),
+                    text: 'คอมเม้นท์',
                   ),
                   Tab(
                     icon: Icon(Icons.reviews),
+                    text: 'รีวิว',
                   )
                 ],
               ),
@@ -1482,6 +1486,7 @@ class _DetailFoodState extends State<DetailFood> {
                                     borderRadius: BorderRadius.circular(35)),
                                 child: IconButton(
                                   onPressed: () async {
+                                    
                                     getname(userid);
                                     setState(() {
                                       isBookmarked = !isBookmarked;
@@ -1491,14 +1496,16 @@ class _DetailFoodState extends State<DetailFood> {
                                             userid, getfoodID)
                                         : await followerService.unBookmark(
                                             userid, getfoodID);
+                                            Get.snackbar('ติดดาวเมนูอาหาร', 'ติดตามสูตรอาหารแล้ว');
                                   },
+                                  
                                   icon: Icon(
                                     isBookmarked
                                         ? Icons.bookmark
-                                        : Icons.bookmark_outline,
+                                        : Icons.bookmark,
                                     color: isBookmarked
-                                        ? Colors.amber
-                                        : const Color.fromARGB(255, 0, 0, 0),
+                                        ? Color.fromARGB(255, 199, 199, 199)
+                                        : Color.fromARGB(255, 199, 199, 199),
                                     size: 35,
                                   ),
                                 ),
@@ -1862,7 +1869,7 @@ class _DetailFoodState extends State<DetailFood> {
                   builder:
                       (BuildContext context, AsyncSnapshot<void> snapshot) {
                     return Container(
-                      color: Colors.yellowAccent,
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       child: Column(
                         children: [
                           Expanded(
@@ -2173,7 +2180,7 @@ class _DetailFoodState extends State<DetailFood> {
                   builder:
                       (BuildContext context, AsyncSnapshot<void> snapshot) {
                     return Container(
-                      color: Colors.red,
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       child: Column(
                         children: [
                           Expanded(
@@ -2427,9 +2434,9 @@ class _DetailFoodState extends State<DetailFood> {
 
                                       InkWell(
                                         onTap: () {
-                                          Get.snackbar(
-                                              '${commentData['ID_Comment']}',
-                                              'message');
+                                          // Get.snackbar(
+                                          //     '${commentData['ID_Comment']}',
+                                          //     'message');
                                           Get.to(ReplyCommentFood(),
                                               arguments:
                                                   commentData['ID_Comment']);
@@ -2477,7 +2484,7 @@ class _DetailFoodState extends State<DetailFood> {
                   builder:
                       (BuildContext context, AsyncSnapshot<void> snapshot) {
                     return Container(
-                      color: Colors.yellowAccent,
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       child: Column(
                         children: [
                           Expanded(
